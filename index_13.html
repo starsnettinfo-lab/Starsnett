@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starsnett — Qui est où ?</title>
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
+#header { background:#1A1D2E; padding:12px 16px; position:sticky; top:0; z-index:100; border-bottom:1px solid #2A2D3E; }
+.htop { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.sync-bar { display:flex; gap:6px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+/* ── CALENDAR ── */
+.cal-hdr { background:#1A1D2E; border:1px solid #2A2D3E; border-radius:12px; padding:14px; margin-bottom:10px; }
+.cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.cal-nav-btn { background:#13151F; border:1px solid #2A2D3E; color:#E8ECF0; border-radius:8px; padding:6px 14px; font-size:16px; cursor:pointer; }
+.cal-nav-btn:hover { background:#2A9D8F; border-color:#2A9D8F; }
+.cal-month-title { font-size:16px; font-weight:800; color:#fff; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.cal-day-hdr { text-align:center; font-size:10px; font-weight:700; color:#8892A4; padding:4px 0; }
+.cal-cell { background:#13151F; border-radius:6px; padding:4px; min-height:52px; border:1px solid #1A1D2E; cursor:pointer; transition:border-color 0.2s; }
+.cal-cell:hover { border-color:#2A9D8F; }
+.cal-cell.today { border-color:#3A86FF; }
+.cal-cell.other-month { opacity:0.3; }
+.cal-cell.selected { border-color:#2A9D8F; background:#2A9D8F22; }
+.cal-day-num { font-size:11px; font-weight:700; color:#8892A4; margin-bottom:3px; }
+.cal-cell.today .cal-day-num { color:#3A86FF; }
+.cal-dot { height:4px; border-radius:2px; margin-bottom:2px; }
+.cal-count { font-size:9px; color:#8892A4; }
+.cal-detail { background:#13151F; border-radius:10px; padding:12px; margin-bottom:8px; border:1px solid #2A2D3E; }
+.cal-detail-title { font-size:14px; font-weight:800; color:#fff; margin-bottom:8px; }
+
+/* ── COMMENTS (internal notes) ── */
+.notes-section { border-top:1px solid #2A2D3E; margin-top:8px; padding-top:8px; }
+.notes-label { font-size:10px; color:#8892A4; font-weight:600; margin-bottom:4px; }
+.notes-text { font-size:11px; color:#6C9BCF; font-style:italic; line-height:1.5; }
+.field-notes { width:100%; background:#0F1117; border:1px solid #2A2D3E; border-radius:8px; color:#E8ECF0; font-size:13px; padding:8px; resize:vertical; min-height:60px; font-family:inherit; margin-top:4px; }
+.field-notes:focus { border-color:#3A86FF; outline:none; }
+
+/* ── HISTORY ── */
+.history-btn { background:none; border:none; color:#8892A4; font-size:11px; cursor:pointer; padding:2px 6px; border-radius:4px; }
+.history-btn:hover { color:#3A86FF; }
+.history-list { font-size:11px; color:#8892A4; border-top:1px solid #1A1D2E; margin-top:6px; padding-top:6px; }
+.history-item { padding:3px 0; border-bottom:1px solid #0F1117; line-height:1.4; }
+.history-item:last-child { border-bottom:none; }
+
+/* ── PDF EXPORT ── */
+.pdf-export-btn { display:flex; align-items:center; gap:8px; padding:10px 16px; background:#13151F; border:1px solid #FB5607; color:#FB5607; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.pdf-export-btn:hover { background:#FB5607; color:#fff; }
+
+/* ── MODE BADGE ── */
+.mode-badge { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all 0.2s; margin-left:auto; }
+.mode-badge.admin { background:#8338EC22; color:#8338EC; border:1px solid #8338EC55; }
+.mode-badge.consult { background:#2A9D8F22; color:#2A9D8F; border:1px solid #2A9D8F55; }
+/* ── PIN OVERLAY ── */
+.pin-overlay { display:none; position:fixed; inset:0; background:#0F1117EE; z-index:2000; align-items:center; justify-content:center; }
+.pin-overlay.open { display:flex; }
+.pin-box { background:#1A1D2E; border-radius:16px; padding:28px 24px; width:300px; text-align:center; border:1px solid #2A2D3E; }
+.pin-title { font-size:16px; font-weight:800; color:#fff; margin-bottom:6px; }
+.pin-sub { font-size:12px; color:#8892A4; margin-bottom:20px; }
+.pin-dots { display:flex; justify-content:center; gap:12px; margin-bottom:20px; }
+.pin-dot { width:14px; height:14px; border-radius:50%; background:#2A2D3E; border:2px solid #3A86FF; transition:all 0.15s; }
+.pin-dot.filled { background:#3A86FF; }
+.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+.pin-key { padding:14px; border-radius:10px; border:1px solid #2A2D3E; background:#13151F; color:#fff; font-size:18px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.pin-key:hover { background:#3A86FF; border-color:#3A86FF; }
+.pin-key.del { color:#E63946; font-size:14px; }
+.pin-error { color:#E63946; font-size:12px; min-height:18px; margin-bottom:8px; }
+.pin-cancel { background:none; border:none; color:#8892A4; font-size:13px; cursor:pointer; text-decoration:underline; }
+.sync-btn { display:flex; align-items:center; gap:5px; padding:7px 13px; border-radius:8px; border:none; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.sync-cfg { display:flex; align-items:center; gap:5px; padding:7px 10px; border-radius:8px; border:none; font-size:12px; cursor:pointer; background:#2A2D3E; color:#8892A4; transition:all 0.2s; }
+.sync-cfg:hover { background:#3A86FF; color:#fff; }
+.sync-save { background:#2A9D8F22; color:#2A9D8F; border:1px solid #2A9D8F55; }
+.sync-save:hover { background:#2A9D8F; color:#fff; }
+.sync-load { background:#3A86FF22; color:#3A86FF; border:1px solid #3A86FF55; }
+.sync-load:hover { background:#3A86FF; color:#fff; }
+.sync-info { font-size:11px; color:#8892A4; margin-left:auto; }
+.sync-pulse { display:inline-block; width:7px; height:7px; border-radius:50%; background:#2A9D8F; margin-right:4px; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+.logo { width:32px; height:32px; background:linear-gradient(135deg,#3A86FF,#8338EC); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+.title { font-weight:700; font-size:15px; color:#fff; }
+.sub { font-size:10px; color:#8892A4; }
+#stats { margin-left:auto; background:#13151F; border:1px solid #2A2D3E; border-radius:6px; padding:3px 10px; font-size:12px; color:#8892A4; }
+#search { width:100%; padding:9px 12px; background:#13151F; border:1px solid #2A2D3E; border-radius:9px; color:#E8ECF0; font-size:15px; outline:none; margin-bottom:10px; }
+.tabs { display:flex; gap:6px; }
+.tab { flex:1; padding:8px; border-radius:8px; border:none; cursor:pointer; font-size:13px; font-weight:600; background:#13151F; color:#8892A4; }
+.tab.on { background:#3A86FF; color:#fff; }
+#main { padding:14px; }
+.card { background:#13151F; border-radius:10px; padding:12px; margin-bottom:8px; border-left:4px solid #3A86FF; position:relative; }
+.card:hover { background:#1F2235; }
+.cnm { font-weight:700; font-size:14px; color:#fff; margin-bottom:4px; }
+.cag { font-size:12px; color:#3A86FF; margin-bottom:2px; }
+.cadr { font-size:11px; color:#8892A4; margin-bottom:2px; }
+.cjr { font-size:11px; color:#6C9BCF; }
+.agrid { display:flex; flex-wrap:wrap; gap:8px; }
+.acard { background:#13151F; border-radius:10px; padding:12px; cursor:pointer; min-width:140px; flex:1; text-align:center; border:1px solid #2A2D3E; }
+.acard:hover { background:#1F2235; }
+.aav { width:40px; height:40px; border-radius:10px; background:#3A86FF22; border:2px solid #3A86FF; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:#3A86FF; margin:0 auto 8px; }
+.anm { font-size:12px; font-weight:700; color:#fff; margin-bottom:4px; }
+.acnt { font-size:18px; font-weight:800; color:#3A86FF; }
+.back { background:#1F2235; border:none; color:#8892A4; padding:8px 14px; border-radius:8px; cursor:pointer; margin-bottom:12px; font-size:13px; }
+.today-hdr { background:#1A1D2E; border:1px solid #2A2D3E; border-radius:12px; padding:14px; margin-bottom:14px; }
+.today-title { font-size:16px; font-weight:800; color:#fff; margin-bottom:4px; }
+.today-sub { font-size:12px; color:#8892A4; margin-bottom:12px; }
+.dtabs { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+.dtab { padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #2A2D3E; background:#13151F; color:#8892A4; }
+.dtab.on { background:#3A86FF; border-color:#3A86FF; color:#fff; }
+.tcnt { font-size:13px; color:#8892A4; margin-bottom:10px; }
+.empty { color:#8892A4; font-size:13px; padding:20px 0; }
+
+/* Edit button on cards */
+.edit-btn {
+  position:absolute; top:10px; right:10px;
+  background:#2A2D3E; border:none; color:#8892A4;
+  width:28px; height:28px; border-radius:6px;
+  cursor:pointer; font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+  transition:background 0.2s, color 0.2s;
+  z-index:2;
+}
+.edit-btn:hover { background:#3A86FF; color:#fff; }
+
+/* Add new site button */
+.add-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; padding:12px; border-radius:10px;
+  border:2px dashed #2A2D3E; background:transparent;
+  color:#8892A4; font-size:13px; font-weight:600;
+  cursor:pointer; margin-bottom:8px; transition:all 0.2s;
+}
+.add-btn:hover { border-color:#3A86FF; color:#3A86FF; }
+
+/* Modal overlay */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.7); z-index:1000;
+  align-items:center; justify-content:center; padding:16px;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:#1A1D2E; border-radius:16px;
+  padding:20px; width:100%; max-width:500px;
+  border:1px solid #2A2D3E; max-height:90vh; overflow-y:auto;
+}
+.modal-title {
+  font-size:16px; font-weight:800; color:#fff;
+  margin-bottom:16px; display:flex; align-items:center;
+  justify-content:space-between;
+}
+.modal-close {
+  background:none; border:none; color:#8892A4;
+  font-size:20px; cursor:pointer; line-height:1;
+}
+.modal-close:hover { color:#fff; }
+.field-group { margin-bottom:14px; }
+.field-label {
+  font-size:11px; font-weight:700; color:#8892A4;
+  text-transform:uppercase; letter-spacing:0.5px;
+  margin-bottom:6px; display:block;
+}
+.field-input, .field-textarea, .field-select {
+  width:100%; padding:9px 12px;
+  background:#13151F; border:1px solid #2A2D3E;
+  border-radius:8px; color:#E8ECF0; font-size:13px;
+  outline:none; font-family:Arial,sans-serif;
+  transition:border-color 0.2s;
+}
+.field-input:focus, .field-textarea:focus, .field-select:focus {
+  border-color:#3A86FF;
+}
+.field-textarea { min-height:70px; resize:vertical; }
+.modal-actions { display:flex; gap:10px; margin-top:18px; }
+.btn-save {
+  flex:1; padding:10px; border-radius:8px;
+  background:#3A86FF; border:none; color:#fff;
+  font-size:14px; font-weight:700; cursor:pointer;
+  transition:background 0.2s;
+}
+.btn-save:hover { background:#2970d6; }
+.btn-delete {
+  padding:10px 16px; border-radius:8px;
+  background:#13151F; border:1px solid #E63946;
+  color:#E63946; font-size:13px; font-weight:600;
+  cursor:pointer; transition:all 0.2s;
+}
+.btn-delete:hover { background:#E63946; color:#fff; }
+.btn-cancel {
+  padding:10px 16px; border-radius:8px;
+  background:#13151F; border:1px solid #2A2D3E;
+  color:#8892A4; font-size:13px; font-weight:600;
+  cursor:pointer; transition:all 0.2s;
+}
+.btn-cancel:hover { background:#2A2D3E; color:#fff; }
+
+/* Toast notification */
+.toast {
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:#2A9D8F; color:#fff; padding:10px 20px;
+  border-radius:20px; font-size:13px; font-weight:700;
+  z-index:9999; transition:transform 0.3s ease;
+  pointer-events:none;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Confirm dialog */
+.confirm-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.8); z-index:2000;
+  align-items:center; justify-content:center; padding:16px;
+}
+.confirm-overlay.open { display:flex; }
+.confirm-box {
+  background:#1A1D2E; border-radius:16px; padding:24px;
+  width:100%; max-width:340px; border:1px solid #E63946;
+  text-align:center;
+}
+.confirm-box p { color:#E8ECF0; margin-bottom:8px; font-weight:700; }
+.confirm-box span { color:#8892A4; font-size:13px; }
+.confirm-actions { display:flex; gap:10px; margin-top:20px; }
+
+/* Compta view */
+.compta-hdr { background:#1A1D2E; border:1px solid #2A2D3E; border-radius:12px; padding:14px; margin-bottom:12px; }
+.compta-title { font-size:16px; font-weight:800; color:#E9C46A; margin-bottom:2px; }
+.compta-sub { font-size:12px; color:#8892A4; margin-bottom:12px; }
+.compta-filters { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+.compta-filter { padding:5px 11px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #2A2D3E; background:#13151F; color:#8892A4; }
+.compta-filter.on { background:#E9C46A; border-color:#E9C46A; color:#0F1117; }
+.compta-select { padding:5px 10px; background:#13151F; border:1px solid #2A2D3E; border-radius:20px; color:#E8ECF0; font-size:12px; outline:none; cursor:pointer; }
+.compta-stats { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+.compta-stat { background:#13151F; border-radius:10px; padding:10px 14px; flex:1; min-width:70px; text-align:center; border:1px solid #2A2D3E; }
+.compta-stat-num { font-size:22px; font-weight:800; }
+.compta-stat-lbl { font-size:10px; color:#8892A4; margin-top:2px; }
+.compta-period-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; align-items:center; }
+.compta-period-btn { padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #2A2D3E; background:#13151F; color:#8892A4; }
+.compta-period-btn.on { background:#3A86FF; border-color:#3A86FF; color:#fff; }
+.compta-period-input { padding:5px 10px; background:#13151F; border:1px solid #2A2D3E; border-radius:20px; color:#E8ECF0; font-size:12px; outline:none; }
+.compta-view-toggle { display:flex; gap:6px; margin-bottom:10px; }
+.compta-view-btn { flex:1; padding:7px; border-radius:8px; border:1px solid #2A2D3E; background:#13151F; color:#8892A4; font-size:12px; font-weight:600; cursor:pointer; }
+.compta-view-btn.on { background:#8338EC; border-color:#8338EC; color:#fff; }
+.compta-row { background:#13151F; border-radius:8px; padding:10px 12px; margin-bottom:6px; border-left:4px solid #E63946; display:flex; align-items:flex-start; gap:10px; }
+.compta-row.type-absence { border-left-color:#E63946; }
+.compta-row.type-retard { border-left-color:#E9C46A; }
+.compta-row.type-non-effectue { border-left-color:#FB5607; }
+.compta-row-date { font-size:12px; font-weight:700; color:#fff; min-width:72px; padding-top:2px; }
+.compta-row-info { flex:1; }
+.compta-row-site { font-size:13px; font-weight:700; color:#fff; margin-bottom:2px; }
+.compta-row-agent { font-size:11px; color:#8892A4; margin-bottom:2px; }
+.compta-row-note { font-size:11px; color:#6C9BCF; font-style:italic; }
+.compta-badge { padding:2px 8px; border-radius:10px; font-size:10px; font-weight:700; white-space:nowrap; align-self:flex-start; }
+.badge-absence { background:#E6394622; color:#E63946; }
+.badge-retard { background:#E9C46A22; color:#E9C46A; }
+.badge-non-effectue { background:#FB560722; color:#FB5607; }
+.compta-del-btn { background:none; border:none; color:#8892A4; cursor:pointer; font-size:13px; padding:2px 4px; }
+.compta-del-btn:hover { color:#E63946; }
+.compta-export { display:flex; align-items:center; gap:8px; padding:10px 16px; background:#13151F; border:1px solid #E9C46A; color:#E9C46A; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:12px; transition:all 0.2s; }
+.compta-export:hover { background:#E9C46A; color:#0F1117; }
+.compta-group-hdr { font-size:13px; font-weight:700; color:#8892A4; padding:8px 0 4px; border-bottom:1px solid #2A2D3E; margin-bottom:8px; margin-top:12px; display:flex; justify-content:space-between; align-items:center; }
+.agent-block { background:#13151F; border-radius:10px; padding:12px; margin-bottom:8px; border:1px solid #2A2D3E; }
+.agent-block-hdr { display:flex; align-items:center; gap:10px; margin-bottom:8px; cursor:pointer; }
+.agent-block-name { font-size:14px; font-weight:800; color:#fff; flex:1; }
+.agent-block-counts { display:flex; gap:6px; }
+.agent-mini-badge { padding:2px 8px; border-radius:10px; font-size:11px; font-weight:700; }
+.recap-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:4px; }
+.recap-table th { text-align:left; color:#8892A4; font-weight:600; padding:4px 8px; border-bottom:1px solid #2A2D3E; }
+.recap-table td { padding:5px 8px; border-bottom:1px solid #1A1D2E; color:#E8ECF0; }
+.recap-table tr:last-child td { border-bottom:none; }
+.recap-table .site-name { font-weight:700; }
+
+/* Absences section on card */
+.abs-toggle {
+  margin-top:8px; padding-top:8px;
+  border-top:1px solid #2A2D3E;
+  display:flex; align-items:center; gap:6px;
+  cursor:pointer;
+}
+.abs-toggle-label {
+  font-size:11px; color:#8892A4; flex:1;
+}
+.abs-count {
+  background:#E63946; color:#fff;
+  font-size:10px; font-weight:700;
+  padding:1px 6px; border-radius:10px;
+}
+.abs-count.zero { background:#2A2D3E; color:#8892A4; }
+.abs-list {
+  margin-top:8px; display:none;
+}
+.abs-list.open { display:block; }
+.abs-item {
+  display:flex; align-items:flex-start; gap:8px;
+  background:#1A1D2E; border-radius:8px;
+  padding:8px 10px; margin-bottom:6px;
+  border-left:3px solid #E63946;
+}
+.abs-item.type-absence { border-left-color:#E63946; }
+.abs-item.type-retard { border-left-color:#E9C46A; }
+.abs-item.type-non-effectue { border-left-color:#FB5607; }
+.abs-item-info { flex:1; }
+.abs-item-date { font-size:11px; font-weight:700; color:#fff; }
+.abs-item-type {
+  font-size:10px; font-weight:700;
+  padding:1px 7px; border-radius:10px;
+  display:inline-block; margin:2px 0;
+}
+.type-absence .abs-item-type { background:#E6394622; color:#E63946; }
+.type-retard .abs-item-type { background:#E9C46A22; color:#E9C46A; }
+.type-non-effectue .abs-item-type { background:#FB560722; color:#FB5607; }
+.abs-item-note { font-size:11px; color:#8892A4; }
+.abs-del-btn {
+  background:none; border:none; color:#8892A4;
+  cursor:pointer; font-size:14px; padding:2px 4px;
+  line-height:1; flex-shrink:0;
+}
+.abs-del-btn:hover { color:#E63946; }
+.abs-add-row {
+  display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;
+}
+.abs-add-row select, .abs-add-row input {
+  flex:1; min-width:80px; padding:6px 8px;
+  background:#13151F; border:1px solid #2A2D3E;
+  border-radius:6px; color:#E8ECF0; font-size:12px;
+  outline:none;
+}
+.abs-add-row select:focus, .abs-add-row input:focus { border-color:#E63946; }
+.abs-save-btn {
+  padding:6px 12px; background:#E63946; border:none;
+  color:#fff; border-radius:6px; font-size:12px;
+  font-weight:700; cursor:pointer; white-space:nowrap;
+}
+.abs-save-btn:hover { background:#c42d38; }
+</style>
+</head>
+<body>
+<div id="header">
+  <div class="htop">
+    <div class="logo">⭐</div>
+    <div><div class="title">STARSNETT SERVICES</div><div class="sub">QUI EST OÙ ?</div></div>
+    <div id="stats">...</div>
+  </div>
+  <div class="sync-bar">
+    <button class="sync-btn sync-save" onclick="cloudSync()" id="syncBtn">☁️ Sync</button>
+    <button class="sync-btn sync-cfg" onclick="openSyncConfig()" title="Configurer la synchronisation">⚙️</button>
+    <button onclick="syncPegase()" title="Synchroniser avec Pégase : archive les absents, injecte les dates de contrat" style="background:#E9C46A22;color:#E9C46A;border:1px solid #E9C46A55;border-radius:6px;font-size:11px;padding:4px 9px;cursor:pointer;font-weight:600;margin-left:4px;">🔄 Pégase</button>
+    <span class="sync-info" id="syncInfo"><span class="sync-pulse"></span>Non configuré</span>
+    <button class="mode-badge consult" id="modeBadge" onclick="onModeBadgeClick()">👁️ Consultation</button>
+  </div>
+  <!-- Sync config modal -->
+  <div class="modal-overlay" id="syncModal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-title">
+        <span>☁️ Synchronisation cloud</span>
+        <button class="modal-close" onclick="closeSyncConfig()">✕</button>
+      </div>
+      <div style="background:#0F1117;border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;color:#8892A4;line-height:1.7">
+        <b style="color:#E9C46A">Comment configurer (gratuit, 2 minutes) :</b><br>
+        1. Allez sur <b style="color:#3A86FF">jsonbin.io</b> → créez un compte gratuit<br>
+        2. Cliquez <b>API Keys</b> → copiez votre <b>Master Key</b><br>
+        3. Collez-la ci-dessous et cliquez <b>Créer & connecter</b>
+      </div>
+      <div class="field-group">
+        <label class="field-label">🔑 Clé API JSONBin (Master Key)</label>
+        <input class="field-input" id="jbApiKey" type="password" placeholder="$2b$10$...">
+      </div>
+      <div class="field-group">
+        <label class="field-label">📦 ID du coffre <span style="color:#8892A4;font-weight:400">(rempli automatiquement)</span></label>
+        <input class="field-input" id="jbBinId" type="text" placeholder="Sera créé automatiquement">
+      </div>
+      <div id="syncStatus" style="font-size:12px;color:#8892A4;margin-bottom:12px;min-height:18px"></div>
+      <div class="modal-actions">
+        <button class="btn-save" onclick="setupSync()">🔗 Créer &amp; connecter</button>
+        <button class="btn-cancel" onclick="closeSyncConfig()">Fermer</button>
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid #2A2D3E">
+        <div style="font-size:11px;color:#8892A4;margin-bottom:8px">⬇️ Sauvegarde manuelle (sans cloud)</div>
+        <div style="display:flex;gap:8px">
+          <button class="sync-btn sync-save" style="flex:1" onclick="saveJSON()">💾 Exporter JSON</button>
+          <button class="sync-btn sync-load" style="flex:1" onclick="document.getElementById('jsonFileInput').click()">📂 Importer JSON</button>
+          <input type="file" id="jsonFileInput" accept=".json" style="display:none" onchange="loadJSON(event)">
+        </div>
+      </div>
+    </div>
+  </div>
+  <input id="search" type="search" placeholder="🔍 Rechercher site, agent..." oninput="onSearch()">
+  <div class="tabs">
+    <button class="tab on" onclick="setView('today')">📅 Aujourd'hui</button>
+    <button class="tab" onclick="setView('agents')">👤 Agents</button>
+    <button class="tab" onclick="setView('sites')">🏢 Sites</button>
+    <button class="tab" onclick="setView('compta')" style="background:#E9C46A22;color:#E9C46A;" id="tabCompta" title="Réservé à l'administration">💰 Compta</button>
+    <button class="tab" onclick="setView('calendar')" style="background:#2A9D8F22;color:#2A9D8F;" id="tabCalendar">📆 Calendrier</button>
+    <button class="tab" onclick="setView('archives')" style="background:#FB560722;color:#FB5607;" id="tabArchives">🗄️ Archives</button>
+  </div>
+</div>
+<div id="main"></div>
+<!-- PIN Overlay -->
+<div class="pin-overlay" id="pinOverlay">
+  <div class="pin-box">
+    <div class="pin-title">🔐 Accès administrateur</div>
+    <div class="pin-sub" id="pinSubtitle">Entrez votre code PIN à 4 chiffres</div>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-error" id="pinError"></div>
+    <div class="pin-pad">
+      <button class="pin-key" onclick="pinPress('1')">1</button>
+      <button class="pin-key" onclick="pinPress('2')">2</button>
+      <button class="pin-key" onclick="pinPress('3')">3</button>
+      <button class="pin-key" onclick="pinPress('4')">4</button>
+      <button class="pin-key" onclick="pinPress('5')">5</button>
+      <button class="pin-key" onclick="pinPress('6')">6</button>
+      <button class="pin-key" onclick="pinPress('7')">7</button>
+      <button class="pin-key" onclick="pinPress('8')">8</button>
+      <button class="pin-key" onclick="pinPress('9')">9</button>
+      <button class="pin-key" style="visibility:hidden"></button>
+      <button class="pin-key" onclick="pinPress('0')">0</button>
+      <button class="pin-key del" onclick="pinDel()">⌫</button>
+    </div>
+    <button class="pin-cancel" onclick="closePinOverlay()">Annuler</button>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detailModal" onclick="closeDetail()">
+  <div class="modal" id="detailModalBox" onclick="event.stopPropagation()" style="max-width:560px;max-height:88vh;overflow-y:auto;">
+    <div class="modal-title" style="position:sticky;top:0;background:#1a1d2e;z-index:2;padding-bottom:10px;">
+      <span id="detailTitle" style="font-size:16px;font-weight:700;"></span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="detailEditBtn" onclick="closeDetail();openEdit(window._detailIdx)" style="background:#2A9D8F22;color:#2A9D8F;border:1px solid #2A9D8F44;border-radius:6px;padding:4px 12px;cursor:pointer;font-size:12px;">✏️ Modifier</button>
+        <button class="modal-close" onclick="closeDetail()">✕</button>
+      </div>
+    </div>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="modalTitleText">✏️ Modifier la fiche</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="field-group">
+      <label class="field-label">🏢 Nom du site</label>
+      <input class="field-input" id="fldNom" type="text" placeholder="Nom du site">
+    </div>
+    <div class="field-group">
+      <label class="field-label">👤 Agent assigné</label>
+      <input class="field-input" id="fldAgent" type="text" placeholder="Nom de l'agent" list="agentsList">
+      <datalist id="agentsList"></datalist>
+    </div>
+    <div class="field-group">
+      <label class="field-label">📍 Adresse / Codes d'accès</label>
+      <textarea class="field-textarea" id="fldAdresse" placeholder="Adresse, codes d'accès..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">📅 Jours de passage</label>
+      <input class="field-input" id="fldJours" type="text" placeholder="Ex: Lundi et vendredi, WE...">
+    </div>
+    <div class="field-group">
+      <label class="field-label">🔄 Fréquence / Contact</label>
+      <input class="field-input" id="fldFreq" type="text" placeholder="Ex: 2 fs/semaine">
+    </div>
+    <div class="field-group">
+      <label class="field-label">🪟 Vitrerie</label>
+      <input class="field-input" id="fldVitrerie" type="text" placeholder="Ex: 1 fois par mois">
+    </div>
+    <div class="field-group">
+      <label class="field-label">⏱️ Durée de passage (heures)</label>
+      <input class="field-input" id="fldDuree" type="text" placeholder="Ex: 1.5" style="max-width:120px;">
+    </div>
+    <div class="field-group">
+      <label class="field-label">💬 Consignes / Notes internes</label>
+      <textarea class="field-textarea" id="fldNotes" placeholder="Consignes, contacts, informations importantes..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">📅 Date d'ouverture du contrat</label>
+      <input class="field-input" id="fldDateContrat" type="text" placeholder="JJ/MM/AAAA" style="max-width:160px;">
+      <div id="fldDateContratInfo" style="font-size:11px;color:#888;margin-top:4px;"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">📸 Photo du site</label>
+      <input type="file" id="fldPhoto" accept="image/*" onchange="previewPhoto(this)" style="display:none;">
+      <button type="button" onclick="document.getElementById('fldPhoto').click()" style="background:#1a1d2e;color:#aaa;border:1px solid #2A2D3E;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;">📷 Choisir une photo</button>
+      <div id="photoPreview" style="margin-top:8px;"></div>
+      <div id="photoRemoveRow" style="display:none;margin-top:4px;">
+        <button type="button" onclick="removePhoto()" style="background:#E6394622;color:#E63946;border:1px solid #E6394644;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;">🗑️ Supprimer la photo</button>
+      </div>
+    </div>
+    <div id="archiveRow" style="display:none;margin-bottom:8px;">
+      <button type="button" onclick="archiveSite(editIdx)" style="background:#FB560722;color:#FB5607;border:1px solid #FB560744;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px;width:100%;">🗄️ Archiver ce site</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="saveEdit()">💾 Enregistrer</button>
+      <button class="btn-delete" onclick="confirmDelete()">🗑️</button>
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete -->
+<div class="confirm-overlay" id="confirmModal">
+  <div class="confirm-box">
+    <p>Supprimer cette fiche ?</p>
+    <span id="confirmSiteName"></span>
+    <div class="confirm-actions">
+      <button class="btn-delete" style="flex:1" onclick="doDelete()">🗑️ Supprimer</button>
+      <button class="btn-cancel" style="flex:1" onclick="closeConfirm()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// =====================
+// PEGASE — Contrats actifs au 12/03/2026
+// =====================
+var PEGASE_MAP = {
+  "FFI":"11/10/2024","DR TIMSIT JEAN":"06/01/2025","ALTIDEM":"22/09/2025",
+  "ASSOCIATION JEUNESSE MARINE":"07/02/2020","AUSSI ALSO":"10/09/2025",
+  "AZKAN GROUP":"01/03/2021","DIGISECUR":"19/02/2020",
+  "ECOLE TAXI HOCINE YOUSFI":"03/11/2025","EUKLID":"01/01/2024",
+  "GALERIE TEMPLON":"12/10/2018","JASMIN CAPITAL":"08/11/2024",
+  "MATEIA":"02/03/2020","NOVEO":"01/02/2021","OPCC - DOUMER":"01/12/2020",
+  "AVOCAT À LA COUR":"01/04/2023","SCM NATION SANTE DORIAN":"01/04/2021",
+  "SPEC SALSET ET SAUVAT ASSURANCES":"18/11/2022","PRIMAXION MALAKOFF":"01/10/2025",
+  "TNR":"15/09/2025","1G SOLUTIONS":"01/09/2020",
+  "40ÈME RUGISSANT GUENOT":"26/05/2023","40ÈME RUGISSANT JARDINIER":"19/04/2025",
+  "421 PRODUCTIONS":"31/05/2017","A LA MAISON DU CADEAU":"15/10/2024",
+  "ABSIS GROUPE":"27/06/2022","AC6":"27/05/2022",
+  "ACT& NOTAIRES ASSOCIES":"24/06/2019","ACT&NOTAIRES ASSOCIES":"24/06/2019",
+  "AD HOMINEM":"25/10/2016","ADESOFT":"02/04/2024",
+  "ALAIN BENSOUSSAN SELAS":"22/11/2019","ALPHAJET FAIR INVESTORS":"01/09/2021",
+  "ANGELA BOWER GHIDALIA SARL":"27/06/2022","ARCHITRIO":"25/04/2016",
+  "ASIANA AIRLINES":"23/12/2015","ASTER FAB":"21/07/2017",
+  "ATELIER COQLICO":"19/05/2022","AURELIE   JEUNANG":"03/02/2025",
+  "AXIA INTERIM":"05/10/2021","B.BRAUN AVITUM FRANCE":"01/01/2022",
+  "BABYCHOU":"03/11/2022","BABYCHOU NEUILLY":"22/09/2015",
+  "BERCY COPIE":"05/01/2022","BIBLIOTHECA SAS  (IDENT)":"01/05/2018",
+  "BIBLIOTECA SAS  (IDENT)":"01/05/2018","BIRAMBEAU 2":"09/03/2022",
+  "BIZAROID":"01/02/2022","BON PARFUMEUR FAUBOURG POISSONNIERE":"17/12/2022",
+  "BONAPARTE PROMOTION":"02/02/2026","C2L OPHTASANTE":"02/05/2025",
+  "CABINET DENTAIRE PITAGORA":"25/03/2024","CABINET MEDICAL ALIZEE TROTET":"04/11/2023",
+  "CABINET MORGAN":"02/05/2019","CABINET ZERAH":"24/10/2022",
+  "CAFE BENJAMIN":"01/07/2023","CAFE BENJAMAIN":"01/07/2023",
+  "CEC PARIS SARL":"06/09/2022",
+  "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A M A S C)":"02/10/2017",
+  "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A.M.A.S.C)":"02/10/2017",
+  "CHIMI SAS":"27/03/2024","CHRISTOPHE ET GUILLAUME":"28/04/2025",
+  "CINDY FASHION":"01/10/2025","CNDO BOULOGNE":"09/02/2024",
+  "CNDO NATION PARIS 12ÈME":"02/10/2024","CNDO NATION PARIS 6ÈME":"04/10/2024",
+  "CNDO NATION PO7":"09/02/2024","CNDO PARIS 16EME":"02/10/2024",
+  "COMELIT IMMOTEC":"10/07/2012","CONSEIL REGIONNAL DE LA GUADELOUPE":"19/06/2024",
+  "COOLING SYSTEM":"14/11/2018","COOLING SYSTÈME":"14/11/2018",
+  "CPNEF AUDIOVISUEL":"04/06/2016","CPNEF SPECTACLE VIVANT":"04/06/2016",
+  "CPNEF":"04/06/2016","DOCTEUR COHEN ELISE LAURENCE":"03/10/2023",
+  "DYNAMIC  LED":"20/09/2016","DYNAMIC LED":"20/09/2016",
+  "ECOFUR SARL":"20/06/2016","ECRIN SECRET (GRIPOIX)":"01/04/2015",
+  "EDITIONS BRUNO DOUCEY":"30/09/2017","ENTMV":"05/02/2022",
+  "ENVELCOM LUXIUM":"17/10/2024","ESPACE ORTHO SCOLIOSE":"26/06/2023",
+  "EUROPAIN GESTION":"23/12/2014","EUROPAIN GESTION (EKIP)":"23/12/2014",
+  "EVOLUCIM":"21/12/2015","EVTB":"10/03/2017",
+  "EXPERT ENERGIE SERVICES":"10/07/2025","FAIR PLAY":"07/12/2015",
+  "FOREST":"26/02/2015","FP MIROITERIE SERRURIE":"29/10/2021",
+  "FRANCE PRO HYGIENE":"11/10/2022","FREDERIC LETELLIER":"06/10/2025",
+  "GAUTIER CONQUET PUMA":"01/02/2024","GIEPS":"06/03/2015",
+  "GOLDER & PARTNERS":"25/06/2016","GROUPE S-P-Q-R":"13/01/2024",
+  "GTF SIGNALETIQUE":"24/02/2022","HYGIE":"28/04/2025",
+  "IDY PRODUCTION":"26/03/2025","LACOSTE ASSOCIES":"08/02/2023",
+  "LA CREME DES DESSERTS":"17/11/2025","LA MODELERIE PARISIENNE":"03/06/2019",
+  "L'ATELIER VIKEN":"15/10/2024","MAG MAX PRODUCTIONS":"09/08/2023",
+  "MAITRE CLAIRE BATELLIER":"08/01/2022","MANUFACTURE PRELLE":"03/06/2020",
+  "MASSON MIETTE":"06/01/2023","MCD PROMOTION":"28/03/2014",
+  "MEDICAL PLUS FRANCE":"28/08/2024","MUSIC BUSINESS":"01/07/2011",
+  "NDS VERRES":"09/02/2024","NOUS EPICERIES ANTI GASPI":"29/07/2022",
+  "NUX  DIGITAL-HELLO MOJITO":"01/11/2020","OLIVIER LIJIE WANG":"27/04/2019",
+  "OLIVIER LILIE WANG":"27/04/2019","OPTIC 2000":"06/09/2012",
+  "PARIS PRIVATE FINANCE":"25/01/2025","PLANTUREUX ET ASSOCIES":"20/06/2024",
+  "POLETTE":"11/05/2022","POULET O PIRI PIRI":"16/09/2021",
+  "PROTOTEXTILE":"24/11/2022","PVH HOTEL (MARMOTT)":"19/09/2014",
+  "RAY PRO MAILING":"01/02/2022","RENOFY":"10/01/2026",
+  "SAGIPA 1":"16/01/2024","SAGNIER":"23/12/2025",
+  "SARL ZANUSO FRANCE":"20/03/2024","SAS PARIS TRIBE":"01/02/2024",
+  "SCI 2123":"02/05/2019","SCI 2123":"02/05/2019","SCI IMMOLAK":"20/01/2021",
+  "SCI JABALLAH":"02/05/2023","LA QUATUOR":"21/04/2025",
+  "SCI TIC & TOC":"01/01/2022","SCM AVOCAT - PLACE DE LA BASTILLE":"01/07/2025",
+  "SCM MEDICAL":"18/09/2014","CABINET SCM MEDICAL":"18/09/2014",
+  "SCPFAURE VIDECOQ & ERAUD":"15/10/2022","SEIZE CONSULTING":"19/03/2025",
+  "SELARL QUAI DE SEINE":"25/03/2025","SELARL DR PARA":"01/06/2022",
+  "SELARL DR SCHMUCKLER DOMINIQUE":"01/06/2022",
+  "SCM CABINET JEAN PIERRE TIMBAUD":"25/04/2019",
+  "SOCIÉTÉ NRGY":"20/01/2020","NRGY":"20/01/2020",
+  "STAM PRODUCTION":"17/05/2021","STUDIO HARMONIC":"25/03/2015",
+  "SYNDIC DU 9, RUE LEMOINE":"27/09/2018","SYNDIC 9 RUE LEMOINE":"27/09/2018",
+  "TEAMSQUARE":"19/03/2022","TISCO INGENIERIE":"20/10/2022",
+  "UNSS PARIS":"18/05/2016","VALOMBREUSE":"15/11/2021",
+  "VALUE CONSEIL":"15/04/2024","VENDIS CAPITAL MANAGEMENT SA":"02/07/2022",
+  "YOUNG HAPPY":"11/06/2024","CDM LAVOISIER":"05/06/2024",
+  "COALLIA  BRANCION":"23/01/2025","RIMADESIO":"08/01/2025",
+  "160G SARL":"01/03/2018","160 G SARL":"01/03/2018",
+  "ASSOCIATION SPORTIVE ET GYMNIQUE DE BAGNOLET":"13/03/2020",
+  "BUTTERFLY TRAINING":"09/05/2019","CD 92 BASKET":"01/10/2021",
+  "EFICIENS":"15/05/2019","FLEXAM CONSEIL":"30/06/2025","FLEXAM INVEST":"30/06/2025",
+  "HASAP":"25/09/2018","KRYS OPTIQUE  LEWIN":"11/09/2018",
+  "KRYS OPTIQUE SILVERA LEWIN":"11/09/2018",
+  "LES ABBESSES IMMOBILIER":"06/09/2019",
+  "OPTIC'ALEXIA":"16/01/2019","OPTIC ALEXIA":"16/01/2019","OPTIC ALEXIA":"16/01/2019",
+  "ORID AVOCATS":"05/04/2019","POLE FORMATION 93":"03/05/2025",
+  "RIVECOUR":"22/05/2023","SARL ISABEL":"04/04/2025",
+  "VALEA":"03/03/2021","ZEEEGGS":"13/11/2024",
+  "SCM NATION SANTE DORIAN":"01/04/2021","SGEA":"01/01/2020",
+  "ATELIER COQLICO":"19/05/2022","HASAP":"25/09/2018"
+};
+
+function getPegaseDate(siteName) {
+  if (!siteName) return null;
+  var key = siteName.trim().toUpperCase();
+  return PEGASE_MAP[key] || null;
+}
+
+function getAnciennete(dateStr) {
+  // dateStr: "DD/MM/YYYY"
+  if (!dateStr) return null;
+  var parts = dateStr.split('/');
+  if (parts.length !== 3) return null;
+  var d = new Date(parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]));
+  var now = new Date();
+  var years = (now - d) / (1000 * 60 * 60 * 24 * 365.25);
+  return Math.round(years * 10) / 10;
+}
+
+function ancienneteLabel(years) {
+  if (years === null) return '';
+  if (years < 1) return '🟢 < 1 an';
+  if (years < 3) return '🔵 ' + Math.floor(years) + ' an' + (Math.floor(years)>1?'s':'');
+  if (years < 5) return '🟡 ' + Math.floor(years) + ' ans';
+  if (years < 8) return '🟠 ' + Math.floor(years) + ' ans';
+  return '🔴 ' + Math.floor(years) + ' ans — Client fidèle';
+}
+
+function ancienneteBadge(siteName, dateContrat) {
+  var d = dateContrat || getPegaseDate(siteName);
+  if (!d) return '';
+  var yrs = getAnciennete(d);
+  if (yrs === null) return '';
+  var colors = yrs < 1 ? '#2A9D8F' : yrs < 3 ? '#4895EF' : yrs < 5 ? '#E9C46A' : yrs < 8 ? '#FB8500' : '#E63946';
+  var label = yrs < 1 ? '< 1 an' : Math.floor(yrs) + ' an' + (Math.floor(yrs)>1?'s':'');
+  var stars = yrs >= 8 ? ' ⭐' : yrs >= 5 ? ' ★' : '';
+  return '<span style="display:inline-block;background:'+colors+'22;color:'+colors+';border:1px solid '+colors+'44;border-radius:10px;font-size:10px;padding:1px 7px;margin-top:3px;font-weight:700;">📅 '+label+stars+'</span>';
+}
+
+function syncPegase() {
+  if (!isAdminMode()) { showToast('🔒 Action admin uniquement'); return; }
+  var toArchive = [];
+  DATA.forEach(function(s, idx) {
+    var d = s.dateContrat || getPegaseDate(s.n);
+    // No Pegase match at all = candidate to archive
+    if (!d) toArchive.push({idx: idx, name: s.n});
+  });
+  // Also inject dates on matched sites
+  var updated = 0;
+  DATA.forEach(function(s) {
+    if (!s.dateContrat) {
+      var d = getPegaseDate(s.n);
+      if (d) { s.dateContrat = d; updated++; }
+    }
+  });
+  if (updated > 0) { saveData(); }
+
+  if (toArchive.length === 0) {
+    showToast('✅ Tous les sites sont dans Pégase ! (' + updated + ' dates injectées)');
+    render();
+    return;
+  }
+
+  // Show confirmation modal
+  var msg = toArchive.length + ' site(s) absents de Pégase :\n\n';
+  var names = toArchive.slice(0,15).map(function(x){ return '• ' + x.name; }).join('\n');
+  if (toArchive.length > 15) names += '\n... et ' + (toArchive.length-15) + ' autres';
+  msg += names + '\n\nArchiver ces sites maintenant ?';
+  if (confirm(msg)) {
+    var archived = 0;
+    // Archive in reverse order to preserve indices
+    toArchive.slice().reverse().forEach(function(item) {
+      var s = DATA[item.idx];
+      ARCHIVES.push({ site: s, archivedAt: new Date().toISOString(), archivedAtStr: new Date().toLocaleDateString('fr-FR'), reason: 'Absent Pégase' });
+      addHistory(s.n, 'Archivé automatiquement — absent de Pégase');
+      DATA.splice(item.idx, 1);
+      archived++;
+    });
+    saveData();
+    saveArchives();
+    buildColorMap();
+    showToast('🗄️ ' + archived + ' site(s) archivé(s) + ' + updated + ' dates injectées');
+    render();
+  } else {
+    if (updated > 0) { showToast('📅 ' + updated + ' dates de contrat injectées'); render(); }
+  }
+}
+
+var DATA_DEFAULT = [{"n": "AUX MERVEILLEUX (LVDH)", "a": "Adama (12e)                     Seydou", "adr": "Rue du Pont Louis Philippe Paris 4ème       | 5 place Monge Paris 5ème  | 95, Rue Saint-Dominique PARIS 7ème | 129, Rue Saint-Charles PARIS 15ème | 29, Rue de l'Annonciation PARIS 16ème | 7, Rue de Tocqueville PARIS 17ème     | 12 place d'Aligre - Paris 11ème       | 8 Boulevard Jean Jaures 92100 Boulogne", "j": "4ème Seydou/Boulaye Mercredi à 6h | 5ème Seydou/Boulaye Mercredi à 6h | 7ème Seydou/Boulaye Jeudi à 6h | 15ème Seydou/Boulaye Mercredi à 6h | 16ème Seydou/Boulaye Mercredi à 6h | 17ème Seydou/Boulaye Jeudi à 6h | 12ème Adama Mercredi à 6h | Boulogne Seydou/Boulaye Jeudi à 6h", "f": "1 fs / semaine", "t": "", "v": "ras"}, {"n": "CARREFOUR CITY", "a": "fodie", "adr": "", "j": "", "f": "3fs/mois", "t": "", "v": "1 fois par semaine"}, {"n": "FOR YOU", "a": "ADAMA", "adr": "", "j": "Dans la semaine", "f": "1 fs / mois", "t": "", "v": "1 fois par mois"}, {"n": "LA CONDITIION URBAINE", "a": "ADAMA", "adr": "", "j": "", "f": "2 fs/mois", "t": "", "v": "1 fois par mois"}, {"n": "UNSS PARIS", "a": "Amara FISSOUROU", "adr": "Code 1807 pour désactiver et pour activer appuyer sur la touche représentée par une maison", "j": "Mardi 18 h 30 et WE", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "LA MODELERIE PARISIENNE", "a": "Amara FISSOUROU", "adr": "", "j": "LUNDI, Mardi, mercredi et Jeudi à 16 heures", "f": "4 FS : SEMAINE", "t": "", "v": "TRIMESTRIELLE"}, {"n": "EHW ARCHITECTE", "a": "Amara FISSOUROU", "adr": "Code porte 34 A 28 - Alarme Cadenas vert 4343 et sortie appuyer sur cadenas noir", "j": "", "f": "1 fs / semaine", "t": "", "v": "1 fs/mois"}, {"n": "EUKLID", "a": "Bakary NIMAGA", "adr": "", "j": "", "f": "M,ABRIBAT SYLVAIN", "t": "", "v": "1 fs/mois"}, {"n": "EDITIONS BRUNO DOUCEY", "a": "Bakary NIMAGA", "adr": "67 rue de Reuilly 75012 Paris", "j": "WEEk end", "f": "1 FOIS / SEMAINE", "t": "", "v": "TRIMESTRIELLE"}, {"n": "COSMIC", "a": "Bakary NIMAGA", "adr": "", "j": "Du lundi au Vendredi", "f": "5 fs / semaine\nVitrerie  1 fs/ trimestre", "t": "", "v": "TRIMESTRIELLE"}, {"n": "UNIVERSITES AUTO-ECOLE SARL", "a": "BAKARY NIMAGA", "adr": "", "j": "dimanche 16 h", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "HOLISTICK MEDICAL", "a": "BOUYAGUI", "adr": "", "j": "", "f": "1 fs /semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CABINET HOUARI AVOCATS", "a": "BATHILLY", "adr": "", "j": "lundi et jeudi à 08h00", "f": "2 FOIS PAR SEMAINE", "t": "", "v": "pas nettoyage de vitres"}, {"n": "adef résidences", "a": "BATHILLY", "adr": "Gardienne absente entre 12 et 15 HEURES ET L'AGENT DOIT PASSER IMPERATIVEMENT ENTRE 9 et 11 heures", "j": "Mardi 11 heures et le vendredi", "f": "M. Dominique Bourgine", "t": "", "v": "1 fs/mois"}, {"n": "SCM DU 160 RUE DU TEMPLE", "a": "BATHILLY", "adr": "", "j": "Mardi fin d' apres midi et vendredi midi", "f": "2 FS / SEMAINE", "t": "", "v": "1 fs/mois"}, {"n": "FERMIER GOURMET", "a": "BATHILY", "adr": "Code 72Y46", "j": "Lundi et Mercredi matin ET VENDREDI", "f": "3fs/semaine", "t": "", "v": "a chaque passage"}, {"n": "POLE SANTE DU MILLENAIRE", "a": "CAMARA", "adr": "code acces local poubelle: 3487", "j": "Lundi au Vendredi", "f": "5 fs/semaine", "t": "", "v": "1 fs/mois"}, {"n": "ATELIER PAULIN", "a": "CAMARA BOUBACAR", "adr": "", "j": "", "f": "1 fs/semaine et une fois par mois", "t": "", "v": "1 fs/mois intérieur et encadrement\n1 fs/semaine extérieur et huissserie hauteur d'homme"}, {"n": "EFICIENS", "a": "CAMARA BOUBACAR", "adr": "116 BOULEVARD DIDEROT 75012 PARIS", "j": "Mercredi et samedi", "f": "2 fs/semaine", "t": "", "v": "pas de vitres contrat signé pas dans le dossier"}, {"n": "GALERIE TEMPLON", "a": "CAMARA BOUBACAR ET SANDALY", "adr": "", "j": "le mardi à 9 h 30", "f": "2 fs / mois", "t": "", "v": "2 fois par mois"}, {"n": "Monsieur GRATEAU", "a": "CAMARA CIKOU IBRAHIMA", "adr": "", "j": "Mercredi  avant 12 h", "f": "2 fs / mois", "t": "", "v": ""}, {"n": "CAPS HOME (SCHMIDT)", "a": "MOUSSA TOURE", "adr": "Code : 7272 puis cadenas ouvert  boitier 1er bureau vendeur en face de la prte d'entrée", "j": "lundi matin avant 9 h 30", "f": "Mme Priscilla LE ROUX", "t": "", "v": "extérieur 1 fs/semaine\nintérieur 1 fs/tous les 15 jours"}, {"n": "SCi 2123", "a": "CAMARA KODORE", "adr": "CODE 1218", "j": "mercredi et we", "f": "2 fs / semaine", "t": "", "v": "1 fs/mois"}, {"n": "ARCHITRIO", "a": "CAMARA KODORE", "adr": "", "j": "Samedi (avant) Apres midi", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "Le 249, Hélène G.", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Lundi et Vendredi    10 heures", "f": "1 ou 2 fs/semaine", "t": "", "v": "1 fs/semaine"}, {"n": "PVH HOTEL (MARMOTT)", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "vendredi 12h", "f": "1 fs / semaine", "t": "", "v": "1 fs/semaine"}, {"n": "NILAI (2)", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Lundi", "f": "1 fs / semaine", "t": "", "v": "1 fs/semaine intérieur\n1 fs/semaine extérieur"}, {"n": "SAS HANDRA", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Vendredi de 15h à 17h", "f": "1 fs / Semaine", "t": "", "v": "1 fs/par mois"}, {"n": "CABINET LAURENCE BLANCHARD PERETTI", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "CODE A1945", "f": "1 fs / semaine\nvitrerie  début mars,mai\nfin août, décembre", "t": "", "v": "TRIMESTRIELLE"}, {"n": "GIEPS", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "we mercredi", "f": "2 fs/semaine", "t": "", "v": "1 fs/par mois"}, {"n": "ATENOR", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Vendredi matin", "f": "1 fs/semaine", "t": "", "v": "1 fs/par mois"}, {"n": "CONCORD INTERNATIONAL", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "le vendredi à 11h00  / 2 FOIS PAR MOIS", "f": "2 FOIS PAR MOIS", "t": "", "v": "1 fs/par mois"}, {"n": "ASTER CAPITAL", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "", "f": "", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SCM VIGNON SANTE", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "", "f": "2 Fs / semaine", "t": "", "v": "1 fs/par mois"}, {"n": "TERRES INCONNUES", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Mercredi et WE - CODE 9 HA 10", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "ICE - ICOVER EUROPE (ADVISE)", "a": "Camara Sidy (Boubacar)", "adr": "16, Rue Gaillon75002 PARIS", "j": "lundi et jeudi", "f": "2 fois/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "L'ENCRERIE", "a": "CAMARA SADIO", "adr": "", "j": "lundi, mercredi et vendredi matin avant l'ouverture", "f": "3 fs/semaine", "t": "", "v": "1 FS tous les 15 jours"}, {"n": "PMJC", "a": "Camara Sadio", "adr": "", "j": "mardi et jeudi", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "COCINELLE (SCHMIDT)", "a": "MOUSSA TOURE", "adr": "Code : 8282 puis cadenas ouvert", "j": "Lundi matin avant ouverture", "f": "Mme Priscilla LE ROUX", "t": "", "v": "extérieur 1 fs/semaine\nintérieur 1 fs/tous les 15 jours"}, {"n": "CENTRE DE SANTE LA PLAINE MONCEAU", "a": "DEMBA", "adr": "", "j": "Lundi au Vendredi", "f": "5 fs/semaine", "t": "", "v": "1 fs/mois"}, {"n": "BIRAMBEAU", "a": "DEMBA", "adr": "", "j": "mardi jeudi week-end", "f": "3fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SARL HVM PIZZA", "a": "DIADIE", "adr": "", "j": "", "f": "1 fs/semaine", "t": "", "v": "A CHAQUE PASSAGE"}, {"n": "COMELIT IMMOTEC", "a": "DIAKITE ( SOUKOUNA 2)", "adr": "", "j": "Mardi soir et vendredi soir", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "BABYCHOU NEUILLY", "a": "DIARRA", "adr": "Madame Delphine BEAUFRE - Compta: Mme Josiane DUARTE  | Code grille : 9526 Code porte : 5283 4ème étage, porte droite", "j": "VENDREDI A 17 H 30", "f": "1 fs / Semaine", "t": "", "v": "1 fois par mois"}, {"n": "CABINET ALAIN SAUZEY", "a": "DIARRA 07 53 95 94 07", "adr": "code B 715 (à compter du 10.09.2019)", "j": "mardi à 12 heures précises", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CDC 78, avenue Galliéni C/O CABINET BETTI", "a": "DIARRA", "adr": "78 AVENUE GALLIENI 93800 EPINAY SUR SEINE | 06.14.25.77.78", "j": "cleveque080467@outlook/bodin.betti@orange.fr", "f": "1 fs/semaine net et 3 fs rotation poubelle", "t": "", "v": "1 fois par mois"}, {"n": "CENTURY 21", "a": "Diarra", "adr": "", "j": "", "f": "2 fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "CLUSTER CONSEILS", "a": "Diarra", "adr": "", "j": "MERCREDI ET samedi", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "ENGAGEMENT ET ENTREPRISE", "a": "DIARRA", "adr": "CODE 2645*", "j": "WE MARDI SOIR ET JEUDI SOIR", "f": "3 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "EXPLORE STUDIO", "a": "DIARRA", "adr": "", "j": "", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "LABORATOIRE GECERAM", "a": "DIARRA", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "PHARMACIE DES BORDS DE SEINE", "a": "DIARRA", "adr": "", "j": "Mercredi et samedi à 10  heures", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "PROXEM", "a": "DIARRA", "adr": "", "j": "mercredi a partir de 19h00 - WE", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "RAY PRO MAILING", "a": "DIARRA", "adr": "code 27633", "j": "mercredi 10 h 30", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "ROOS AND ROOS", "a": "DIARRA", "adr": "", "j": "vendredi après 17h30", "f": "1 fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "SBKG & ASSOCIES", "a": "DIARRA", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "STEPEVI", "a": "DIARRA", "adr": "", "j": "mardi et vendredi à 10 h 15", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "PIERRE LAFAURIE SARL", "a": "DIAWARA", "adr": "94, avenue Albert Petit 92220 BAGNEUX", "j": "LUNDI 9 h 30 ET JEUDI 14 h", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "22 DEGRES", "a": "DIAWARA Oumar", "adr": "CODE PORTAIL 36A49", "j": "samedi", "f": "1 fois / semaine", "t": "", "v": "1 fois par mois"}, {"n": "la maison dE LA NOUVELLE CALEDONIE", "a": "DIAWARA Oumar", "adr": "", "j": "Mercredi soir et week-end", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "ATELIER MAXIM SCHMITT", "a": "DIAWARA Oumar", "adr": "", "j": "lundi et mercredi matin", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "CATHERINE CHAUVIGNE COIFFURE", "a": "DIAWARA Oumar", "adr": "", "j": "1 FOIS PAR SEMAINE", "f": "1 fois / semaine (lundi matin)", "t": "", "v": "1 fois par mois"}, {"n": "cooling système", "a": "DIAWARA Oumar", "adr": "26 rue pierre belmondo 75012 paris", "j": "le week-end", "f": "1fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "DIALECTICA", "a": "DIAWARA Oumar", "adr": "", "j": "le samedi", "f": "1 fs /semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "FAIR PLAY", "a": "DIAWARA Oumar", "adr": "", "j": "MARDI 13h30 et 16h", "f": "1 FS/SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "GOLDER & PARTNERS", "a": "DIAWARA Oumar", "adr": "#4753", "j": "WEEK END", "f": "1fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "MUSIC BUSINESS", "a": "DIAWARA Oumar", "adr": "", "j": "Mardi et Vendredi", "f": "2 fs /semaine", "t": "", "v": "1 fois par mois"}, {"n": "OFFICE DENTAL", "a": "Diawara Oumar", "adr": "", "j": "lundi 9 h à 12", "f": "1 fs/ semaine", "t": "", "v": "Cloisons tous les 2 mois\nvitres tous les mois"}, {"n": "PARTI  RADICAL DE GAUCHE (7SUR7 NETT)", "a": "DIAWARA Oumar", "adr": "", "j": "mardi et jeudi matin", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "PLANS B", "a": "DIAWARA Oumar", "adr": "", "j": "Samedi", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "SATELLITE ARCHITECTE", "a": "DIAWARA Oumar", "adr": "", "j": "SAMEDI", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "STUDIO HARMONIC", "a": "Solo   et    SEYDOU (Vitres) - Diawara Oumar & Camara Sidy (Boubacar)", "adr": "", "j": "MERCREDI ET SAMEDI DE 6 à             9 H 30", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois avec perche e échafaudage"}, {"n": "UNIQUE VENTURES LIMITED", "a": "DIAWARA Oumar", "adr": "", "j": "", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "VILLA SAID (LE BON SYnDIC)", "a": "DIAWARA Oumar", "adr": "7, Villa Saîd 75016 PARIS | CODE 9573", "j": "jeudi ou lundi après-midi", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "OPTIC 2000", "a": "FODIE CISSE", "adr": "", "j": "Mardi Matin  | Vendredi Matin", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "NILAI SAS", "a": "FODIE CISSE", "adr": "", "j": "Lundi à 11 h 00", "f": "1 fs /semaine", "t": "", "v": "1 fois par mois"}, {"n": "STUDIO ALIENS", "a": "FODIE CISSE", "adr": "", "j": "jeudi WE", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "EVTB", "a": "FODIE CISSE", "adr": "124, rue de Picpus - 75012 Paris", "j": "A824 (18,07,2018)", "f": "M. FRANCHITTI\nMarie-Ange", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CABINET MORGAN", "a": "FODIE CISSE", "adr": "", "j": "lundi au samedi", "f": "6fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "L35", "a": "FODIE CISSE", "adr": "code rue de charonne A1026-CODE passage josset 0407B", "j": "du Lundi au Vendredi (avant 9 h 15)", "f": "5/SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "M. INDUSTRIE", "a": "GANDEGA", "adr": "Cour de la Maison Brulée  | 89, Rue du Faubourg St Antoine 75011 PARIS | Alarme 978 on  | 2ème code 3141 pour l'étage", "j": "Mardi soir et vendredi soir", "f": "2 FOIS / SEMAINE", "t": "", "v": "2 fois par mois"}, {"n": "OPTIC ALEXIA", "a": "FODIE CISSE", "adr": "", "j": "", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SCM CABINET JEAN PIERRE TIMBAUD", "a": "MOUSSA TOURE", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "SCM DES DOCTEURS CADOT ET SORRIAUX", "a": "GAOUSSOU Mahamadou BAYOKO", "adr": "", "j": "Lundi, Mercredi et samedi", "f": "3 FOIS /SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "SCP CBF/SELASU DAVID LACOMBE", "a": "IBRAHIM  CISSE", "adr": "4 Place de Wagram  75017 Paris", "j": "mardi et vendredi soir OU WE", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "ROOTS TRAVEL", "a": "IBRAHIM CISSE", "adr": "26A79", "j": "mercredi et samedi", "f": "2fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "HEURITECH", "a": "IBRAHIM CISSE", "adr": "Lundi, mercredi et vendredi soir à partir de 19 h", "j": "", "f": "3 fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "SIMONETTI-MALASPINA", "a": "IBRAHIM CISSE", "adr": "code porte : 14078 1er étage", "j": "Mardi et vendredi", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "QUELLE VILLE", "a": "IBRAHIM CISSE", "adr": "", "j": "MARDI 21H00  et Samedi matin", "f": "2 fs/semaine", "t": "", "v": "pas de vitres"}, {"n": "TEDIBER (bureaux)", "a": "Ibrahima cisse", "adr": "samedi et mercredi matin", "j": "TU", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "LA MAISON DE LA NOUVELLE CALEDONIE", "a": "Ibrahima cisse", "adr": "", "j": "du lundi au vendredi", "f": "5 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CENTRE DE SANTE DENTAIRE LA BOULE", "a": "Ismaila", "adr": "", "j": "Nanterre : Lundi au Vendredi", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "FEDERATION PARISIENNE DES SCOPS DU BTP", "a": "Ismaila", "adr": "", "j": "samedi matin", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "EUROPAIN GESTION (EKIP)", "a": "ismaila", "adr": "Le badge noir est pour la 1ère porte d'entrée-le badge bleu pour l'alarme de la boutique-", "j": "mardi et samedi soir a 20h45", "f": "2 fs/semaine", "t": "", "v": "2 fois par mois"}, {"n": "BIBLIOTECA SAS  (IDENT)", "a": "Ismaïla", "adr": "", "j": "samedi dans la journee /jeudi soir 21h00 -", "f": "3 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "LA MAISON DU PRÊT IMMOBILIER", "a": "KONTE DANS LE 9eme", "adr": "la maison du prêt immobilier 9 rue clauzel 75009 paris   |   48 rue du general leclerc 92100 boulogne", "j": "", "f": "1 fs les 15 jours les 2 site", "t": "", "v": "1 fois par mois"}, {"n": "GROUPE MORGAN SERVICES", "a": "SIMAGA", "adr": "Mme DE VILLAS", "j": "78 RUE DE ROME 75008 PARIS", "f": "2 FOIS SPAR SEMAINE", "t": "", "v": "2 fois par mois"}, {"n": "E-ENFANCE", "a": "MOHAMED CISSE", "adr": "Porte gauche, escalier A appuyer sur 11 à E-enfance", "j": "mercredi a 11h", "f": "1 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "IMMEUBLE DE L'ANNONCIATION", "a": "mohamed cisse", "adr": "14, rue de l'annonciation 75016 paris", "j": "lundi et vendredi pour le nettoyage | lundi mercredi samedi pour les poubelles", "f": "2 fs/semaine partie communune et 3 fs/semaine pour poubelles", "t": "", "v": "pas de vitre"}, {"n": "LABANDORIGINALE", "a": "MOHAMED CISSE", "adr": "code 571998", "j": "mardi et vendredi soir OU WE", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SYNDIC 9 rue Lemoine", "a": "MOHAMED CISSE", "adr": "", "j": "Jeudi", "f": "1 fs/semaine", "t": "", "v": "pas de vitre"}, {"n": "LIME", "a": "MOHAMED CISSE", "adr": "code d'accès 1973  | BAT D - 3ème étage", "j": "mardi, jeudi et vendredi ou we soir", "f": "3 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CAP PERFORMANCE", "a": "MOUSSA TOURE", "adr": "Rue 8642 Cour 6594* Esc B 87512 Cave 5947 - code sanitaires  : 2006", "j": "", "f": "6 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "john arthur et Thyssen", "a": "MOUSSA TOURE", "adr": "3 fs/semaine", "j": "51, rue de l'Echiquier 75010 paris", "f": "1 fs pour parties communes\n3 fs pour rotation de poubelles", "t": "", "v": "1 fois par mois"}, {"n": "KOPP TALOS", "a": "NON ASSIGNÉ", "adr": "", "j": "", "f": "", "t": "", "v": ""}, {"n": "KOPP TALOS", "a": "NIAKATE Adama", "adr": "", "j": "samedi", "f": "1 fs/semaine", "t": "", "v": "2 fois par an"}, {"n": "FOREST", "a": "Niakate Adama", "adr": "", "j": "LUNDI, MERCREDI, VENDREDI 15H", "f": "2 fois par semaine", "t": "", "v": "1 fois par mois"}, {"n": "DYNAMIC  LED", "a": "Oumar  KEBE", "adr": "", "j": "Mardi à 15 H", "f": "1 fs/par semaine", "t": "", "v": "1 fois par mois"}, {"n": "IMMEUBLE MONTGALLET / Jean François ESMIEU", "a": "Oumar  KEBE POUR LA ROTATION DES POUBELLE ET SIMAGA POUR LE MENAGE", "adr": "14 rue Montgallet 75012 PARIS - 1er code 1842  2ème code A572", "j": "MERCREDI parties communes", "f": "1 fs/semaine + rotation de poubelle", "t": "", "v": ""}, {"n": "SARL HVM PIZZA", "a": "OUMAR CISSE", "adr": "124, Rue Parmentier 75011 Paris", "j": "", "f": "1 fs/semaine", "t": "", "v": "A CHAQUE PASSAGE"}, {"n": "BACK LIGHT", "a": "OUMAR KEBE", "adr": "", "j": "Mardi et jeudi à 5 heures jusque 8 heures et samedi journée", "f": "3 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CRISOTECH", "a": "OUMAR KEBE", "adr": "code 2485", "j": "week-end ou lundi matin", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "HASAP", "a": "OUMAR KEBE", "adr": "", "j": "", "f": "1fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "YNFLUENCE", "a": "OUMAR KEBE", "adr": "25A89", "j": "we", "f": "2 Fs / mois", "t": "", "v": "sur demande ou lorsque c'est nécessaire"}, {"n": "ACTERIS", "a": "OUMAR KEBE", "adr": "Code 47A50", "j": "SAMEDI", "f": "1 FOIS / SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "WGSN", "a": "OUMAR KEBE", "adr": "Code 22A52 1er étage", "j": "WE", "f": "1 fs/semaiine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CENTRE COMMERCIAL KIDS", "a": "OUMAR KEBE", "adr": "", "j": "Jeudi 10 h 30", "f": "1 fs / semaine", "t": "", "v": "1 fois tous les 15 jours"}, {"n": "CENTRE COMMERCIAL", "a": "OUMAR KEBE", "adr": "", "j": "Lundi à 12 h  | Jeudi à 10 h", "f": "2 fs / semaine", "t": "", "v": "1 fois tous les 15 jours"}, {"n": "PROJET ICONE", "a": "OUMAR KEBE", "adr": "", "j": "mardi", "f": "1 fs/semaine", "t": "", "v": "1 fois par trimestre"}, {"n": "BBG France", "a": "OUMAR KEBE", "adr": "6, Avenue Albert Einstein  | 78 TRAPPES", "j": "Samedi", "f": "1 fs /semaine", "t": "", "v": "1 fois par mois"}, {"n": "ALAIN BENSOUSSAN SELAS", "a": "Poubelles : agent vehicule (Adama)", "adr": "", "j": "lundi au vendredi à partir de       16 h 30", "f": "5 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "AUDISSIMO", "a": "SANDALY", "adr": "", "j": "Lundi, mercredi et vendredi : 1 h", "f": "3 fs / semaine", "t": "", "v": "1 fois par trimestre"}, {"n": "CENTRE DE SANTE DENTAIRE AUSTERLITZ", "a": "SANDALY", "adr": "", "j": "Lundi au Vendredi  | Monceau : Lundi au Vendredi", "f": "5 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "JURISBOISSIERE", "a": "SANDALY", "adr": "", "j": "week-end et mercredi à 19 heures", "f": "2fs/semaine", "t": "", "v": "COTE RUE 1 FOIS PAR MOIS\nCOTE COUR 1 FOIS PAR TRIMESTRE"}, {"n": "ILYEUM", "a": "SANDALY", "adr": "Code : 72531", "j": "lundi et jeudi à 9 h 30", "f": "1 ou 2 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "GALERIE TEMPLON", "a": "SANDALY et BOUBACAR", "adr": "", "j": "", "f": "2 fs / mois", "t": "", "v": "PLANNING ETABLI TOUTES LES 6 SEMAINES"}, {"n": "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A.M.A.S.C)", "a": "Sandaly et BOULAYE", "adr": "", "j": "LUNDI AU SAMEDI", "f": "6 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A.M.A.S.C)", "a": "Sandaly ET KONTE", "adr": "", "j": "LUNDI AU SAMEDI", "f": "6 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "SAS BE92 DOMINO'S", "a": "SEYDOU", "adr": "41, Avenue Victor Cresson 92130 Issy Les Moulineaux", "j": "mercredi 1 fois par mois", "f": "1 fs/mois", "t": "", "v": "MENSUELLE"}, {"n": "SARL HVM PIZZA", "a": "SEYDOU", "adr": "68 rue Damremont - 75018 Paris", "j": "", "f": "1fs/semaine", "t": "", "v": "A CHAQUE PASSAGE"}, {"n": "IBOS VITART", "a": "SEYDOU", "adr": "42B06  2101", "j": "jamais le samedi et dimanche après-midi passage prévu le samedi matin", "f": "1 FS/Semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SELARL DR SCHMUCKLER DOMINIQUE", "a": "SEYDOU CISSE", "adr": "", "j": "mardi et vendredi à 10 h 15", "f": "2 FOIS PAR SEMAINE", "t": "", "v": "TRIMESTRIELLE"}, {"n": "HORIZONTEL", "a": "SEYDOU CISSE", "adr": "", "j": "HORS JOURS FERIE", "f": "2 FOIS/SEMAINE \nVITRERIE 1FOIS/MOIS", "t": "", "v": "1 FS/MOIS"}, {"n": "MGS DEVELOPPEMENT", "a": "SIMAGA", "adr": "Code 2846 B Entre 8 et 10 h Local poubelle", "j": "mercredi soir et week-end", "f": "2 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "YOU FID", "a": "SIMAGA", "adr": "", "j": "lundi matin avant ouverture 9 h 30", "f": "1 fs par semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "RANK CONSULTING", "a": "SIMAGA", "adr": "10, rue de la Justice 75020 PARIS", "j": "jeudi", "f": "1 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "WART", "a": "SIMAGA", "adr": "", "j": "Lundi soir après 19 h code 1958", "f": "1fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "HOMEBOXE", "a": "SIMAGA", "adr": "", "j": "", "f": "", "t": "", "v": "1 FS/MOIS"}, {"n": "ICI LA LUNE", "a": "SIMAGA", "adr": "", "j": "WE", "f": "", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CABINET SCM MEDICAL", "a": "SOLO", "adr": "3112 Désactivation", "j": "Mercredi soir et week end", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "FINDIT CONSULTING", "a": "SOLO", "adr": "3 RUE TALMA 75016 PARIS CODE 3945", "j": "VENDREDI 12 h maximum", "f": "M.BERQUEZ Fabrice / M.BENMUSSA", "t": "", "v": "1 fois par trimestre"}, {"n": "TEDIBER BUREAUX", "a": "SOLO", "adr": "", "j": "Lundi à 9 h 30", "f": "1 fs / Semaine", "t": "", "v": "1 fois par mois"}, {"n": "FTC PARIS", "a": "SOLO", "adr": "", "j": "", "f": "1 fs/ semaine", "t": "", "v": "1 fois tous les 15 jours"}, {"n": "MARCELLA", "a": "SOLO (solo 2)", "adr": "5 IMPASSE POPINCOUR 75011 PARIS", "j": "Du Lundi au Vendredi (après fermeture)", "f": "5 fs / semaine", "t": "", "v": "1 fois tous les 2 mois"}, {"n": "MCD PROMOTION", "a": "solo 2", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "2 fois par mois"}, {"n": "ASIANA AIRLINES", "a": "SOLO", "adr": "Lundi matin, mardi soir et vendredi matin", "j": "code alarme 3009", "f": "3 fs /semaine", "t": "", "v": "1 fois par mois"}, {"n": "AD HOMINEM", "a": "SOLO", "adr": "", "j": "Mardi et jeudi entre 6h30 et 7h45", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "BRIAND AVOCAT", "a": "SOLO", "adr": "CODE 6971", "j": "Mercredi et vendredi soir (ou WE)", "f": "2 FOIS / SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "VEJA FAIR TRADE", "a": "SOLO", "adr": "Code 1358A pour toutes les portes", "j": "Lundi soir Merc Soir Vend soir", "f": "3 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "LUMAS SAINT GERMAIN", "a": "SOLO (solo 2)", "adr": "CODE 75 X 04", "j": "mercr et samedi 10h", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "ORID AVOCATS", "a": "SOLO (solo 2)", "adr": "", "j": "lundi mercredi", "f": "2 fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "160 G SARL", "a": "SOLO", "adr": "", "j": "lundi et mercredi  avant 10 h et Vendredi", "f": "3 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "MON CAMION RESTO", "a": "SOLO", "adr": "", "j": "Mardi Matin", "f": "1 fs / Semaine", "t": "", "v": "1 fois par mois"}, {"n": "CENTRE DENTAIRE DE BOULOGNE", "a": "SOLO", "adr": "", "j": "", "f": "6 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "GCF", "a": "SOLO", "adr": "", "j": "", "f": "1  fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "OLIVIER LILIE WANG", "a": "SOLO", "adr": "le samedi de 9 à 11 h", "j": "", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois Extérieur tous les 15 jour intérieur"}, {"n": "STUDIO HARMONIC", "a": "Solo   et    SEYDOU (Vitres) - Diawara Oumar & Camara Sidy (Boubacar)", "adr": "", "j": "MERCREDI ET SAMEDI DE 6 à             9 H 30", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois avec perche e échafaudage"}, {"n": "Centre de Santé de Boulogne", "a": "SOLO 1", "adr": "", "j": "LUNDI AU SAMEDI", "f": "6 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "SAFE AND SOUND", "a": "SOLO 2", "adr": "5 BIS RUE SAINT PAUL 75004 PARIS", "j": "mercredi + WE", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "SIGHTCALL (WEEMO SAS)", "a": "NON ASSIGNÉ", "adr": "CODE #639220", "j": "WE", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "CAFE BENJAMIN", "a": "SOUKOUNA (Boubou)", "adr": "", "j": "vendredi a 17h avant que tout le monde s'en aille", "f": "7 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "DATA IMMO", "a": "SOUKOUMA BOUBOU", "adr": "", "j": "", "f": "2fs/semaine", "t": "", "v": "pas de vitre"}, {"n": "I LOVE EVENTS", "a": "SOUKOUMA BOUBOU", "adr": "Code 1530 au 1er étage", "j": "mardi - vendredi", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "KRYS OPTIQUE SILVERA LEWIN", "a": "SOUKOUNA BOUBOU", "adr": "", "j": "Mardi à 10 h", "f": "1 fs/semaine", "t": "", "v": "Ttes les 2 semaines : vitres intérieures et extérieures\ntoutes les semaines : extérieure"}, {"n": "NRGY", "a": "SOUKOUNA BOUBOU", "adr": "code 1er porte : A0212                          2EME PORTE : 1202A", "j": "le lundi (à confirmer)", "f": "1 fs/semaine", "t": "", "v": "1 fois par semaine"}, {"n": "VISTORY", "a": "SOUKOUNA BOUBOU", "adr": "CODE SERRURE : 69088513#", "j": "VENDREDI A 16 H", "f": "1 fs/semaine", "t": "", "v": "1 fois par trimestre"}, {"n": "VOUS FINANCER.COM", "a": "SOUKOUNA BOUBOU", "adr": "", "j": "lundi 9h", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "AGENCE 52 K (ARNAUD RAFFIN ARCHITECTE)", "a": "SOULE", "adr": "", "j": "mercredi ou jeudi à 8 heures en présence Du client", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "BAGEL CORNER", "a": "SOULE", "adr": "", "j": "1 FOIS TOUS LES 15 JOURS", "f": "2FS / MOIS", "t": "", "v": "2 fois par mois"}, {"n": "BUTTERFLY TRAINING", "a": "SOULE", "adr": "code  2903B", "j": "", "f": "", "t": "", "v": "TRIMESTRIELLE"}, {"n": "cabinet dentaire de BONDY", "a": "SOULE", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par moi"}, {"n": "CABINET DENTAIRE SOPHIE GIROMAGNY", "a": "SOULE", "adr": "", "j": "", "f": "2 fs / Semaine", "t": "", "v": "1 fois par moi"}, {"n": "CPNEF", "a": "SOULE", "adr": "", "j": "week-end", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "EDITION DU 1ER MAI", "a": "SOULE", "adr": "", "j": "WE", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "NAPOLEON CRYPTO", "a": "SOULE", "adr": "Mardi et jeudi avant ouverture", "j": "", "f": "2fs/ semaine", "t": "", "v": "1 fois tous les 2 mois"}, {"n": "SMEM", "a": "SOULE", "adr": "", "j": "Mardi en journée et Vendredi avant 14 h 30", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "TISS INFO", "a": "SOULE", "adr": "", "j": "vendredi", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "AUX MERVEILLEUX (BUREAU ST CHARLES)", "a": "TRAORE LASSANA", "adr": "", "j": "LUNDI A 10 H", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "FLEXAM INVEST", "a": "TRAORE LASSANA", "adr": "", "j": "VENDREDI A 16 H", "f": "1 fs/ semaine", "t": "", "v": "1 fois par moi"}, {"n": "CIBLE CLIC", "a": "TRAORE LASSANA", "adr": "6, Rue de Lancry 75010 PARIS", "j": "Mercredi avant 9 h 30 et le samedi", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "TREASURYXPRESS", "a": "TRAORE LASSANA", "adr": "", "j": "Mardi à 9h30 et Vendredi à partir de 14h30", "f": "2fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "ECRIN SECRET (GRIPOIX)", "a": "TRAORE LASSANA", "adr": "4, rue du vide gousset paris 2 Ouvert le samedi de 10 à 19 h (passer avant ou après)", "j": "", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "STUDIO AMV", "a": "TRAORE LASSANA", "adr": "", "j": "jeudi après 19 h", "f": "1 fs/semaine", "t": "", "v": "1 fois par moiS"}, {"n": "FIRMA DIFFUSION", "a": "TRAORE LASSANA", "adr": "6717", "j": "mercredi 12h", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "LA NEW CO (SAS GAGEP)", "a": "TRAORE LASSANA", "adr": "", "j": "", "f": "1 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "ATELIER NILS ROUSSET DIEGO", "a": "TRAORE LASSANA", "adr": "", "j": "Vendredi à partir de 15 h", "f": "1 fois par semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "DENTILYS MJ", "a": "TRAORE LASSANA", "adr": "", "j": "lundi matin", "f": "1 fs par semaine", "t": "", "v": "1 fois par mois"}, {"n": "centre dentaire val d'yerres", "a": "TRAORE LASSANA", "adr": "", "j": "lundi  samedi", "f": "ts les jours", "t": "", "v": "1 fois par mois"}, {"n": "confiture parisienne", "a": "TRAORE LASSANA", "adr": "", "j": "", "f": "2fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "GS REIM", "a": "TRAORIE LASSANA", "adr": "bureau 5  | 47a31 et 23b74  | Ascenseur cour 5eme gauche", "j": "", "f": "2  fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "GS REIM", "a": "TRAORIE LASSANA", "adr": "DE", "j": "WE et mardi soir ou avant 9 h le mercredi", "f": "2  fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "GS REIM", "a": "TRAORIE LASSANA", "adr": "bureau 18", "j": "Mercredi à  9 heures", "f": "2  fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "WINESITTING", "a": "TRAORE", "adr": "", "j": "jeudi", "f": "1 fs/semaine", "t": "", "v": ""}, {"n": "SPIN INTERACTIVE", "a": "YOUSSOUF", "adr": "emmanuel@spin-interactive.com sandrine@spin-interactive.com   gp@spin-interactive.com", "j": "LUNDI ET MERCREDI SOIR pour l'instant", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "BON PARFUMEUR", "a": "YOUSSOUF", "adr": "58, Rue Tiquetonne 75002 PARIS", "j": "Samedi", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SARL HVM PIZZA", "a": "YOUSSOUF", "adr": "9ème", "j": "mercredi", "f": "1 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "SYNDICAT COMMISSAIRES ET HAUTS FONCTIONNAIRE POLICE NATIONALE", "a": "YOUSSOUF", "adr": "", "j": "", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "INTEMPORA", "a": "YOUSSOUF", "adr": "", "j": "mercredi vers 13 ou 14h", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "ECOFUR SARL", "a": "YOUSSOUF", "adr": "", "j": "lundi mercredi vendredi", "f": "3 fs/ semaine", "t": "", "v": "2 fois par mois"}, {"n": "SBT", "a": "YOUSSOUF", "adr": "", "j": "Du LUNDI au JEUDI ET SAMEDI A 12H00", "f": "5 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CROSSLOG INTERNATIONAL", "a": "YOUSSOUF", "adr": "8, Rue Beauregard 75002 PARIS", "j": "Mercredi avant 11 h 30", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "EVOLUCIM", "a": "YOUSSOUF", "adr": "", "j": "", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "CABINET DENTAIRE DU DOCTEUR PARA", "a": "YOUSSOUF", "adr": "", "j": "5 fs par semaine lundi au vendredi", "f": "5 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "VOLTA AVOCAT", "a": "YOUSSOUF", "adr": "A9746 pour la porte rue 132A pour la porte intérieure", "j": "Samedi 10à 12h", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "VOXCO", "a": "YOUSSOUF (Diadié 2)", "adr": "", "j": "CODE ASCENSEUR 02B45", "f": "1 fs/semaine", "t": "", "v": "1 fois tous les 2 mois"}, {"n": "ACT&NOTAIRES ASOCIES", "a": "solo 2", "adr": "", "j": "", "f": "1 fs/ semaine", "t": "", "v": "EXTERIEURE 1 FS/TS LES 15 JOURS\nINTERIEUR 1 FS/MOIS\nVERRIERE 1 FS/AN"}, {"n": "DEFI  RH", "a": "NON ASSIGNÉ", "adr": "WEEK END", "j": "CODE PORTE 7263", "f": "1 fs tous les 15 j", "t": "", "v": "TRIMESTRIELLE"}, {"n": "GALERIE Mariam GOODMAN", "a": "NON ASSIGNÉ", "adr": "", "j": "", "f": "", "t": "", "v": "Toutes les six semaines"}, {"n": "LE BON SYNDIC (GESIP)", "a": "NON ASSIGNÉ", "adr": "", "j": "", "f": "", "t": "", "v": ""}, {"n": "PRIMAXION", "a": "NON ASSIGNÉ", "adr": "", "j": "", "f": "", "t": "", "v": "1 FS/MOIS"}, {"n": "SGEA", "a": "Simaga", "adr": "81 boulevard jean baptiste oudry", "j": "", "f": "2 fois/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "ASSOCIATION JEUNESSE MARINE", "a": "NON ASSIGNÉ", "adr": "9 Rue de la Véga,", "j": "", "f": "", "t": "", "v": ""}, {"n": "EDICOM", "a": "NON ASSIGNÉ", "adr": "", "j": "Lundi, mercredi et vendredi avant 9 heures", "f": "3 FS/semaine", "t": "", "v": "3 Fs par an"}, {"n": "CABINET DE PSYCHOMOTRICITE", "a": "NON ASSIGNÉ", "adr": "", "j": "Mercredi 19h30 et Samedi 19h30", "f": "2 FS / semaine", "t": "", "v": "1 fs par mois"}, {"n": "MATEIA", "a": "NON ASSIGNÉ", "adr": "", "j": "Mercredi 7 h-9 h et samedi 8 h-10 h", "f": "2 FS / semaine", "t": "", "v": ""}, {"n": "FFI", "a": "", "adr": "10 BIS RUE MULHER 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "DR TIMSIT JEAN", "a": "", "adr": "10 RUE LUCIEN BOUGET 91220 BRETIGNY SUR ORGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ALTIDEM", "a": "", "adr": "201 RUE SAINT MARTIN 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AUSSI ALSO", "a": "", "adr": "6 BOULEVARD DES FILLES DU CALVAIRE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AZKAN GROUP", "a": "", "adr": "1 QUAI DE LA GARONNE 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "DIGISECUR", "a": "", "adr": "113 BOULEVARD SOULT, 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ECOLE TAXI HOCINE YOUSFI", "a": "", "adr": "38 rue Paul Belmondo 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "JASMIN CAPITAL", "a": "", "adr": "32 RUE DE CAUMARTIN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "NOVEO", "a": "", "adr": "69 BOULEVARD MALHERBES 75008 PARIS", "j": "", "f": "--M--J--S--D", "t": "", "v": ""}, {"n": "OPCC - DOUMER", "a": "", "adr": "112 RUE AMBROISE CROIZAT 93200 ST DENIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Avocat à la cour", "a": "", "adr": "137 Boulevard Magenta 75010 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCM NATION SANTE DORIAN", "a": "", "adr": "6 rue Dorian, 75016 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SPEC SALSET ET SAUVAT ASSURANCES", "a": "", "adr": "9 RUE ETEX 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "PRIMAXION MALAKOFF", "a": "", "adr": "75 RUE GUY MOQUET 92240 MALAKOFF", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "TNR", "a": "", "adr": "5 AVENUE DE L EUROPE 95400 VILLIERS LE BEL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "1G SOLUTIONS", "a": "", "adr": "77 RUE REAUMUR 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "40ème RUGISSANT GUENOT", "a": "", "adr": "6 RUE GUENOT 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "40ème RUGISSANT JARDINIER", "a": "", "adr": "5 IMPASSE DES JARDINIER 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "421 PRODUCTIONS", "a": "", "adr": "172, rue de Charonne 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "A LA MAISON DU CADEAU", "a": "", "adr": "17 RUE DE L'ANNONCIATION 75016 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ABSIS GROUPE", "a": "", "adr": "39 RUE ANATOLE FRANCE 39 RUE ANATOLE FRANCE CS 50227 92532 LEVALLOIS PERRET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AC6", "a": "", "adr": "21 rue Pierre Curie 92400 COURBEVOIE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ACT& NOTAIRES ASSOCIES", "a": "", "adr": "14 RUE OLIVIER DE SERRES 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ADESOFT", "a": "", "adr": "71 RUE DU FAUBOURG SAINT ANTOINE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ALPHAJET FAIR INVESTORS", "a": "", "adr": "18 RUE DE LA PEPINIERE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ANGELA BOWER GHIDALIA SARL", "a": "", "adr": "66 RUE DE PARIS 93100 MONTREUIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ASTER FAB", "a": "", "adr": "26, avenue de l'Opéra 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ATELIER COQLICO", "a": "", "adr": "101 RUE LEGENDRE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AURELIE   JEUNANG", "a": "", "adr": "4 RUE ESPLANADE JACQUE CHIRAC 92150 SURENES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AXIA INTERIM", "a": "", "adr": "60 AVENUE DAUMESNIL 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "B.Braun Avitum France", "a": "", "adr": "25 rue Melingue 75019 PARIS", "j": "", "f": "---A-----O--", "t": "", "v": ""}, {"n": "BABYCHOU", "a": "", "adr": "8 RUE DE STRASBOURG 94300 VINCENNES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BERCY COPIE", "a": "", "adr": "55 RUE DE MONTREUIL 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BIBLIOTHECA SAS  (IDENT)", "a": "", "adr": "5, Boulevard des Bouvets 92000 NANTERRE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BIRAMBEAU 2", "a": "", "adr": "28 AVENUE DU PETIT PARC 94300 VINCENNES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BIZAROID", "a": "", "adr": "5 PASSAGE DU CHANTIER 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BON PARFUMEUR FAUBOURG POISSONNIERE", "a": "", "adr": "68 RUE DU FAUBOURG POISSONNIERE 75010 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BONAPARTE PROMOTION", "a": "", "adr": "14 RUE DES MERCURIALES 67450 LAMPERTHEM", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "C2L OPHTASANTE", "a": "", "adr": "91 AVENUE DE CLICHY 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CABINET DENTAIRE PITAGORA", "a": "", "adr": "177 RUE ST HONORE 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CABINET MEDICAL ALIZEE TROTET", "a": "", "adr": "5 Place SALVADOR ALLENDE 94140 ALFORTVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CABINET ZERAH", "a": "", "adr": "7 RUE ANTOINE HAJJE 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CAFE BENJAMAIN", "a": "", "adr": "53 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CEC PARIS SARL", "a": "", "adr": "4 RUE DE FURSTEMBERG 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A M A S C)", "a": "", "adr": "1-9 Rue Pierre Expert ZAC La Marine 92700 COLOMBES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CHIMI SAS", "a": "", "adr": "127 RUE VIEILLE TEMPLE 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CHRISTOPHE ET GUILLAUME", "a": "", "adr": "12 RUE DUPETIT-THOUARS 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CINDY FASHION", "a": "", "adr": "203 RUE SAINT MAUR 75010 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO BOULOGNE", "a": "", "adr": "28 RUE GEORGES SOREL 92100 BOULOGNE BILLANCOURT", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO NATION Paris 12ème", "a": "", "adr": "24 BIS PLACE DE LA NATION 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO NATION Paris 6ème", "a": "", "adr": "32 RUE DU FOUR 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO NATION PO7", "a": "", "adr": "78 RUE ST DOMINIQUE 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO PARIS 16EME", "a": "", "adr": "19 AVENUE DE LA GRANDE ARMÉE 75016 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CONSEIL REGIONNAL DE LA GUADELOUPE", "a": "", "adr": "284 BOULEVARD ST GERMAIN 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "COOLING SYSTEM", "a": "", "adr": "26 Rue Paul Belmondo 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CPNEF AUDIOVISUEL", "a": "", "adr": "48, Rue Saint-Honoré 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CPNEF Spectacle Vivant", "a": "", "adr": "48 rue Saint-Honoré 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "DOCTEUR COHEN ELISE LAURENCE", "a": "", "adr": "2 RUE PIERRE JOSEPH REDOUTE 92360 MEUDON LAFORET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ENTMV", "a": "", "adr": "25 RUE SAINT AUGUSTIN 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ENVELCOM LUXIUM", "a": "", "adr": "15 RUE JEAN PIERRE TIMBAUD 78500 SARTROUVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ESPACE ORTHO SCOLIOSE", "a": "", "adr": "1 RUE JACQUES COEUR 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "EUROPAIN GESTION", "a": "", "adr": "64, Rue Caumartin 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "EXPERT ENERGIE SERVICES", "a": "", "adr": "17 RUE CAMILLE GROULT 94400 VITRY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "FP MIROITERIE SERRURIE", "a": "", "adr": "17 RUE GEORGES MELIES BAT O.2 95240 CORNEILLES EN PARISIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "FRANCE PRO HYGIENE", "a": "", "adr": "189 RUE D'AUBERVILLIERS 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "FREDERIC LETELLIER", "a": "", "adr": "116 RUE DE MEAUX, 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "GAUTIER CONQUET PUMA", "a": "", "adr": "5 RUE CHARONNE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "GROUPE S-P-Q-R", "a": "", "adr": "10-14 RUE AUDUBON 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "GTF SIGNALETIQUE", "a": "", "adr": "132 Boulevard Serurier 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "HYGIE", "a": "", "adr": "19 RUE DE LA MAIN D'OR 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "IDY PRODUCTION", "a": "", "adr": "1 RUE DE L EGALITE 92220 BAGNEUX", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "LACOSTE ASSOCIES", "a": "", "adr": "10 RUE LABIE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "LA CREME DES DESSERTS", "a": "", "adr": "65 RUE D'AGUESSEAU 92100 BOULOGNE BILLANCOURT", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "L'ATELIER VIKEN", "a": "", "adr": "68 RUE DE LA CHAUSSÉE D'ANTIN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "MAG MAX PRODUCTIONS", "a": "", "adr": "175 AV ACHILLE PERETTI 92200 NEUILLY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "MAITRE CLAIRE BATELLIER", "a": "", "adr": "3 BIS GRAND PLACE 77600 BUSSY SAINT GEORGES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Manufacture PRELLE", "a": "", "adr": "5 Place des Victoires, 75001 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "MASSON MIETTE", "a": "", "adr": "16 RUE DE MARSEILLE 94140 ALFORTVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "MEDICAL PLUS FRANCE", "a": "", "adr": "40 rue de la réunion 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "NDS VERRES", "a": "", "adr": "9 MAIL JOLIOT CURIE 95310 SAINT-OUEN-L'AUMÔNE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "NOUS EPICERIES ANTI GASPI", "a": "", "adr": "221 Boulevard Davout 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "NUX  DIGITAL-HELLO MOJITO", "a": "", "adr": "1 VOIE FELIX EBOUE 94000 CRETEIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Olivier Lijie WANG", "a": "", "adr": "11, Place de la Nation 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "PARIS PRIVATE FINANCE", "a": "", "adr": "10 RUE DE LA BIENFAISANCE 75008 75008", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "PLANTUREUX ET ASSOCIES", "a": "", "adr": "36 RUE DE PICPUS 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "POLETTE", "a": "", "adr": "91 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "POULET O PIRI PIRI", "a": "", "adr": "18 PLACE DES QUATREE SAISONS 91270 VIGNEUX-SUR-SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "PROTOTEXTILE", "a": "", "adr": "28 RUE SAINT SABIN 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "RENOFY", "a": "", "adr": "9 Rue de Condé, 33000 BORDEAUX", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SAGIPA 1", "a": "", "adr": "25 RUE PELLEPORT 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SAGNIER", "a": "", "adr": "2 RUE DE CHAPP 93800 EPINAY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SARL ZANUSO FRANCE", "a": "", "adr": "26 RUE ST SULPICE 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SAS PARIS TRIBE", "a": "", "adr": "44 rue du Temple 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCI IMMOLAK", "a": "", "adr": "45 RUE EMILE MENIER 75116 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCI JABALLAH", "a": "", "adr": "1 RUE CHARLES GUSTAVE STOSKOPF 94000 CRETEIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "LA QUATUOR", "a": "", "adr": "1 RUE EDOUARD VAILLANT 93170 BAGNOLET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCI TIC & TOC", "a": "", "adr": "13 RUE DE TOCQUEVILLE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCM AVOCAT - PLACE DE LA BASTILLE", "a": "", "adr": "3 PLACE DE LA BASTILLE 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCM MEDICAL", "a": "", "adr": "213, Avenue de Choisy 75013 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCPFAURE VIDECOQ & ERAUD", "a": "", "adr": "60 BOULEVARD HUSSON 91170 VITRY CHATILLON", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SEIZE CONSULTING", "a": "", "adr": "20 RUE CHAROLAIS 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SELARL QUAI DE SEINE", "a": "", "adr": "49 QUAI DE SEINE 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SELARL Dr PARA", "a": "", "adr": "6 RUE DE ROME 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Société NRGY", "a": "", "adr": "348 RUE DE VAUGIRARD 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "STAM PRODUCTION", "a": "", "adr": "34 RUE NICOLAI 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SYNDIC du 9, Rue Lemoine", "a": "", "adr": "9, Rue Lemoine 92100 BOULOGNE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "TEAMSQUARE", "a": "", "adr": "63 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "TISCO INGENIERIE", "a": "", "adr": "25 RUE DE MAUBEUGE 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "VALOMBREUSE", "a": "", "adr": "66 RUE DU FAUBOURG SAINT HONORE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "VALUE CONSEIL", "a": "", "adr": "97 RUE PELLEPORT 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "VENDIS CAPITAL MANAGEMENT SA", "a": "", "adr": "36 BOULEVARD HAUSSMANN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "YOUNG HAPPY", "a": "", "adr": "80 RUE MOUFFETARD 75005 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CDM LAVOISIER", "a": "", "adr": "18 RUE DE LA PEPINIERE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "COALLIA  BRANCION", "a": "", "adr": "10 RUE BRANCION 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "RIMADESIO", "a": "", "adr": "25 AVENUE RAPP 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "160G SARL", "a": "", "adr": "160 RUE DE MONTMARTRE 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Association Sportive et Gymnique de Bagnolet", "a": "", "adr": "172 Rue Sadi Carnot 93170 Bagnolet", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CD 92 BASKET", "a": "", "adr": "56 RUE DES HAUTES PATURES 92000 NANTERRE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Flexam Conseil", "a": "", "adr": "38 rue du colisée 75008 PARIS - 3EME ETAGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "KRYS OPTIQUE  LEWIN", "a": "", "adr": "78, avenue de la République 92120 MONTROUGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "LES ABBESSES IMMOBILIER", "a": "", "adr": "52 RUE D'ORSEL 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "OPTIC'ALEXIA", "a": "", "adr": "229, Rue des Pyrénées 75020 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "POLE FORMATION 93", "a": "", "adr": "193 AVENUE DU PRESIDENT WILSON 93210 SAINT DENIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "RIVECOUR", "a": "", "adr": "31 RUE DES PETITS CHAMPS 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SARL ISABEL", "a": "", "adr": "91 RUE SAINT CHARLES 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "VALEA", "a": "", "adr": "BAT 3B ZONE D'ACTIVITE DES 4 CHEMINS 95540 MERY SUR OISE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ZEEEGGS", "a": "", "adr": "96 RUE BLANCHE 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}];
+
+// Load from localStorage or use default
+var DATA = (function() {
+  try {
+    var ver = localStorage.getItem('starsnett_ver');
+    if (ver === 'pegase_2026_v2') {
+      var saved = localStorage.getItem('starsnett_data');
+      if (saved) return JSON.parse(saved);
+    }
+    localStorage.removeItem('starsnett_data');
+    localStorage.setItem('starsnett_ver', 'pegase_2026_v2');
+    return JSON.parse(JSON.stringify(DATA_DEFAULT));
+  } catch(e) { return JSON.parse(JSON.stringify(DATA_DEFAULT)); }
+})();
+
+function saveData() {
+  try { localStorage.setItem('starsnett_data', JSON.stringify(DATA)); } catch(e) {}
+  triggerAutoSync();
+}
+
+// ABSENCES stored separately
+var ABSENCES = (function() {
+  try { var s = localStorage.getItem('starsnett_absences'); return s ? JSON.parse(s) : {}; } catch(e) { return {}; }
+})();
+
+function saveAbsences() {
+  try { localStorage.setItem('starsnett_absences', JSON.stringify(ABSENCES)); } catch(e) {}
+}
+
+var ARCHIVES = (function() {
+  try { return JSON.parse(localStorage.getItem('starsnett_archives') || '[]'); } catch(e) { return []; }
+})();
+function saveArchives() {
+  try { localStorage.setItem('starsnett_archives', JSON.stringify(ARCHIVES)); } catch(e) {}
+}
+
+var AGENTS_LIST = (function() {
+  try { return JSON.parse(localStorage.getItem('starsnett_agents') || 'null'); } catch(e) { return null; }
+})();
+function saveAgents() {
+  try { localStorage.setItem('starsnett_agents', JSON.stringify(AGENTS_LIST)); } catch(e) {}
+}
+function getAgentsList() {
+  if (AGENTS_LIST) return AGENTS_LIST;
+  var names = [];
+  DATA.forEach(function(s) { if (s.a && s.a !== 'NON ASSIGNÉ' && names.indexOf(s.a) < 0) names.push(s.a); });
+  names.sort();
+  return names.map(function(n) { return { name: n, actif: true }; });
+}
+
+function siteKey(s) { return (s.n + '||' + s.a).replace(/\s+/g,' ').trim(); }
+function getAbsences(s) { return ABSENCES[siteKey(s)] || []; }
+
+function addAbsence(s, date, type, note) {
+  var k = siteKey(s);
+  if (!ABSENCES[k]) ABSENCES[k] = [];
+  ABSENCES[k].unshift({ date:date, type:type, note:note, id:Date.now() });
+  saveAbsences();
+}
+
+function removeAbsence(s, id) {
+  var k = siteKey(s);
+  if (!ABSENCES[k]) return;
+  ABSENCES[k] = ABSENCES[k].filter(function(a){ return a.id !== id; });
+  saveAbsences();
+}
+
+function fmtDateShort(d) {
+  if (!d) return '';
+  var p = d.split('-');
+  return p[2]+'/'+p[1]+'/'+p[0];
+}
+
+function typeLabel(t) {
+  if (t==='absence') return 'Absence';
+  if (t==='retard') return 'Retard';
+  if (t==='non-effectue') return 'Non effectué';
+  return t;
+}
+
+function todayStr() {
+  var n = new Date(), m=n.getMonth()+1, d=n.getDate();
+  return n.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(d<10?'0':'')+d;
+}
+
+var COLORS = ['#3A86FF','#E63946','#2A9D8F','#E9C46A','#F4A261','#8338EC','#06D6A0','#FB5607','#FFCA3A','#4CC9F0','#FF595E','#52B788','#457B9D','#6A4C93','#B5179E'];
+var JOURS_FR = ['DIMANCHE','LUNDI','MARDI','MERCREDI','JEUDI','VENDREDI','SAMEDI'];
+var JOURS_SHORT = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+var CM = {};
+var view = 'today';
+var selAgent = null;
+var selDay = new Date().getDay();
+var editIdx = null;
+var comptaFilter = 'all';
+var comptaAgent = '';
+var comptaPeriod = 'all';
+var comptaCustomMonth = '';
+var comptaViewMode = 'list'; // 'list' or 'agent'
+var calMonth = new Date().getMonth();
+var calYear = new Date().getFullYear();
+var calSelectedDay = null;
+
+function buildColorMap() {
+  CM = {};
+  var names = [];
+  DATA.forEach(function(s) {
+    if (s.a && s.a !== 'NON ASSIGNÉ' && names.indexOf(s.a) < 0) names.push(s.a);
+  });
+  names.forEach(function(n, i) { CM[n] = COLORS[i % COLORS.length]; });
+}
+buildColorMap();
+
+function gc(n) { return CM[n] || '#8892A4'; }
+
+function ini(n) {
+  return (n || '?').split(/\s+/).map(function(w) { return w[0] || ''; }).slice(0,2).join('').toUpperCase();
+}
+
+function parseJours(j) {
+  if (!j) return [];
+  var t = j.toUpperCase();
+  var result = [];
+  var rm = t.match(/(?:DU\s+)?(\w+)\s+(?:AU|À|A)\s+(\w+)/);
+  if (rm) {
+    var fr = JOURS_FR.indexOf(rm[1]), to = JOURS_FR.indexOf(rm[2]);
+    if (fr >= 0 && to >= 0) { for (var d = fr; d <= to; d++) result.push(d); return result; }
+  }
+  if (t.indexOf('7/7') >= 0 || t.indexOf('TOUS') >= 0) return [0,1,2,3,4,5,6];
+  for (var i = 0; i < JOURS_FR.length; i++) { if (t.indexOf(JOURS_FR[i]) >= 0) result.push(i); }
+  if (t.indexOf('WEEK') >= 0 || t.indexOf('WK') >= 0) {
+    if (result.indexOf(6) < 0) result.push(6);
+    if (result.indexOf(0) < 0) result.push(0);
+  }
+  return result;
+}
+
+function getAgents() {
+  var m = {};
+  DATA.forEach(function(s) {
+    if (!s.a || s.a === 'NON ASSIGNÉ') return;
+    if (!m[s.a]) m[s.a] = { name: s.a, sites: [] };
+    m[s.a].sites.push(s);
+  });
+  return Object.values(m).sort(function(a,b) { return b.sites.length - a.sites.length; });
+}
+
+function setView(v) {
+  view = v; selAgent = null; comptaFilter = 'all'; comptaAgent = ''; comptaPeriod = 'all'; comptaCustomMonth = ''; comptaViewMode = 'list';
+  document.getElementById('search').value = '';
+  document.querySelectorAll('.tab').forEach(function(t,i) {
+    t.className = 'tab';
+    if (i === 3) t.style.cssText = 'background:#E9C46A22;color:#E9C46A;';
+    if (i === 4) t.style.cssText = 'background:#2A9D8F22;color:#2A9D8F;';
+    if (i === 5) t.style.cssText = 'background:#FB560722;color:#FB5607;';
+  });
+  if (v === 'compta' && !isAdminMode()) { showToast('🔒 Comptabilité réservée aux admins — connectez-vous avec votre PIN'); openPinOverlay(function(){ setView('compta'); }); return; }
+  var viewList = ['today','agents','sites','compta','calendar','archives'];
+  var idx = viewList.indexOf(v);
+  var tabs = document.querySelectorAll('.tab');
+  tabs[idx].className = 'tab on';
+  if (idx === 3) tabs[idx].style.cssText = 'background:#E9C46A;color:#fff;';
+  if (idx === 4) tabs[idx].style.cssText = 'background:#2A9D8F;color:#fff;';
+  if (idx === 5) tabs[idx].style.cssText = 'background:#FB5607;color:#fff;';
+  render();
+}
+
+function onSearch() { render(); }
+
+function fmtDate(d) {
+  var days = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  var months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  return days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+// --- EDIT FUNCTIONS ---
+function openEdit(idx) {
+  editIdx = idx;
+  var s = idx === -1 ? {n:'',a:'',adr:'',j:'',f:'',t:'',v:''} : DATA[idx];
+  document.getElementById('modalTitleText').textContent = idx === -1 ? '➕ Nouveau site' : '✏️ Modifier la fiche';
+  document.getElementById('fldNom').value = s.n || '';
+  document.getElementById('fldAgent').value = s.a || '';
+  document.getElementById('fldAdresse').value = s.adr || '';
+  document.getElementById('fldJours').value = s.j || '';
+  document.getElementById('fldFreq').value = s.f || '';
+  document.getElementById('fldVitrerie').value = s.v || '';
+  document.getElementById('fldDuree').value = s.duree || '';
+  document.getElementById('fldNotes').value = s.notes || '';
+  // dateContrat
+  var dc = s.dateContrat || getPegaseDate(s.n) || '';
+  document.getElementById('fldDateContrat').value = dc;
+  var dcInfo = document.getElementById('fldDateContratInfo');
+  if (dcInfo) {
+    var yrs = getAnciennete(dc);
+    dcInfo.innerHTML = dc ? ancienneteLabel(yrs) + (getPegaseDate(s.n) && !s.dateContrat ? ' <span style="color:#2A9D8F">(Pégase)</span>' : '') : '';
+    // Live update on type
+    document.getElementById('fldDateContrat').oninput = function() {
+      var yrs2 = getAnciennete(this.value);
+      dcInfo.innerHTML = this.value ? ancienneteLabel(yrs2) : '';
+    };
+  }
+  // Load photo preview
+  var prev = document.getElementById('photoPreview');
+  var remRow = document.getElementById('photoRemoveRow');
+  if (prev) {
+    if (s && s.photo) {
+      prev.innerHTML = '<img src="' + s.photo + '" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid #2A2D3E;">';
+      if (remRow) remRow.style.display = 'block';
+    } else {
+      prev.innerHTML = '';
+      if (remRow) remRow.style.display = 'none';
+    }
+  }
+  document.getElementById('fldPhoto').value = '';
+  // Fill agents datalist
+  var dl = document.getElementById('agentsList');
+  dl.innerHTML = '';
+  getAgents().forEach(function(a) {
+    var opt = document.createElement('option');
+    opt.value = a.name;
+    dl.appendChild(opt);
+  });
+  var archRow = document.getElementById('archiveRow');
+  if (archRow) archRow.style.display = (idx >= 0) ? 'block' : 'none';
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('open');
+  editIdx = null;
+}
+
+function openDetail(idx) {
+  var s = DATA[idx];
+  if (!s) return;
+  window._detailIdx = idx;
+  var c = gc(s.a);
+  var dc = s.dateContrat || getPegaseDate(s.n);
+  var yrs = getAnciennete(dc);
+  var abs = getAbsences(s);
+  var absParType = {absence:0,'non-effectue':0,retard:0};
+  abs.forEach(function(a){ if(absParType[a.type]!==undefined) absParType[a.type]++; });
+
+  document.getElementById('detailTitle').innerHTML =
+    '<span style="color:' + c + '">⬤</span> ' + s.n;
+
+  var body = '';
+
+  // Agent
+  body += row('👤 Agent', '<span style="color:'+c+';font-weight:600">'+s.a+'</span>');
+
+  // Ancienneté / date contrat
+  if (dc) {
+    var badge = ancienneteBadge(s.n, s.dateContrat);
+    body += row('📅 Contrat depuis', dc + ' ' + badge);
+  }
+
+  // Adresse
+  if (s.adr) body += row('📍 Adresse / Accès', '<span style="white-space:pre-wrap;font-size:12px">'+escHtml(s.adr)+'</span>');
+
+  // Jours
+  if (s.j) body += row('📆 Jours de passage', escHtml(s.j));
+
+  // Fréquence
+  if (s.f) body += row('🔄 Fréquence / Contact', escHtml(s.f));
+
+  // Vitrerie
+  if (s.v) body += row('🪟 Vitrerie', escHtml(s.v));
+
+  // Durée
+  if (s.duree) body += row('⏱️ Durée / passage', s.duree + ' h');
+
+  // Notes
+  if (s.notes) body += row('💬 Consignes', '<span style="white-space:pre-wrap;font-size:12px;color:#ccc">'+escHtml(s.notes)+'</span>');
+
+  // Photo
+  if (s.photo) {
+    body += '<div style="margin:12px 0;border-radius:10px;overflow:hidden;border:1px solid #2A2D3E;cursor:pointer" onclick="closeDetail();showPhotoIdx('+idx+')">'
+      + '<img src="'+s.photo+'" style="width:100%;max-height:220px;object-fit:cover;display:block">'
+      + '<div style="text-align:center;font-size:10px;color:#666;padding:4px">Cliquer pour agrandir</div></div>';
+  }
+
+  // Absences recap
+  if (abs.length > 0) {
+    body += '<div style="margin-top:14px;border-top:1px solid #2A2D3E;padding-top:12px;">';
+    body += '<div style="font-size:12px;font-weight:700;color:#E9C46A;margin-bottom:8px;">⚠️ Absences / Incidents (' + abs.length + ')</div>';
+    body += '<div style="display:flex;gap:10px;margin-bottom:10px;">';
+    body += '<span style="background:#E6394622;color:#E63946;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">Absences: '+absParType.absence+'</span>';
+    body += '<span style="background:#FB560722;color:#FB5607;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">Non effectués: '+absParType['non-effectue']+'</span>';
+    body += '<span style="background:#E9C46A22;color:#E9C46A;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;">Retards: '+absParType.retard+'</span>';
+    body += '</div>';
+    abs.slice().reverse().slice(0,8).forEach(function(a) {
+      var tc = a.type==='absence'?'#E63946':a.type==='non-effectue'?'#FB5607':'#E9C46A';
+      var tl = a.type==='absence'?'Absence':a.type==='non-effectue'?'Non effectué':'Retard';
+      body += '<div style="background:#0F1117;border-left:3px solid '+tc+';border-radius:6px;padding:6px 10px;margin-bottom:5px;font-size:11px;">';
+      body += '<span style="color:'+tc+';font-weight:700">'+tl+'</span>';
+      body += ' — <span style="color:#aaa">'+fmtDateShort(a.date)+'</span>';
+      if (a.note) body += ' <span style="color:#666">• '+escHtml(a.note)+'</span>';
+      body += '</div>';
+    });
+    if (abs.length > 8) body += '<div style="font-size:10px;color:#666;text-align:center;">+ '+(abs.length-8)+' plus anciens</div>';
+    body += '</div>';
+  }
+
+  // Historique
+  var hist = getHistory(s.n).slice(0,5);
+  if (hist.length > 0) {
+    body += '<div style="margin-top:14px;border-top:1px solid #2A2D3E;padding-top:12px;">';
+    body += '<div style="font-size:12px;font-weight:700;color:#888;margin-bottom:8px;">🕐 Historique des modifications</div>';
+    hist.forEach(function(h) {
+      body += '<div style="font-size:10px;color:#666;margin-bottom:3px;">'+h.dateStr+' — '+escHtml(h.action)+'</div>';
+    });
+    body += '</div>';
+  }
+
+  document.getElementById('detailBody').innerHTML = body;
+  document.getElementById('detailModal').classList.add('open');
+  // Show edit button only for admin
+  document.getElementById('detailEditBtn').style.display = isAdminMode() ? '' : 'none';
+}
+
+function row(label, val) {
+  return '<div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid #1a1d2e;">'
+    + '<div style="font-size:11px;color:#888;font-weight:600;padding-top:2px;">'+label+'</div>'
+    + '<div style="font-size:13px;color:#fff;">'+val+'</div>'
+    + '</div>';
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function closeDetail() {
+  document.getElementById('detailModal').classList.remove('open');
+}
+
+
+
+function saveEdit() {
+  var prevSite = editIdx >= 0 ? JSON.parse(JSON.stringify(DATA[editIdx])) : null;
+  var s = {
+    n: document.getElementById('fldNom').value.trim(),
+    a: document.getElementById('fldAgent').value.trim(),
+    adr: document.getElementById('fldAdresse').value.trim(),
+    j: document.getElementById('fldJours').value.trim(),
+    f: document.getElementById('fldFreq').value.trim(),
+    t: '',
+    v: document.getElementById('fldVitrerie').value.trim(),
+    duree: document.getElementById('fldDuree').value.trim(),
+    notes: document.getElementById('fldNotes').value.trim(),
+    dateContrat: document.getElementById('fldDateContrat').value.trim() || undefined,
+    photo: (editIdx >= 0 && DATA[editIdx] ? DATA[editIdx].photo : undefined) || undefined
+  };
+  // If new photo was picked, it's stored via previewPhoto into a temp var
+  if (window._pendingPhoto !== undefined) {
+    s.photo = window._pendingPhoto;
+    window._pendingPhoto = undefined;
+  }
+  if (!s.n) { alert('Le nom du site est obligatoire.'); return; }
+  if (editIdx === -1) {
+    DATA.push(s);
+    addHistory(s.n, 'Nouveau site créé');
+    showToast('✅ Site ajouté');
+  } else {
+    DATA[editIdx] = s;
+    if (prevSite) {
+      var changes = [];
+      if (prevSite.n !== s.n) changes.push('Nom: "'+prevSite.n+'" → "'+s.n+'"');
+      if (prevSite.a !== s.a) changes.push('Agent: "'+prevSite.a+'" → "'+s.a+'"');
+      if (prevSite.j !== s.j) changes.push('Jours modifiés');
+      if (prevSite.f !== s.f) changes.push('Fréquence modifiée');
+      if (prevSite.duree !== (s.duree||'')) changes.push('Durée modifiée');
+      if (changes.length === 0) changes.push('Fiche modifiée');
+      addHistory(s.n, changes.join(' | '));
+    }
+    showToast('✅ Fiche mise à jour');
+  }
+  buildColorMap();
+  saveData();
+  closeModal();
+  render();
+}
+
+function confirmDelete() {
+  var s = editIdx >= 0 ? DATA[editIdx] : null;
+  if (!s) return;
+  document.getElementById('confirmSiteName').textContent = s.n;
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmModal').classList.remove('open');
+}
+
+function doDelete() {
+  if (editIdx < 0) return;
+  DATA.splice(editIdx, 1);
+  buildColorMap();
+  saveData();
+  closeConfirm();
+  closeModal();
+  showToast('🗑️ Fiche supprimée');
+  render();
+}
+
+// =====================
+// MODE ADMIN / CONSULTATION
+// =====================
+// Détection automatique : ordinateur = admin, téléphone = consultation
+function isDesktop() {
+  return !/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+    && window.innerWidth >= 768;
+}
+
+// =====================
+// SYSTÈME PIN — Admin mobile
+// PIN_ADMIN = code pour Ketty et comptable (plein accès)
+// =====================
+var PIN_ADMIN = '1234'; // ← CHANGER CE CODE avant déploiement !
+var _pinBuffer = '';
+var _pinCallback = null;
+var _mobileAdmin = (function() {
+  try { return localStorage.getItem('starsnett_admin_session') === 'yes'; } catch(e) { return false; }
+})();
+
+function isAdminMode() {
+  return isDesktop() || _mobileAdmin;
+}
+
+function openPinOverlay(callback) {
+  _pinBuffer = '';
+  _pinCallback = callback || null;
+  document.getElementById('pinError').textContent = '';
+  document.getElementById('pinSubtitle').textContent = 'Entrez votre code PIN à 4 chiffres';
+  updatePinDots();
+  document.getElementById('pinOverlay').classList.add('open');
+}
+
+function closePinOverlay() {
+  _pinBuffer = '';
+  document.getElementById('pinOverlay').classList.remove('open');
+}
+
+function pinPress(digit) {
+  if (_pinBuffer.length >= 4) return;
+  _pinBuffer += digit;
+  updatePinDots();
+  if (_pinBuffer.length === 4) {
+    setTimeout(checkPin, 120);
+  }
+}
+
+function pinDel() {
+  _pinBuffer = _pinBuffer.slice(0, -1);
+  document.getElementById('pinError').textContent = '';
+  updatePinDots();
+}
+
+function updatePinDots() {
+  for (var i = 0; i < 4; i++) {
+    var dot = document.getElementById('pd' + i);
+    if (dot) dot.classList.toggle('filled', i < _pinBuffer.length);
+  }
+}
+
+function checkPin() {
+  if (_pinBuffer === PIN_ADMIN) {
+    _mobileAdmin = true;
+    try { localStorage.setItem('starsnett_admin_session', 'yes'); } catch(e) {}
+    closePinOverlay();
+    updateModeBadge();
+    showToast('🔓 Mode Admin activé !');
+    if (_pinCallback) { _pinCallback(); _pinCallback = null; }
+    render();
+  } else {
+    document.getElementById('pinError').textContent = '❌ Code incorrect — réessayez';
+    _pinBuffer = '';
+    updatePinDots();
+  }
+}
+
+function logoutAdmin() {
+  _mobileAdmin = false;
+  try { localStorage.removeItem('starsnett_admin_session'); } catch(e) {}
+  updateModeBadge();
+  showToast('🔒 Déconnecté du mode Admin');
+  render();
+}
+
+function onModeBadgeClick() {
+  if (isDesktop() && !_mobileAdmin) {
+    showToast('💻 Mode Admin actif — ordinateur reconnu');
+  } else if (isAdminMode()) {
+    if (confirm('Vous êtes en mode Admin.\n\nSe déconnecter du mode Admin ?')) {
+      logoutAdmin();
+    }
+  } else {
+    openPinOverlay();
+  }
+}
+
+function updateModeBadge() {
+  var btn = document.getElementById('modeBadge');
+  if (!btn) return;
+  if (isAdminMode()) {
+    btn.className = 'mode-badge admin';
+    btn.innerHTML = isDesktop() ? '💻 Admin' : '🔓 Admin';
+    btn.title = isDesktop() ? 'Ordinateur — accès complet' : 'Mode admin actif — cliquer pour se déconnecter';
+  } else {
+    btn.className = 'mode-badge consult';
+    btn.innerHTML = '🔒 Connexion';
+    btn.title = 'Cliquer pour entrer le code PIN et accéder au mode Admin';
+  }
+}
+
+function changePinPrompt() {
+  if (!isAdminMode()) { openPinOverlay(); return; }
+  var np = prompt('Nouveau code PIN (4 chiffres) :');
+  if (!np) return;
+  np = np.trim();
+  if (!/^\d{4}$/.test(np)) { alert('Le code doit contenir exactement 4 chiffres.'); return; }
+  PIN_ADMIN = np;
+  showToast('✅ Code PIN modifié');
+}
+
+// =====================
+// ARCHIVE
+// =====================
+function archiveSite() {
+  if (editIdx < 0) return;
+  if (!confirm('Archiver "' + DATA[editIdx].n + '" ?\nLe site disparaîtra du planning mais restera consultable dans les archives.')) return;
+  var site = DATA.splice(editIdx, 1)[0];
+  site._archivedAt = new Date().toISOString();
+  ARCHIVES.push(site);
+  saveData(); saveArchives();
+  addHistory(site.n, 'Site archivé');
+  closeModal(); render();
+  showToast('🗄️ Site archivé');
+}
+
+function restoreSite(idx) {
+  if (!confirm('Restaurer ce site dans le planning actif ?')) return;
+  var entry = ARCHIVES.splice(idx, 1)[0];
+  var site = (entry && entry.site) ? entry.site : entry;
+  delete site._archivedAt;
+  delete site.archivedAt;
+  DATA.push(site);
+  saveData(); saveArchives();
+  addHistory(site.n || '?', 'Site restauré depuis les archives');
+  buildColorMap();
+  render(); showToast('✅ Site restauré : ' + (site.n || ''));
+}
+
+function deleteArchived(idx) {
+  if (!confirm('Supprimer définitivement ? Action irréversible.')) return;
+  var entry = ARCHIVES.splice(idx, 1)[0];
+  var site = (entry && entry.site) ? entry.site : entry;
+  saveArchives();
+  addHistory(site.n || '?', 'Site supprimé définitivement des archives');
+  render(); showToast('🗑️ Site supprimé');
+}
+
+function renderArchives(m) {
+  var hdr = document.createElement('div');
+  hdr.innerHTML = '<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:12px">🗄️ Sites archivés <span style="font-size:12px;color:#8892A4;font-weight:400">(' + ARCHIVES.length + ')</span></div>';
+  m.appendChild(hdr);
+  if (ARCHIVES.length === 0) {
+    var emp = document.createElement('div'); emp.className='empty';
+    emp.textContent = 'Aucun site archivé pour le moment.'; m.appendChild(emp); return;
+  }
+  ARCHIVES.forEach(function(entry, i) {
+    // Gère les 2 structures : {site:{...}, archivedAt:...} OU site directement avec _archivedAt
+    var s = (entry && entry.site) ? entry.site : entry;
+    var archivedAt = entry.archivedAt || entry._archivedAt || '';
+    var reason = entry.reason || '';
+    var nom = (s && s.n) ? s.n : (s && s.name) ? s.name : '(sans nom)';
+    var agent = (s && s.a) ? s.a : (s && s.agent) ? s.agent : '—';
+    var dateStr = archivedAt ? new Date(archivedAt).toLocaleDateString('fr-FR') : '';
+    var card = document.createElement('div');
+    card.style.cssText = 'background:#13151F;border-radius:10px;padding:12px;margin-bottom:8px;border-left:4px solid #FB5607;';
+    card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">'
+      + '<div style="min-width:0;flex:1">'
+      + '<div style="font-size:14px;font-weight:700;color:#ccc;text-decoration:line-through;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + nom + '</div>'
+      + '<div style="font-size:11px;color:#FB5607;margin-top:3px">👤 ' + agent + '</div>'
+      + (reason ? '<div style="font-size:10px;color:#8892A4;margin-top:2px">Motif : ' + reason + '</div>' : '')
+      + (dateStr ? '<div style="font-size:10px;color:#555;margin-top:2px">Archivé le ' + dateStr + '</div>' : '')
+      + '</div>'
+      + '<div style="display:flex;gap:6px;flex-shrink:0;align-items:center">'
+      + (isAdminMode() ? '<button onclick="restoreSite('+i+')" style="background:#2A9D8F22;border:1px solid #2A9D8F;color:#2A9D8F;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">↩️</button>' : '')
+      + (isAdminMode() ? '<button onclick="deleteArchived('+i+')" style="background:#E6394622;border:1px solid #E63946;color:#E63946;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer">🗑️</button>' : '')
+      + '</div></div>';
+    m.appendChild(card);
+  });
+}
+
+function openAgentsManager() {
+  if (!AGENTS_LIST) { AGENTS_LIST = getAgentsList(); saveAgents(); }
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:#000000CC;z-index:2000;display:flex;align-items:flex-end;justify-content:center;';
+  var box = document.createElement('div');
+  box.style.cssText = 'background:#1A1D2E;border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px;max-height:80vh;overflow-y:auto;';
+  box.innerHTML = '<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:4px">👥 Gestion des salariés</div>'
+    + '<div style="font-size:11px;color:#8892A4;margin-bottom:16px">Désactiver masque l\'agent du planning</div>';
+  AGENTS_LIST.forEach(function(ag, i) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#13151F;border-radius:8px;margin-bottom:6px;';
+    var sitesCount = DATA.filter(function(s){return s.a && s.a.toLowerCase().indexOf(ag.name.split(' ')[0].toLowerCase()) >= 0;}).length;
+    var left = document.createElement('div');
+    left.innerHTML = '<div style="font-size:13px;font-weight:700;color:'+(ag.actif?'#fff':'#555')+'">' + ag.name + '</div>'
+      + '<div style="font-size:10px;color:#8892A4">' + sitesCount + ' site(s)</div>';
+    var toggle = document.createElement('button');
+    toggle.style.cssText = 'padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:none;margin-left:8px;'+(ag.actif?'background:#2A9D8F;color:#fff;':'background:#2A2D3E;color:#8892A4;');
+    toggle.textContent = ag.actif ? '✅ Actif' : '❌ Inactif';
+    (function(idx){ toggle.onclick = function() {
+      AGENTS_LIST[idx].actif = !AGENTS_LIST[idx].actif; saveAgents();
+      addHistory(AGENTS_LIST[idx].name, AGENTS_LIST[idx].actif ? 'Agent réactivé' : 'Agent désactivé');
+      document.body.removeChild(overlay); openAgentsManager();
+    }; })(i);
+    var del = document.createElement('button');
+    del.style.cssText = 'padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;border:1px solid #E63946;background:none;color:#E63946;margin-left:6px;';
+    del.textContent = '🗑️';
+    (function(idx){ del.onclick = function() {
+      if (!confirm('Retirer "' + AGENTS_LIST[idx].name + '" ?')) return;
+      AGENTS_LIST.splice(idx,1); saveAgents();
+      document.body.removeChild(overlay); openAgentsManager();
+    }; })(i);
+    var btns = document.createElement('div'); btns.style.cssText='display:flex;gap:4px;align-items:center;flex-shrink:0;';
+    btns.appendChild(toggle); btns.appendChild(del);
+    row.appendChild(left); row.appendChild(btns); box.appendChild(row);
+  });
+  var addRow = document.createElement('div'); addRow.style.cssText='display:flex;gap:8px;margin-top:12px;';
+  var inp = document.createElement('input'); inp.type='text'; inp.placeholder='Nouveau salarié...';
+  inp.style.cssText='flex:1;background:#13151F;border:1px solid #2A2D3E;border-radius:8px;color:#fff;padding:8px 12px;font-size:13px;';
+  var addBtn = document.createElement('button');
+  addBtn.style.cssText='background:#3A86FF;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;';
+  addBtn.textContent='+ Ajouter';
+  addBtn.onclick = function() {
+    var n = inp.value.trim().toUpperCase(); if (!n) return;
+    if (AGENTS_LIST.find(function(a){return a.name===n;})) { alert('Déjà dans la liste'); return; }
+    AGENTS_LIST.push({name:n,actif:true}); saveAgents();
+    document.body.removeChild(overlay); openAgentsManager();
+  };
+  addRow.appendChild(inp); addRow.appendChild(addBtn); box.appendChild(addRow);
+  var closeBtn = document.createElement('button');
+  closeBtn.style.cssText='width:100%;margin-top:12px;padding:12px;background:#2A2D3E;border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;';
+  closeBtn.textContent='Fermer'; closeBtn.onclick=function(){document.body.removeChild(overlay);};
+  box.appendChild(closeBtn); overlay.appendChild(box); document.body.appendChild(overlay);
+}
+
+function showPhoto(siteName) {
+  var site = DATA.find(function(s){ return s.n === siteName; });
+  if (!site || !site.photo) return;
+  showPhotoSite(site);
+}
+
+function showPhotoIdx(idx) {
+  var site = DATA[idx];
+  if (!site || !site.photo) return;
+  showPhotoSite(site);
+}
+
+function showPhotoSite(site) {
+  var ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:#000000EE;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  ov.onclick = function(){ document.body.removeChild(ov); };
+  ov.innerHTML = '<div style="max-width:100%;text-align:center">'
+    + '<div style="color:#8892A4;font-size:12px;margin-bottom:8px">' + siteName + '</div>'
+    + '<img src="' + site.photo + '" style="max-width:100%;max-height:80vh;border-radius:10px;display:block;">'
+    + '<div style="color:#8892A4;font-size:11px;margin-top:8px">Appuyez pour fermer</div></div>';
+  document.body.appendChild(ov);
+}
+
+function previewPhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  if (file.size > 2*1024*1024) { showToast('❌ Photo trop lourde (max 2 Mo)'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    window._pendingPhoto = e.target.result;
+    var prev = document.getElementById('photoPreview');
+    if (prev) prev.innerHTML = '<img src="'+e.target.result+'" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid #2A9D8F;">';
+    var remRow = document.getElementById('photoRemoveRow');
+    if (remRow) remRow.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto() {
+  window._pendingPhoto = null;
+  var prev = document.getElementById('photoPreview'); if (prev) prev.innerHTML = '';
+  var remRow = document.getElementById('photoRemoveRow'); if (remRow) remRow.style.display = 'none';
+  document.getElementById('fldPhoto').value = '';
+}
+
+// =====================
+// HISTORY
+// =====================
+var HISTORY = (function() {
+  try { return JSON.parse(localStorage.getItem('starsnett_history') || '[]'); } catch(e) { return []; }
+})();
+function saveHistory() {
+  try { localStorage.setItem('starsnett_history', JSON.stringify(HISTORY.slice(0,500))); } catch(e) {}
+}
+function addHistory(site, action) {
+  var now = new Date();
+  HISTORY.unshift({
+    site: site, action: action, who: '🔐 Admin',
+    date: now.toISOString(),
+    dateStr: now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})
+  });
+  saveHistory();
+}
+function getHistory(siteName) {
+  return HISTORY.filter(function(h){ return h.site === siteName; });
+}
+
+// =====================
+// CALENDAR
+// =====================
+var MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+var JOURS_CAL = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+
+function renderCalendar(m) {
+  var today = new Date();
+  var firstDay = new Date(calYear, calMonth, 1);
+  var lastDay = new Date(calYear, calMonth+1, 0);
+  var html = '<div class="cal-hdr">';
+  html += '<div class="cal-nav">';
+  html += '<button class="cal-nav-btn" onclick="calMonth--;if(calMonth<0){calMonth=11;calYear--;}render()">‹</button>';
+  html += '<div class="cal-month-title">' + MOIS[calMonth] + ' ' + calYear + '</div>';
+  html += '<button class="cal-nav-btn" onclick="calMonth++;if(calMonth>11){calMonth=0;calYear++;}render()">›</button>';
+  html += '</div>';
+  html += '<div class="cal-grid">';
+  JOURS_CAL.forEach(function(d){ html += '<div class="cal-day-hdr">'+d+'</div>'; });
+  var startDow = (firstDay.getDay() + 6) % 7;
+  for (var i=0; i<startDow; i++) html += '<div class="cal-cell other-month"></div>';
+  for (var d=1; d<=lastDay.getDate(); d++) {
+    var dow = (new Date(calYear, calMonth, d).getDay() + 6) % 7;
+    var isToday = (d===today.getDate() && calMonth===today.getMonth() && calYear===today.getFullYear());
+    var isSel = (calSelectedDay===d);
+    var origDow = (dow+1)%7;
+    var sitesDay = DATA.filter(function(s){ return parseJours(s.j).indexOf(origDow)>=0; });
+    var agentColors = {};
+    sitesDay.forEach(function(s){ if(s.a && !agentColors[s.a]) agentColors[s.a]=gc(s.a); });
+    var agKeys = Object.keys(agentColors).slice(0,4);
+    var cls = 'cal-cell'+(isToday?' today':'')+(isSel?' selected':'');
+    html += '<div class="'+cls+'" onclick="calSelectedDay='+(isSel?'null':d)+';render()">';
+    html += '<div class="cal-day-num">'+d+'</div>';
+    agKeys.forEach(function(ag){ html += '<div class="cal-dot" style="background:'+agentColors[ag]+'"></div>'; });
+    if (sitesDay.length>0) html += '<div class="cal-count">'+sitesDay.length+' site'+(sitesDay.length>1?'s':'')+'</div>';
+    html += '</div>';
+  }
+  html += '</div></div>';
+  m.innerHTML = html;
+  if (calSelectedDay) {
+    var selDow = (new Date(calYear, calMonth, calSelectedDay).getDay()+6)%7;
+    var selDowOrig = (selDow+1)%7;
+    var selSites = DATA.filter(function(s){ return parseJours(s.j).indexOf(selDowOrig)>=0; });
+    var detail = document.createElement('div');
+    detail.className = 'cal-detail';
+    var dayNames=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+    detail.innerHTML = '<div class="cal-detail-title">📅 '+dayNames[selDow]+' '+calSelectedDay+' '+MOIS[calMonth]+' — '+selSites.length+' site(s)</div>';
+    selSites.forEach(function(s){
+      var c = gc(s.a);
+      var card = document.createElement('div');
+      card.style.cssText = 'background:#0F1117;border-left:3px solid '+c+';border-radius:6px;padding:8px 10px;margin-bottom:6px;';
+      card.innerHTML = '<div style="font-size:13px;font-weight:700;color:#fff">'+s.n+'</div>'
+        +'<div style="font-size:11px;color:'+c+'">👤 '+s.a+'</div>'
+        +(s.duree?'<div style="font-size:11px;color:#2A9D8F">⏱️ '+s.duree+'h</div>':'');
+      detail.appendChild(card);
+    });
+    m.appendChild(detail);
+  }
+}
+
+// =====================
+// PDF EXPORT
+// =====================
+function exportComptaPDF(items, periodLabel) {
+  var recap = {};
+  items.forEach(function(a) {
+    if (!recap[a.agent]) recap[a.agent] = {absence:0,nonEffectue:0,retard:0,heures:0};
+    var r = recap[a.agent];
+    if (a.type==='absence') r.absence++;
+    if (a.type==='non-effectue') r.nonEffectue++;
+    if (a.type==='retard') r.retard++;
+    var site = DATA.find(function(s){return s.n===a.site;});
+    if (site && site.duree && a.type!=='retard') r.heures += parseFloat(site.duree)||0;
+  });
+  var agentList = Object.keys(recap).sort();
+  var totA=items.filter(function(x){return x.type==='absence';}).length;
+  var totN=items.filter(function(x){return x.type==='non-effectue';}).length;
+  var totR=items.filter(function(x){return x.type==='retard';}).length;
+  var totH=0; agentList.forEach(function(ag){totH+=recap[ag].heures;});
+  var win = window.open('','_blank');
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Récap Compta Starsnett</title>';
+  html += '<style>body{font-family:Arial,sans-serif;font-size:12px;color:#222;margin:20px;}h1{font-size:18px;border-bottom:2px solid #E9C46A;padding-bottom:6px;}h2{font-size:14px;color:#555;margin-top:18px;}.period{color:#888;font-size:11px;margin-bottom:16px;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#f5f5f5;padding:6px 10px;text-align:left;font-size:11px;border:1px solid #ddd;}td{padding:5px 10px;border:1px solid #eee;font-size:11px;}tr:nth-child(even){background:#fafafa;}.total-row{font-weight:bold;background:#fff8e1!important;border-top:2px solid #E9C46A;}.abs{color:#E63946;font-weight:700;}.ne{color:#FB5607;font-weight:700;}.ret{color:#E9A000;font-weight:700;}.h{color:#2A9D8F;font-weight:700;}.footer{margin-top:24px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:8px;}@media print{body{margin:10px;}}</style>';
+  html += '</head><body>';
+  html += '<h1>⭐ STARSNETT SERVICES — Récapitulatif Comptabilité</h1>';
+  html += '<div class="period">Période : <b>'+periodLabel+'</b> · Généré le '+new Date().toLocaleDateString('fr-FR')+'</div>';
+  html += '<h2>Résumé global</h2><table><tr><th>Absences</th><th>Non effectués</th><th>Retards</th><th>Heures à déduire</th><th>Agents concernés</th></tr>';
+  html += '<tr><td class="abs">'+totA+'</td><td class="ne">'+totN+'</td><td class="ret">'+totR+'</td><td class="h">'+(totH>0?totH.toFixed(1)+'h':'—')+'</td><td>'+agentList.length+'</td></tr></table>';
+  html += '<h2>Détail par agent</h2><table><tr><th>Agent</th><th>Absences</th><th>Non effectués</th><th>Retards</th><th>Heures à déduire</th></tr>';
+  agentList.forEach(function(ag){
+    var r=recap[ag];
+    html+='<tr><td><b>'+ag+'</b></td><td class="abs">'+r.absence+'</td><td class="ne">'+r.nonEffectue+'</td><td class="ret">'+r.retard+'</td><td class="h">'+(r.heures>0?r.heures.toFixed(1)+'h':'—')+'</td></tr>';
+  });
+  html+='<tr class="total-row"><td>TOTAL</td><td class="abs">'+totA+'</td><td class="ne">'+totN+'</td><td class="ret">'+totR+'</td><td class="h">'+(totH>0?totH.toFixed(1)+'h':'—')+'</td></tr></table>';
+  html+='<h2>Liste complète</h2><table><tr><th>Date</th><th>Site</th><th>Agent</th><th>Type</th><th>Heures</th><th>Note</th></tr>';
+  items.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'');}).forEach(function(a){
+    var site=DATA.find(function(s){return s.n===a.site;});
+    var h=(site&&site.duree&&a.type!=='retard')?(parseFloat(site.duree)||0).toFixed(1)+'h':'—';
+    var tc=a.type==='absence'?'abs':a.type==='non-effectue'?'ne':'ret';
+    html+='<tr><td>'+fmtDateShort(a.date)+'</td><td>'+a.site+'</td><td>'+a.agent+'</td><td class="'+tc+'">'+typeLabel(a.type)+'</td><td class="h">'+h+'</td><td>'+(a.note||'')+'</td></tr>';
+  });
+  html+='</table><div class="footer">Document généré automatiquement par Starsnett — Confidentiel</div></body></html>';
+  win.document.write(html); win.document.close();
+  setTimeout(function(){ win.print(); }, 500);
+}
+
+// =====================
+// CLOUD SYNC — JSONBin.io
+// =====================
+var JBKEY  = localStorage.getItem('jb_key')  || '';
+var JBBIN  = localStorage.getItem('jb_bin')   || '';
+var syncTimer = null;
+
+function openSyncConfig() {
+  document.getElementById('jbApiKey').value = JBKEY || '';
+  document.getElementById('jbBinId').value  = JBBIN || '';
+  document.getElementById('syncStatus').textContent = '';
+  document.getElementById('syncModal').classList.add('open');
+}
+function closeSyncConfig() {
+  document.getElementById('syncModal').classList.remove('open');
+}
+document.getElementById('syncModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSyncConfig();
+});
+
+function setSyncStatus(msg, color) {
+  var el = document.getElementById('syncStatus');
+  if (el) { el.textContent = msg; el.style.color = color || '#8892A4'; }
+}
+
+async function setupSync() {
+  var key = document.getElementById('jbApiKey').value.trim();
+  var bin = document.getElementById('jbBinId').value.trim();
+  if (!key) { setSyncStatus('❌ Clé API manquante', '#E63946'); return; }
+  setSyncStatus('⏳ Connexion en cours...', '#E9C46A');
+
+  try {
+    if (bin) {
+      // Test existing bin
+      var r = await fetch('https://api.jsonbin.io/v3/b/' + bin + '/latest', {
+        headers: { 'X-Master-Key': key }
+      });
+      if (!r.ok) throw new Error('Bin introuvable');
+      JBKEY = key; JBBIN = bin;
+      localStorage.setItem('jb_key', JBKEY);
+      localStorage.setItem('jb_bin', JBBIN);
+      setSyncStatus('✅ Connecté ! Chargement des données...', '#2A9D8F');
+      await cloudLoad(true);
+    } else {
+      // Create new bin
+      var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString(), app: 'starsnett' };
+      var r = await fetch('https://api.jsonbin.io/v3/b', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'Starsnett', 'X-Bin-Private': 'true' },
+        body: JSON.stringify(payload)
+      });
+      if (!r.ok) throw new Error('Création échouée — vérifiez votre clé API');
+      var json = await r.json();
+      JBKEY = key;
+      JBBIN = json.metadata.id;
+      localStorage.setItem('jb_key', JBKEY);
+      localStorage.setItem('jb_bin', JBBIN);
+      document.getElementById('jbBinId').value = JBBIN;
+      setSyncStatus('✅ Coffre créé et connecté ! ID : ' + JBBIN, '#2A9D8F');
+      showToast("☁️ Cloud configuré ! Partagez l'ID du coffre aux autres appareils.");
+    }
+    updateSyncBar();
+  } catch(err) {
+    setSyncStatus('❌ Erreur : ' + err.message, '#E63946');
+  }
+}
+
+async function cloudSync() {
+  if (!JBKEY || !JBBIN) { openSyncConfig(); return; }
+  setSyncInfo('⏳ Synchronisation...');
+  var btn = document.getElementById('syncBtn');
+  if (btn) btn.textContent = '⏳ Sync...';
+  try {
+    var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString(), app: 'starsnett' };
+    var r = await fetch('https://api.jsonbin.io/v3/b/' + JBBIN, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JBKEY },
+      body: JSON.stringify(payload)
+    });
+    if (!r.ok) throw new Error('Erreur réseau');
+    var now = new Date();
+    setSyncInfo('☁️ Synchronisé à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}));
+    if (btn) btn.textContent = '☁️ Sync';
+    showToast('☁️ Synchronisé !');
+  } catch(err) {
+    setSyncInfo('❌ Sync échouée');
+    if (btn) btn.textContent = '☁️ Sync';
+    showToast('❌ Synchronisation échouée');
+  }
+}
+
+async function cloudLoad(silent) {
+  if (!JBKEY || !JBBIN) return;
+  try {
+    var r = await fetch('https://api.jsonbin.io/v3/b/' + JBBIN + '/latest', {
+      headers: { 'X-Master-Key': JBKEY }
+    });
+    if (!r.ok) throw new Error('Erreur réseau');
+    var json = await r.json();
+    var payload = json.record;
+    if (payload && payload.data) {
+      DATA = payload.data;
+      if (payload.absences) ABSENCES = payload.absences;
+      saveData(); saveAbsences(); buildColorMap();
+      var savedAt = payload.savedAt ? new Date(payload.savedAt) : null;
+      var when = savedAt ? savedAt.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}) : '';
+      setSyncInfo('☁️ Synchronisé' + (when ? ' à ' + when : ''));
+      if (!silent) { render(); showToast('✅ Données chargées depuis le cloud !'); }
+      else { render(); }
+    }
+  } catch(err) {
+    if (!silent) showToast('❌ Chargement cloud échoué');
+  }
+}
+
+function updateSyncBar() {
+  var btn = document.getElementById('syncBtn');
+  if (JBKEY && JBBIN) {
+    if (btn) btn.textContent = '☁️ Sync';
+    setSyncInfo('☁️ Cloud connecté');
+  } else {
+    if (btn) btn.textContent = '☁️ Sync';
+    setSyncInfo('<span class="sync-pulse"></span>Non configuré — cliquez ⚙️');
+  }
+}
+
+// Auto-sync after each data change (debounced 3s)
+function triggerAutoSync() {
+  if (!JBKEY || !JBBIN) return;
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(function() { cloudSync(); }, 3000);
+}
+
+// =====================
+// EXPORT / IMPORT JSON (sauvegarde manuelle)
+// =====================
+function saveJSON() {
+  var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString() };
+  var json = JSON.stringify(payload, null, 2);
+  var blob = new Blob([json], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var now = new Date();
+  var dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  a.href = url; a.download = 'starsnett_' + dateStr + '.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  showToast('💾 Fichier sauvegardé !');
+}
+
+function loadJSON(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var payload = JSON.parse(e.target.result);
+      if (Array.isArray(payload)) { DATA = payload; }
+      else { if (payload.data) DATA = payload.data; if (payload.absences) ABSENCES = payload.absences; }
+      saveData(); saveAbsences(); buildColorMap(); render();
+      showToast('✅ Données importées (' + DATA.length + ' sites) !');
+    } catch(err) { showToast('❌ Fichier invalide'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function setSyncInfo(msg) {
+  var el = document.getElementById('syncInfo');
+  if (el) el.innerHTML = msg;
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+// Close modal on overlay click
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function render() {
+  var q = document.getElementById('search').value.trim().toLowerCase();
+  var m = document.getElementById('main');
+  document.getElementById('stats').innerHTML = '<b style="color:#3A86FF">' + DATA.length + '</b> sites · <b style="color:#8338EC">' + getAgents().length + '</b> agents';
+
+  if (q) {
+    var res = DATA.filter(function(s) {
+      return s.n.toLowerCase().indexOf(q) >= 0 || (s.a||'').toLowerCase().indexOf(q) >= 0 || (s.adr||'').toLowerCase().indexOf(q) >= 0;
+    });
+    m.innerHTML = '<div style="color:#8892A4;font-size:13px;margin-bottom:10px">' + res.length + ' résultat(s) pour "' + q + '"</div>';
+    res.forEach(function(s) { m.appendChild(mkCard(s, DATA.indexOf(s))); });
+    return;
+  }
+
+  if (view === 'today') {
+    var now = new Date();
+    var html = '<div class="today-hdr">';
+    html += '<div class="today-title">📅 Planning du jour</div>';
+    html += '<div class="today-sub">' + fmtDate(now) + '</div>';
+    html += '<div class="dtabs">';
+    for (var i = 1; i <= 6; i++) html += '<div class="dtab' + (i===selDay?' on':'') + '" onclick="selDay=' + i + ';render()">' + JOURS_SHORT[i] + '</div>';
+    html += '<div class="dtab' + (0===selDay?' on':'') + '" onclick="selDay=0;render()">Dim</div>';
+    html += '</div>';
+    var sites = DATA.filter(function(s) { return parseJours(s.j).indexOf(selDay) >= 0; });
+    html += '<div class="tcnt">' + (sites.length > 0 ? '<b style="color:#3A86FF">' + sites.length + '</b> site(s) · ' + JOURS_SHORT[selDay] : 'Aucun site pour ce jour') + '</div>';
+    html += '</div>';
+    m.innerHTML = html;
+    // Add button
+    if (isAdminMode()) { var ab = document.createElement('button'); ab.className = 'add-btn'; ab.innerHTML = '➕ Nouveau site'; ab.onclick = function() { openEdit(-1); }; m.appendChild(ab); }
+    if (sites.length === 0) {
+      m.innerHTML += '<div class="empty">Aucun site programmé ce jour.</div>';
+    } else {
+      sites.forEach(function(s) { m.appendChild(mkCard(s, DATA.indexOf(s))); });
+    }
+    return;
+  }
+
+  if (view === 'agents' && !selAgent) {
+    var agents = getAgents();
+    m.innerHTML = '<div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:14px">Agents (' + agents.length + ')</div><div class="agrid" id="ag"></div>';
+    var ag = document.getElementById('ag');
+    agents.forEach(function(a) {
+      var c = gc(a.name);
+      var d = document.createElement('div');
+      d.className = 'acard';
+      d.style.borderTop = '3px solid ' + c;
+      d.innerHTML = '<div class="aav" style="background:' + c + '22;border-color:' + c + '"><span style="color:' + c + '">' + ini(a.name) + '</span></div><div class="anm">' + a.name + '</div><div class="acnt" style="color:' + c + '">' + a.sites.length + '</div><div style="font-size:10px;color:#8892A4">site' + (a.sites.length>1?'s':'') + '</div>';
+      d.onclick = function() { selAgent = a.name; render(); };
+      ag.appendChild(d);
+    });
+    return;
+  }
+
+  if (view === 'agents' && selAgent) {
+    var agents2 = getAgents();
+    var ag2 = null;
+    agents2.forEach(function(a) { if (a.name === selAgent) ag2 = a; });
+    if (!ag2) { m.innerHTML = '<div class="empty">Introuvable</div>'; return; }
+    var c2 = gc(selAgent);
+    m.innerHTML = '<button class="back" onclick="selAgent=null;render()">← Agents</button><div style="background:#13151F;border-left:4px solid ' + c2 + ';border-radius:10px;padding:14px;margin-bottom:14px"><div style="font-size:16px;font-weight:800;color:#fff">' + ag2.name + '</div><div style="font-size:13px;color:' + c2 + ';font-weight:700">' + ag2.sites.length + ' site' + (ag2.sites.length>1?'s':'') + '</div></div>';
+    if (isAdminMode()) { var ab2 = document.createElement('button'); ab2.className = 'add-btn'; ab2.innerHTML = '➕ Nouveau site'; ab2.onclick = function() { openEdit(-1); }; m.appendChild(ab2); }
+    ag2.sites.forEach(function(s) { m.appendChild(mkCard(s, DATA.indexOf(s))); });
+    return;
+  }
+
+  // Compta view
+  if (view === 'compta') {
+    renderCompta(m);
+    return;
+  }
+
+  // Calendar view
+  if (view === 'calendar') {
+    renderCalendar(m);
+    return;
+  }
+
+  // Archives view
+  if (view === 'archives') {
+    renderArchives(m);
+    return;
+  }
+
+  // Sites view
+  m.innerHTML = '<div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:14px">Tous les sites (' + DATA.length + ')</div>';
+  if (isAdminMode()) { var ab3 = document.createElement('button'); ab3.className = 'add-btn'; ab3.innerHTML = '➕ Nouveau site'; ab3.onclick = function() { openEdit(-1); }; m.appendChild(ab3); }
+  DATA.forEach(function(s, i) { m.appendChild(mkCard(s, i)); });
+}
+
+function mkCard(s, idx) {
+  var c = gc(s.a);
+  var d = document.createElement('div');
+  d.className = 'card';
+  d.style.borderLeftColor = c;
+  d.ondblclick = (function(si, ii){ return function(e){ e.stopPropagation(); openDetail(ii); }; })(s, idx);
+  d.title = 'Double-cliquer pour voir la fiche complète';
+  var abs = getAbsences(s);
+  d.innerHTML = '<div class="cnm">' + s.n + '</div>'
+    + '<div class="cag" style="color:' + c + '">👤 ' + s.a + '</div>'
+    + (s.adr ? '<div class="cadr">📍 ' + s.adr.substring(0,80) + (s.adr.length>80?'...':'') + '</div>' : '')
+    + (s.j ? '<div class="cjr">📅 ' + s.j.substring(0,60) + (s.j.length>60?'...':'') + '</div>' : '')
+    + (s.f ? '<div style="font-size:11px;color:#E9C46A">🔄 ' + s.f + '</div>' : '')
+    + (s.duree ? '<div style="font-size:11px;color:#2A9D8F">⏱️ ' + s.duree + 'h / passage</div>' : '')
+    + (function(){ var badge = ancienneteBadge(s.n, s.dateContrat); return badge ? '<div style="margin-top:3px">'+badge+'</div>' : ''; })()
+    + (s.notes ? '<div class="notes-section"><div class="notes-label">💬 Consignes</div><div class="notes-text">' + s.notes.substring(0,120) + (s.notes.length>120?'...':'') + '</div></div>' : '')
+    + (s.photo ? '<div style="margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid #2A2D3E;cursor:pointer" onclick="event.stopPropagation();showPhotoIdx(' + DATA.indexOf(s) + ')"><img src="' + s.photo + '" style="width:100%;max-height:120px;object-fit:cover;display:block"></div>' : '');
+
+  // Absences section
+  var absDiv = document.createElement('div');
+  var absId = 'abs_' + idx + '_' + Date.now();
+  absDiv.innerHTML = '<div class="abs-toggle" onclick="toggleAbs(\''+absId+'\')"><span style="font-size:12px">⚠️</span><span class="abs-toggle-label">Absences / Passages non effectués</span><span class="abs-count' + (abs.length===0?' zero':'') + '">' + (abs.length===0?'0':abs.length) + '</span></div>';
+
+  // abs list
+  var listDiv = document.createElement('div');
+  listDiv.className = 'abs-list';
+  listDiv.id = absId;
+
+  // existing absences
+  abs.forEach(function(a) {
+    var item = document.createElement('div');
+    item.className = 'abs-item type-' + a.type;
+    item.innerHTML = '<div class="abs-item-info">'
+      + '<div class="abs-item-date">📅 ' + fmtDateShort(a.date) + '</div>'
+      + '<span class="abs-item-type">' + typeLabel(a.type) + '</span>'
+      + (a.note ? '<div class="abs-item-note">' + a.note + '</div>' : '')
+      + '</div>';
+    if (isAdminMode()) {
+      var delBtn = document.createElement('button');
+      delBtn.className = 'abs-del-btn';
+      delBtn.title = 'Supprimer';
+      delBtn.textContent = '✕';
+      (function(absId2, sid, aid) {
+        delBtn.onclick = function(e) { e.stopPropagation(); removeAbsence(sid, aid); renderCard(sid, idx, absId2); };
+      })(absId, s, a.id);
+      item.appendChild(delBtn);
+    }
+    listDiv.appendChild(item);
+  });
+
+  // add row
+  var addRow = document.createElement('div');
+  addRow.className = 'abs-add-row';
+  var dateInput = document.createElement('input');
+  dateInput.type = 'date';
+  dateInput.value = todayStr();
+  dateInput.onclick = function(e) { e.stopPropagation(); };
+  var typeSelect = document.createElement('select');
+  typeSelect.innerHTML = '<option value="absence">Absence</option><option value="non-effectue">Non effectué</option><option value="retard">Retard</option>';
+  typeSelect.onclick = function(e) { e.stopPropagation(); };
+  var noteInput = document.createElement('input');
+  noteInput.type = 'text';
+  noteInput.placeholder = 'Note (optionnel)';
+  noteInput.onclick = function(e) { e.stopPropagation(); };
+  var saveBtn = document.createElement('button');
+  saveBtn.className = 'abs-save-btn';
+  saveBtn.textContent = '+ Ajouter';
+  (function(sid, aidEl, tid, nid, absId2) {
+    saveBtn.onclick = function(e) {
+      e.stopPropagation();
+      if (!aidEl.value) { alert('Choisissez une date'); return; }
+      addAbsence(sid, aidEl.value, tid.value, nid.value.trim());
+      renderCard(sid, idx, absId2);
+    };
+  })(s, dateInput, typeSelect, noteInput, absId);
+  addRow.appendChild(dateInput);
+  addRow.appendChild(typeSelect);
+  addRow.appendChild(noteInput);
+  addRow.appendChild(saveBtn);
+  listDiv.appendChild(addRow);
+
+  absDiv.appendChild(listDiv);
+  d.appendChild(absDiv);
+
+  // Edit button
+  var btn = document.createElement('button');
+  btn.className = 'edit-btn';
+  btn.title = 'Modifier';
+  btn.textContent = '✏️';
+  btn.onclick = function(e) { e.stopPropagation(); openEdit(idx); };
+  d.appendChild(btn);
+  return d;
+}
+
+function toggleAbs(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+
+function renderCard(s, idx, openAbsId) {
+  render();
+}
+
+function filterByPeriod(allAbs) {
+  var now = new Date();
+  var thisYM = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  var lastDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  var lastYM = lastDate.getFullYear() + '-' + String(lastDate.getMonth()+1).padStart(2,'0');
+  if (comptaPeriod === 'month') return allAbs.filter(function(a){ return a.date && a.date.substring(0,7) === thisYM; });
+  if (comptaPeriod === 'lastmonth') return allAbs.filter(function(a){ return a.date && a.date.substring(0,7) === lastYM; });
+  if (comptaPeriod === 'custom' && comptaCustomMonth) return allAbs.filter(function(a){ return a.date && a.date.substring(0,7) === comptaCustomMonth; });
+  return allAbs;
+}
+
+function getPeriodLabel() {
+  var months = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  var now = new Date();
+  if (comptaPeriod === 'month') return months[now.getMonth()+1] + ' ' + now.getFullYear();
+  if (comptaPeriod === 'lastmonth') {
+    var d = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    return months[d.getMonth()+1] + ' ' + d.getFullYear();
+  }
+  if (comptaPeriod === 'custom' && comptaCustomMonth) {
+    var p = comptaCustomMonth.split('-');
+    return months[parseInt(p[1])] + ' ' + p[0];
+  }
+  return 'Toutes périodes';
+}
+
+function renderCompta(m) {
+  var allAbs = [];
+  DATA.forEach(function(s) {
+    var abs = getAbsences(s);
+    abs.forEach(function(a) {
+      allAbs.push({ site: s.n, agent: s.a, date: a.date, type: a.type, note: a.note, id: a.id, s: s });
+    });
+  });
+  allAbs.sort(function(a, b) { return (b.date||'').localeCompare(a.date||''); });
+
+  var periodFiltered = filterByPeriod(allAbs);
+  var filtered = periodFiltered;
+  if (comptaFilter !== 'all') filtered = filtered.filter(function(a){ return a.type === comptaFilter; });
+  if (comptaAgent) filtered = filtered.filter(function(a){ return a.agent === comptaAgent; });
+
+  var nAbs = periodFiltered.filter(function(a){ return a.type==='absence'; }).length;
+  var nNE  = periodFiltered.filter(function(a){ return a.type==='non-effectue'; }).length;
+  var nRet = periodFiltered.filter(function(a){ return a.type==='retard'; }).length;
+
+  var agentNames = [];
+  periodFiltered.forEach(function(a){ if (agentNames.indexOf(a.agent)<0) agentNames.push(a.agent); });
+  agentNames.sort();
+
+  var now = new Date();
+  var thisYM = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  var lastDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  var lastYM = lastDate.getFullYear() + '-' + String(lastDate.getMonth()+1).padStart(2,'0');
+
+  var html = '<div class="compta-hdr">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px"><div class="compta-title">💰 Récapitulatif Comptabilité</div>' + (isAdminMode() ? '<button onclick="openAgentsManager()" style="background:#3A86FF22;border:1px solid #3A86FF;color:#3A86FF;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer">👥 Gérer les agents</button>' : '') + '</div>';
+  html += '<div class="compta-sub">' + getPeriodLabel() + ' · ' + periodFiltered.length + ' incident(s)</div>';
+
+  html += '<div class="compta-stats">';
+  html += '<div class="compta-stat"><div class="compta-stat-num" style="color:#E63946">' + nAbs + '</div><div class="compta-stat-lbl">Absences</div></div>';
+  html += '<div class="compta-stat"><div class="compta-stat-num" style="color:#FB5607">' + nNE + '</div><div class="compta-stat-lbl">Non effectués</div></div>';
+  html += '<div class="compta-stat"><div class="compta-stat-num" style="color:#E9C46A">' + nRet + '</div><div class="compta-stat-lbl">Retards</div></div>';
+  html += '<div class="compta-stat"><div class="compta-stat-num" style="color:#4CC9F0">' + agentNames.length + '</div><div class="compta-stat-lbl">Agents concern.</div></div>';
+  html += '</div>';
+
+  // Period filter
+  html += '<div class="compta-period-row">';
+  html += '<button class="compta-period-btn'+(comptaPeriod==='all'?' on':'')+'" onclick="comptaPeriod=\'all\';render()">Tout</button>';
+  html += '<button class="compta-period-btn'+(comptaPeriod==='month'?' on':'')+'" onclick="comptaPeriod=\'month\';render()">Ce mois</button>';
+  html += '<button class="compta-period-btn'+(comptaPeriod==='lastmonth'?' on':'')+'" onclick="comptaPeriod=\'lastmonth\';render()">Mois préc.</button>';
+  html += '<input type="month" class="compta-period-input" value="'+(comptaCustomMonth||thisYM)+'" onchange="comptaCustomMonth=this.value;comptaPeriod=\'custom\';render()" onclick="event.stopPropagation()" title="Choisir un mois">';
+  html += '</div>';
+
+  // Type + agent filters
+  html += '<div class="compta-filters">';
+  html += '<button class="compta-filter'+(comptaFilter==='all'?' on':'')+'" onclick="comptaFilter=\'all\';render()">Tous</button>';
+  html += '<button class="compta-filter'+(comptaFilter==='absence'?' on':'')+'" onclick="comptaFilter=\'absence\';render()">🔴 Absences</button>';
+  html += '<button class="compta-filter'+(comptaFilter==='non-effectue'?' on':'')+'" onclick="comptaFilter=\'non-effectue\';render()">🟠 Non effectués</button>';
+  html += '<button class="compta-filter'+(comptaFilter==='retard'?' on':'')+'" onclick="comptaFilter=\'retard\';render()">🟡 Retards</button>';
+  html += '<select class="compta-select" onchange="comptaAgent=this.value;render()" onclick="event.stopPropagation()">';
+  html += '<option value="">Tous les agents</option>';
+  agentNames.forEach(function(ag){ html += '<option value="'+ag+'"'+(comptaAgent===ag?' selected':'')+'>'+ag+'</option>'; });
+  html += '</select>';
+  html += '</div>';
+
+  // View mode toggle
+  html += '<div class="compta-view-toggle">';
+  html += '<button class="compta-view-btn'+(comptaViewMode==='list'?' on':'')+'" onclick="comptaViewMode=\'list\';render()">📋 Liste chronologique</button>';
+  html += '<button class="compta-view-btn'+(comptaViewMode==='agent'?' on':'')+'" onclick="comptaViewMode=\'agent\';render()">👤 Par agent</button>';
+  html += '<button class="compta-view-btn'+(comptaViewMode==='recap'?' on':'')+'" onclick="comptaViewMode=\'recap\';render()">📊 Récap tableau</button>';
+  if (isAdminMode()) html += '<button class="compta-view-btn'+(comptaViewMode==='history'?' on':'')+'" onclick="comptaViewMode=\'history\';render()">📝 Historique</button>';
+  html += '</div>';
+  html += '</div>';
+
+  m.innerHTML = html;
+
+  // Export buttons row
+  var exportRow = document.createElement('div');
+  exportRow.style.cssText = 'display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;';
+  var expBtn = document.createElement('button');
+  expBtn.className = 'compta-export';
+  expBtn.innerHTML = '📥 Exporter CSV';
+  expBtn.onclick = function() { exportComptaCSV(filtered); };
+  exportRow.appendChild(expBtn);
+  var pdfBtn = document.createElement('button');
+  pdfBtn.className = 'pdf-export-btn';
+  pdfBtn.innerHTML = '🖨️ Exporter PDF';
+  (function(f, p) { pdfBtn.onclick = function() { exportComptaPDF(f, p); }; })(filtered, getPeriodLabel());
+  exportRow.appendChild(pdfBtn);
+  m.appendChild(exportRow);
+
+  if (filtered.length === 0) {
+    var emp = document.createElement('div');
+    emp.className = 'empty';
+    emp.textContent = 'Aucun incident pour cette période / ce filtre.';
+    m.appendChild(emp);
+    return;
+  }
+
+  // === LIST VIEW ===
+  if (comptaViewMode === 'list') {
+    var groups = {}, groupOrder = [];
+    filtered.forEach(function(a) {
+      var ym = (a.date||'').substring(0,7) || 'Inconnu';
+      if (!groups[ym]) { groups[ym] = []; groupOrder.push(ym); }
+      groups[ym].push(a);
+    });
+
+    var mnames = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    groupOrder.forEach(function(ym) {
+      var grpItems = groups[ym];
+      var label = ym === 'Inconnu' ? 'Date inconnue' : (function(){ var p=ym.split('-'); return mnames[parseInt(p[1])]+' '+p[0]; })();
+      var ghdr = document.createElement('div');
+      ghdr.className = 'compta-group-hdr';
+      ghdr.innerHTML = '<span>📆 ' + label + '</span><span style="color:#3A86FF;font-weight:800">' + grpItems.length + ' incident(s)</span>';
+      m.appendChild(ghdr);
+
+      grpItems.forEach(function(a) {
+        var row = document.createElement('div');
+        row.className = 'compta-row type-' + a.type;
+        row.innerHTML =
+          '<div class="compta-row-date">📅 ' + fmtDateShort(a.date) + '</div>'
+          + '<div class="compta-row-info">'
+          + '<div class="compta-row-site">🏢 ' + a.site + '</div>'
+          + '<div class="compta-row-agent">👤 ' + a.agent + '</div>'
+          + (a.note ? '<div class="compta-row-note">💬 ' + a.note + '</div>' : '')
+          + '</div>'
+          + '<span class="compta-badge badge-' + a.type + '">' + typeLabel(a.type) + '</span>';
+        if (isAdminMode()) {
+          var delBtn = document.createElement('button');
+          delBtn.className = 'compta-del-btn';
+          delBtn.title = 'Supprimer';
+          delBtn.innerHTML = '🗑️';
+          (function(sid, aid) {
+            delBtn.onclick = function(e) { e.stopPropagation(); removeAbsence(sid, aid); render(); };
+          })(a.s, a.id);
+          row.appendChild(delBtn);
+        }
+        m.appendChild(row);
+      });
+    });
+  }
+
+  // === AGENT VIEW ===
+  if (comptaViewMode === 'agent') {
+    var byAgent = {}, agentOrder = [];
+    filtered.forEach(function(a) {
+      if (!byAgent[a.agent]) { byAgent[a.agent] = []; agentOrder.push(a.agent); }
+      byAgent[a.agent].push(a);
+    });
+    // sort by count desc
+    agentOrder.sort(function(x,y){ return byAgent[y].length - byAgent[x].length; });
+
+    agentOrder.forEach(function(ag) {
+      var items = byAgent[ag];
+      var nA = items.filter(function(x){ return x.type==='absence'; }).length;
+      var nN = items.filter(function(x){ return x.type==='non-effectue'; }).length;
+      var nR = items.filter(function(x){ return x.type==='retard'; }).length;
+      var c = gc(ag);
+      var block = document.createElement('div');
+      block.className = 'agent-block';
+      block.style.borderTop = '3px solid ' + c;
+      var hdr = '<div class="agent-block-hdr" onclick="this.parentElement.querySelector(\'.agent-rows\').classList.toggle(\'open\')">';
+      hdr += '<div class="aav" style="background:'+c+'22;border:2px solid '+c+';width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:'+c+'">'+ini(ag)+'</div>';
+      hdr += '<div class="agent-block-name">'+ag+'</div>';
+      hdr += '<div class="agent-block-counts">';
+      if (nA) hdr += '<span class="agent-mini-badge" style="background:#E6394622;color:#E63946">'+nA+' abs</span>';
+      if (nN) hdr += '<span class="agent-mini-badge" style="background:#FB560722;color:#FB5607">'+nN+' NE</span>';
+      if (nR) hdr += '<span class="agent-mini-badge" style="background:#E9C46A22;color:#E9C46A">'+nR+' ret</span>';
+      hdr += '</div>';
+      hdr += '<span style="color:#8892A4;font-size:12px">▼</span>';
+      hdr += '</div>';
+      var rows = '<div class="agent-rows abs-list">';
+      items.forEach(function(a) {
+        rows += '<div class="compta-row type-'+a.type+'" style="margin-bottom:5px">'
+          + '<div class="compta-row-date">📅 ' + fmtDateShort(a.date) + '</div>'
+          + '<div class="compta-row-info"><div class="compta-row-site">🏢 ' + a.site + '</div>'
+          + (a.note ? '<div class="compta-row-note">💬 ' + a.note + '</div>' : '')
+          + '</div>'
+          + '<span class="compta-badge badge-' + a.type + '">' + typeLabel(a.type) + '</span>'
+          + '</div>';
+      });
+      rows += '</div>';
+      block.innerHTML = hdr + rows;
+      m.appendChild(block);
+    });
+  }
+
+  // === RECAP TABLE VIEW ===
+  if (comptaViewMode === 'recap') {
+    // Build per-agent summary across all sites
+    var recap = {}; // agent -> { total, absence, nonEffectue, retard, sites: {siteName: {a,ne,r}} }
+    filtered.forEach(function(a) {
+      if (!recap[a.agent]) recap[a.agent] = { total:0, absence:0, nonEffectue:0, retard:0, sites:{} };
+      var r = recap[a.agent];
+      r.total++;
+      if (a.type==='absence') r.absence++;
+      if (a.type==='non-effectue') r.nonEffectue++;
+      if (a.type==='retard') r.retard++;
+      if (!r.sites[a.site]) r.sites[a.site] = {absence:0,nonEffectue:0,retard:0};
+      r.sites[a.site][a.type==='non-effectue'?'nonEffectue':a.type]++;
+    });
+
+    var agentList = Object.keys(recap).sort(function(a,b){ return recap[b].total - recap[a].total; });
+
+    // Summary table
+    var tbl = document.createElement('div');
+    tbl.style.cssText = 'background:#13151F;border-radius:10px;padding:12px;margin-bottom:12px;overflow-x:auto;';
+    var th = '<table class="recap-table"><thead><tr>'
+      + '<th>Agent</th><th style="color:#E63946">Absences</th><th style="color:#FB5607">Non effectués</th><th style="color:#E9C46A">Retards</th><th style="color:#3A86FF">Total</th>'
+      + '</tr></thead><tbody>';
+    agentList.forEach(function(ag) {
+      var r = recap[ag];
+      var c = gc(ag);
+      th += '<tr>'
+        + '<td><span style="font-weight:700;color:'+c+'">'+ag+'</span></td>'
+        + '<td style="color:#E63946;font-weight:700;text-align:center">'+r.absence+'</td>'
+        + '<td style="color:#FB5607;font-weight:700;text-align:center">'+r.nonEffectue+'</td>'
+        + '<td style="color:#E9C46A;font-weight:700;text-align:center">'+r.retard+'</td>'
+        + '<td style="color:#3A86FF;font-weight:800;text-align:center">'+r.total+'</td>'
+        + '</tr>';
+    });
+    // Total row
+    var tot = filtered.length;
+    var totA = filtered.filter(function(a){ return a.type==='absence'; }).length;
+    var totN = filtered.filter(function(a){ return a.type==='non-effectue'; }).length;
+    var totR = filtered.filter(function(a){ return a.type==='retard'; }).length;
+    th += '<tr style="border-top:2px solid #2A2D3E">'
+      + '<td style="font-weight:800;color:#fff">TOTAL</td>'
+      + '<td style="color:#E63946;font-weight:800;text-align:center">'+totA+'</td>'
+      + '<td style="color:#FB5607;font-weight:800;text-align:center">'+totN+'</td>'
+      + '<td style="color:#E9C46A;font-weight:800;text-align:center">'+totR+'</td>'
+      + '<td style="color:#3A86FF;font-weight:800;text-align:center">'+tot+'</td>'
+      + '</tr>';
+    th += '</tbody></table>';
+    tbl.innerHTML = th;
+    m.appendChild(tbl);
+
+    // Detail per agent
+    agentList.forEach(function(ag) {
+      var r = recap[ag];
+      var c = gc(ag);
+      var block = document.createElement('div');
+      block.className = 'agent-block';
+      block.style.borderTop = '3px solid ' + c;
+      var siteNames = Object.keys(r.sites);
+      var rows = '<table class="recap-table"><thead><tr><th>Site</th><th style="color:#E63946">Abs</th><th style="color:#FB5607">NE</th><th style="color:#E9C46A">Ret</th></tr></thead><tbody>';
+      siteNames.forEach(function(sn) {
+        var sr = r.sites[sn];
+        rows += '<tr><td class="site-name">'+sn+'</td>'
+          + '<td style="text-align:center;color:#E63946">'+sr.absence+'</td>'
+          + '<td style="text-align:center;color:#FB5607">'+sr.nonEffectue+'</td>'
+          + '<td style="text-align:center;color:#E9C46A">'+sr.retard+'</td></tr>';
+      });
+      rows += '</tbody></table>';
+      block.innerHTML = '<div class="agent-block-hdr"><div class="aav" style="background:'+c+'22;border:2px solid '+c+';width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:'+c+'">'+ini(ag)+'</div>'
+        + '<div class="agent-block-name">'+ag+'</div>'
+        + '<span style="color:#8892A4;font-size:12px">'+r.total+' incident(s)</span></div>'
+        + rows;
+      m.appendChild(block);
+    });
+  }
+
+  // === HISTORY VIEW ===
+  if (comptaViewMode === 'history') {
+    if (HISTORY.length === 0) {
+      var emp2 = document.createElement('div');
+      emp2.className = 'empty';
+      emp2.textContent = 'Aucune modification enregistrée.';
+      m.appendChild(emp2);
+      return;
+    }
+    HISTORY.slice(0, 100).forEach(function(h) {
+      var row = document.createElement('div');
+      row.style.cssText = 'background:#13151F;border-radius:8px;padding:10px 12px;margin-bottom:6px;border-left:3px solid #3A86FF;';
+      row.innerHTML = '<div style="display:flex;justify-content:space-between;margin-bottom:3px">'
+        + '<span style="font-size:12px;font-weight:700;color:#fff">' + h.site + '</span>'
+        + '<span style="font-size:10px;color:#8892A4">' + h.dateStr + '</span>'
+        + '</div>'
+        + '<div style="font-size:11px;color:#8892A4">' + h.who + ' · ' + h.action + '</div>';
+      m.appendChild(row);
+    });
+  }
+}
+
+function exportComptaCSV(items) {
+  var rows = [['Date','Site','Agent','Type','Note']];
+  var sorted = items.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+  sorted.forEach(function(a) {
+    rows.push([fmtDateShort(a.date), a.site, a.agent, typeLabel(a.type), a.note||'']);
+  });
+  var csv = rows.map(function(r){
+    return r.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(';');
+  }).join('\n');
+  var blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'starsnett_absences_'+getPeriodLabel().replace(/ /g,'_')+'.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('📥 CSV exporté !');
+}
+render();
+</script>
+</body>
+</html>
