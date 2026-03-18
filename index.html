@@ -1,55 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Starsnett — Qui est où ?</title>
-
-<!-- PWA installable sur Android et iPhone -->
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Starsnett">
-<meta name="application-name" content="Starsnett">
-<meta name="theme-color" content="#1A1D2E">
-<meta name="description" content="Starsnett — Planning agents et vitrerie">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%231A1D2E'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle' fill='%233A86FF'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
-<script>
-(function() {
-  var m = {name:"Starsnett — Qui est où ?",short_name:"Starsnett",description:"Planning agents et vitrerie STARSNETT SERVICES",start_url:"./",display:"standalone",background_color:"#0F1117",theme_color:"#1A1D2E",orientation:"portrait-primary",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%231A1D2E'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle' fill='%233A86FF'%3E%E2%AD%90%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"},{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%231A1D2E'/%3E%3Ctext x='256' y='360' font-size='300' text-anchor='middle' fill='%233A86FF'%3E%E2%AD%90%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
-  var b = new Blob([JSON.stringify(m)],{type:'application/json'});
-  var l = document.createElement('link'); l.rel='manifest'; l.href=URL.createObjectURL(b);
-  document.currentScript.parentNode.appendChild(l);
-})();
-<\/script>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
 #header { background:#1A1D2E; padding:12px 16px; position:sticky; top:0; z-index:100; border-bottom:1px solid #2A2D3E; }
 .htop { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
 .sync-bar { display:flex; gap:6px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
-
-/* ── PWA install button ── */
-#installBtn:hover { background:#3A86FF !important; color:#fff !important; }
-
-/* ── Sync status pill ── */
-.sync-pill {
-  display:inline-flex; align-items:center; gap:5px;
-  padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700;
-}
-.sync-pill.ok     { background:#2A9D8F22; color:#2A9D8F; border:1px solid #2A9D8F44; }
-.sync-pill.error  { background:#E6394622; color:#E63946; border:1px solid #E6394644; }
-.sync-pill.busy   { background:#E9C46A22; color:#E9C46A; border:1px solid #E9C46A44; }
-.sync-pill.off    { background:#FB560722; color:#FB5607; border:1px solid #FB560744; }
-
-/* ── Bannière de bienvenue premiere visite ── */
-#welcomeBanner {
-  background:linear-gradient(135deg,#3A86FF22,#8338EC22);
-  border:1px solid #3A86FF44; border-radius:12px;
-  padding:14px 16px; margin-bottom:12px; display:none;
-}
-
 /* ── CALENDAR ── */
 .cal-hdr { background:#1A1D2E; border:1px solid #2A2D3E; border-radius:12px; padding:14px; margin-bottom:10px; }
 .cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
@@ -306,30 +266,7 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
 .recap-table tr:last-child td { border-bottom:none; }
 .recap-table .site-name { font-weight:700; }
 
-/* Vitrerie view */
-.vitrerie-hdr { background:#1A1D2E; border:1px solid #2A2D3E; border-radius:12px; padding:14px; margin-bottom:12px; }
-.vitrerie-title { font-size:16px; font-weight:800; color:#06D6A0; margin-bottom:2px; }
-.vitrerie-sub { font-size:12px; color:#8892A4; margin-bottom:12px; }
-.vitrerie-filters { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
-.vitrerie-filter { padding:5px 11px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #2A2D3E; background:#13151F; color:#8892A4; }
-.vitrerie-filter.on { background:#06D6A0; border-color:#06D6A0; color:#0F1117; }
-.vtask-card { background:#13151F; border-radius:10px; padding:12px; margin-bottom:8px; border-left:4px solid #06D6A0; position:relative; }
-.vtask-card.overdue { border-left-color:#E63946; }
-.vtask-card.today { border-left-color:#3A86FF; }
-.vtask-card.upcoming { border-left-color:#E9C46A; }
-.vtask-card.future { border-left-color:#8892A4; }
-.vtask-date { font-size:11px; font-weight:700; padding:2px 8px; border-radius:10px; display:inline-block; margin-bottom:6px; }
-.vtask-date.overdue { background:#E6394622; color:#E63946; }
-.vtask-date.today { background:#3A86FF22; color:#3A86FF; }
-.vtask-date.upcoming { background:#E9C46A22; color:#E9C46A; }
-.vtask-date.future { background:#88888822; color:#8892A4; }
-.vtask-name { font-size:14px; font-weight:700; color:#fff; margin-bottom:3px; }
-.vtask-addr { font-size:11px; color:#8892A4; }
-.vtask-done-btn { position:absolute; top:10px; right:10px; background:#06D6A022; border:1px solid #06D6A044; color:#06D6A0; border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; cursor:pointer; }
-.vtask-done-btn:hover { background:#06D6A0; color:#0F1117; }
-.vtask-done-btn.done { background:#2A9D8F22; color:#2A9D8F; border-color:#2A9D8F44; }
-.vtask-group-hdr { font-size:12px; font-weight:700; color:#8892A4; padding:6px 0 4px; border-bottom:1px solid #2A2D3E; margin-bottom:8px; margin-top:10px; }
-
+/* Absences section on card */
 .abs-toggle {
   margin-top:8px; padding-top:8px;
   border-top:1px solid #2A2D3E;
@@ -391,6 +328,29 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
   font-weight:700; cursor:pointer; white-space:nowrap;
 }
 .abs-save-btn:hover { background:#c42d38; }
+
+/* ── ALERTES RÉSILIATION / IMPAYÉ ── */
+.badge-resil { display:inline-block; background:#E6394622; border:1px solid #E63946; color:#E63946; border-radius:6px; padding:2px 8px; font-size:10px; font-weight:800; margin-top:4px; margin-right:4px; }
+.badge-impaye { display:inline-block; background:#FB560722; border:1px solid #FB5607; color:#FB5607; border-radius:6px; padding:2px 8px; font-size:10px; font-weight:800; margin-top:4px; margin-right:4px; }
+
+/* ── ONGLET CONTENTIEUX ── */
+.contentieux-card { background:#13151F; border-radius:12px; padding:14px; margin-bottom:10px; border-left:4px solid #E63946; }
+.contentieux-card.statut-mise-en-demeure { border-left-color:#FB5607; }
+.contentieux-card.statut-huissier { border-left-color:#E63946; }
+.contentieux-card.statut-tribunal { border-left-color:#9B2335; }
+.contentieux-card.statut-resolu { border-left-color:#2A9D8F; opacity:0.6; }
+.contentieux-nom { font-size:15px; font-weight:800; color:#fff; margin-bottom:4px; }
+.contentieux-statut { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; margin-bottom:8px; }
+.statut-relance { background:#3A86FF22; color:#3A86FF; border:1px solid #3A86FF; }
+.statut-mise-en-demeure { background:#FB560722; color:#FB5607; border:1px solid #FB5607; }
+.statut-huissier { background:#E6394622; color:#E63946; border:1px solid #E63946; }
+.statut-tribunal { background:#9B233522; color:#ff6b7a; border:1px solid #9B2335; }
+.statut-resolu { background:#2A9D8F22; color:#2A9D8F; border:1px solid #2A9D8F; }
+.contentieux-meta { font-size:11px; color:#8892A4; margin-bottom:6px; display:flex; flex-wrap:wrap; gap:10px; }
+.relance-item { font-size:11px; color:#8892A4; border-left:2px solid #2A2D3E; padding-left:8px; margin-bottom:4px; }
+.relance-item .r-date { font-weight:700; color:#E9C46A; }
+.contentieux-add-btn { background:#E6394622; border:1px solid #E63946; color:#E63946; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:14px; width:100%; }
+.contentieux-add-btn:hover { background:#E63946; color:#fff; }
 </style>
 </head>
 <body>
@@ -401,62 +361,40 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
     <div id="stats">...</div>
   </div>
   <div class="sync-bar">
-    <button class="sync-btn sync-save" onclick="cloudSync()" id="syncBtn" title="Forcer la synchronisation">☁️ Sync</button>
+    <button class="sync-btn sync-save" onclick="cloudSync()" id="syncBtn">☁️ Sync</button>
     <button class="sync-btn sync-cfg" onclick="openSyncConfig()" title="Configurer la synchronisation">⚙️</button>
-    
-    <span class="sync-info" id="syncInfo"><span style="color:#FB5607">⚠️ Non configuré — cliquez ⚙️</span></span>
+    <button onclick="syncPegase()" title="Synchroniser avec Pégase : archive les absents, injecte les dates de contrat" style="background:#E9C46A22;color:#E9C46A;border:1px solid #E9C46A55;border-radius:6px;font-size:11px;padding:4px 9px;cursor:pointer;font-weight:600;margin-left:4px;">🔄 Pégase</button>
+    <span class="sync-info" id="syncInfo"><span class="sync-pulse"></span>Non configuré</span>
     <button class="mode-badge consult" id="modeBadge" onclick="onModeBadgeClick()">👁️ Consultation</button>
   </div>
   <!-- Sync config modal -->
   <div class="modal-overlay" id="syncModal">
-    <div class="modal" style="max-width:440px">
+    <div class="modal" style="max-width:420px">
       <div class="modal-title">
-        <span>☁️ Synchro temps réel</span>
+        <span>☁️ Synchronisation cloud</span>
         <button class="modal-close" onclick="closeSyncConfig()">✕</button>
       </div>
-
-      <!-- Instructions -->
-      <div style="background:#06D6A011;border:1px solid #06D6A033;border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;color:#8892A4;line-height:1.8">
-        <div style="color:#06D6A0;font-weight:700;font-size:13px;margin-bottom:8px">🔄 Synchro automatique entre tous les téléphones</div>
-        <b style="color:#E9C46A">1ère fois — créer le coffre (2 min) :</b><br>
-        &nbsp;&nbsp;① Allez sur <a href="https://jsonbin.io" target="_blank" style="color:#3A86FF">jsonbin.io</a> → créez un compte gratuit<br>
-        &nbsp;&nbsp;② <b>Account → API Keys</b> → copiez votre <b>Master Key</b><br>
-        &nbsp;&nbsp;③ Collez-la ci-dessous → <b>Créer & connecter</b><br>
-        &nbsp;&nbsp;④ Notez l'<b>ID du coffre</b> généré<br><br>
-        <b style="color:#E9C46A">Autres téléphones — rejoindre :</b><br>
-        &nbsp;&nbsp;① Même clé API + même <b>ID du coffre</b> → Connecter<br>
-        &nbsp;&nbsp;② ✅ Tous les appareils se synchronisent <b>automatiquement toutes les 15 s</b>
+      <div style="background:#0F1117;border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;color:#8892A4;line-height:1.7">
+        <b style="color:#E9C46A">Comment configurer (gratuit, 2 minutes) :</b><br>
+        1. Allez sur <b style="color:#3A86FF">jsonbin.io</b> → créez un compte gratuit<br>
+        2. Cliquez <b>API Keys</b> → copiez votre <b>Master Key</b><br>
+        3. Collez-la ci-dessous et cliquez <b>Créer & connecter</b>
       </div>
-
       <div class="field-group">
         <label class="field-label">🔑 Clé API JSONBin (Master Key)</label>
         <input class="field-input" id="jbApiKey" type="password" placeholder="$2b$10$...">
       </div>
       <div class="field-group">
-        <label class="field-label">📦 ID du coffre
-          <span style="color:#8892A4;font-weight:400"> — laissez vide pour en créer un nouveau</span>
-        </label>
-        <div style="display:flex;gap:6px">
-          <input class="field-input" id="jbBinId" type="text" placeholder="Ex: 6423abc1dxxxxxxx" style="flex:1">
-          <button onclick="copyBinId()" title="Copier l'ID" style="background:#2A2D3E;border:none;color:#8892A4;border-radius:8px;padding:0 10px;cursor:pointer;font-size:16px">📋</button>
-        </div>
-        <div style="font-size:10px;color:#8892A4;margin-top:4px">Partagez cet ID à vos collègues pour qu'ils rejoignent le même coffre</div>
+        <label class="field-label">📦 ID du coffre <span style="color:#8892A4;font-weight:400">(rempli automatiquement)</span></label>
+        <input class="field-input" id="jbBinId" type="text" placeholder="Sera créé automatiquement">
       </div>
-
-      <div id="syncStatus" style="font-size:12px;color:#8892A4;margin-bottom:12px;min-height:18px;padding:6px 0"></div>
-
+      <div id="syncStatus" style="font-size:12px;color:#8892A4;margin-bottom:12px;min-height:18px"></div>
       <div class="modal-actions">
         <button class="btn-save" onclick="setupSync()">🔗 Créer &amp; connecter</button>
         <button class="btn-cancel" onclick="closeSyncConfig()">Fermer</button>
       </div>
-
-      <!-- Déconnexion -->
-      <div id="disconnectRow" style="display:none;margin-top:10px;text-align:center">
-        <button onclick="disconnectSync()" style="background:none;border:none;color:#E63946;font-size:12px;cursor:pointer;text-decoration:underline">🔌 Déconnecter ce téléphone du cloud</button>
-      </div>
-
       <div style="margin-top:14px;padding-top:12px;border-top:1px solid #2A2D3E">
-        <div style="font-size:11px;color:#8892A4;margin-bottom:8px">💾 Sauvegarde manuelle (sans cloud)</div>
+        <div style="font-size:11px;color:#8892A4;margin-bottom:8px">⬇️ Sauvegarde manuelle (sans cloud)</div>
         <div style="display:flex;gap:8px">
           <button class="sync-btn sync-save" style="flex:1" onclick="saveJSON()">💾 Exporter JSON</button>
           <button class="sync-btn sync-load" style="flex:1" onclick="document.getElementById('jsonFileInput').click()">📂 Importer JSON</button>
@@ -465,10 +403,7 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
       </div>
     </div>
   </div>
-  <div style="display:flex;align-items:center;gap:6px;position:relative;flex:1;">
-  <input id="search" type="search" placeholder="🔍 Rechercher site, agent..." oninput="onSearch()" style="flex:1;width:100%;">
-  <button id="micBtn" onclick="startVoiceSearch()" title="Recherche vocale" style="background:#2A9D8F22;color:#2A9D8F;border:1px solid #2A9D8F55;border-radius:8px;font-size:18px;padding:6px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;">🎤</button>
-</div>
+  <input id="search" type="search" placeholder="🔍 Rechercher site, agent..." oninput="onSearch()">
   <div class="tabs">
     <button class="tab on" onclick="setView('today')">📅 Aujourd'hui</button>
     <button class="tab" onclick="setView('agents')">👤 Agents</button>
@@ -476,24 +411,10 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
     <button class="tab" onclick="setView('compta')" style="background:#E9C46A22;color:#E9C46A;" id="tabCompta" title="Réservé à l'administration">💰 Compta</button>
     <button class="tab" onclick="setView('calendar')" style="background:#2A9D8F22;color:#2A9D8F;" id="tabCalendar">📆 Calendrier</button>
     <button class="tab" onclick="setView('archives')" style="background:#FB560722;color:#FB5607;" id="tabArchives">🗄️ Archives</button>
-    <button class="tab" onclick="setView('vitrerie')" style="background:#06D6A022;color:#06D6A0;" id="tabVitrerie">🪟 Vitrerie</button>
+    <button class="tab" onclick="setView('contentieux')" style="background:#E6394622;color:#E63946;" id="tabContentieux">⚖️ Contentieux</button>
   </div>
 </div>
 <div id="main"></div>
-<!-- Banniere premiere visite -->
-<div id="welcomeBanner" style="display:none;background:linear-gradient(135deg,#3A86FF11,#8338EC11);border:1px solid #3A86FF33;border-radius:12px;padding:14px 16px;margin:12px 14px 0;">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start">
-    <div>
-      <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:6px">📱 Bienvenue sur Starsnett !</div>
-      <div style="font-size:12px;color:#8892A4;line-height:1.7">
-        Pour synchroniser avec les autres téléphones :<br>
-        <b style="color:#E9C46A">1.</b> Cliquez <b>⚙️</b> → entrez votre clé JSONBin<br>
-        <b style="color:#E9C46A">2.</b> Sur Android Chrome → <b>📲 Installer</b> pour l'avoir sur l'écran d'accueil
-      </div>
-    </div>
-    <button onclick="document.getElementById('welcomeBanner').style.display='none';localStorage.setItem('wb_dismissed','1')" style="background:none;border:none;color:#8892A4;font-size:18px;cursor:pointer;flex-shrink:0;padding:0 0 0 10px">✕</button>
-  </div>
-</div>
 <!-- PIN Overlay -->
 <div class="pin-overlay" id="pinOverlay">
   <div class="pin-box">
@@ -592,7 +513,30 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
         <button type="button" onclick="removePhoto()" style="background:#E6394622;color:#E63946;border:1px solid #E6394644;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;">🗑️ Supprimer la photo</button>
       </div>
     </div>
-    <div id="archiveRow" style="display:none;margin-bottom:8px;">
+    <div style="margin-top:14px;border-top:1px solid #2A2D3E;padding-top:12px">
+      <div style="font-size:12px;font-weight:700;color:#E63946;margin-bottom:8px">⚠️ Alertes</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#E8ECF0;cursor:pointer">
+          <input type="checkbox" id="fldResiliation" onchange="document.getElementById('resilRow').style.display=this.checked?'block':'none'" style="width:16px;height:16px;accent-color:#E63946"> 🔴 Résiliation reçue
+        </label>
+      </div>
+      <div id="resilRow" style="display:none;margin-bottom:8px;background:#E6394611;border-radius:8px;padding:10px;">
+        <label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">📅 Date de fin de contrat</label>
+        <input type="date" id="fldDateFin" style="width:100%;background:#0F1117;border:1px solid #E63946;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px;margin-bottom:8px">
+        <label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">📝 Note résiliation</label>
+        <input type="text" id="fldNoteResil" placeholder="Ex: résiliation par lettre RAR du 10/03..." style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px">
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#E8ECF0;cursor:pointer">
+          <input type="checkbox" id="fldImpaye" onchange="document.getElementById('impayeRow').style.display=this.checked?'block':'none'" style="width:16px;height:16px;accent-color:#FB5607"> ⚠️ Impayé en cours
+        </label>
+      </div>
+      <div id="impayeRow" style="display:none;margin-top:6px;background:#FB560711;border-radius:8px;padding:10px;">
+        <label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">💶 Montant impayé (€)</label>
+        <input type="number" id="fldMontantImpaye" placeholder="Ex: 1250" style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px">
+      </div>
+    </div>
+    <div id="archiveRow" style="display:none;margin-bottom:8px;margin-top:10px;">
       <button type="button" onclick="archiveSite(editIdx)" style="background:#FB560722;color:#FB5607;border:1px solid #FB560744;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px;width:100%;">🗄️ Archiver ce site</button>
     </div>
     <div class="modal-actions">
@@ -756,21 +700,63 @@ function ancienneteBadge(siteName, dateContrat) {
   return '<span style="display:inline-block;background:'+colors+'22;color:'+colors+';border:1px solid '+colors+'44;border-radius:10px;font-size:10px;padding:1px 7px;margin-top:3px;font-weight:700;">📅 '+label+stars+'</span>';
 }
 
+function syncPegase() {
+  if (!isAdminMode()) { showToast('🔒 Action admin uniquement'); return; }
+  var toArchive = [];
+  DATA.forEach(function(s, idx) {
+    var d = s.dateContrat || getPegaseDate(s.n);
+    // No Pegase match at all = candidate to archive
+    if (!d) toArchive.push({idx: idx, name: s.n});
+  });
+  // Also inject dates on matched sites
+  var updated = 0;
+  DATA.forEach(function(s) {
+    if (!s.dateContrat) {
+      var d = getPegaseDate(s.n);
+      if (d) { s.dateContrat = d; updated++; }
+    }
+  });
+  if (updated > 0) { saveData(); }
 
+  if (toArchive.length === 0) {
+    showToast('✅ Tous les sites sont dans Pégase ! (' + updated + ' dates injectées)');
+    render();
+    return;
+  }
 
-var DATA_DEFAULT = [{"n": "AUX MERVEILLEUX (LVDH)", "a": "Adama (12e)                     Seydou", "adr": "Rue du Pont Louis Philippe Paris 4ème       | 5 place Monge Paris 5ème  | 95, Rue Saint-Dominique PARIS 7ème | 129, Rue Saint-Charles PARIS 15ème | 29, Rue de l'Annonciation PARIS 16ème | 7, Rue de Tocqueville PARIS 17ème     | 12 place d'Aligre - Paris 11ème       | 8 Boulevard Jean Jaures 92100 Boulogne", "j": "4ème Seydou/Boulaye Mercredi à 6h | 5ème Seydou/Boulaye Mercredi à 6h | 7ème Seydou/Boulaye Jeudi à 6h | 15ème Seydou/Boulaye Mercredi à 6h | 16ème Seydou/Boulaye Mercredi à 6h | 17ème Seydou/Boulaye Jeudi à 6h | 12ème Adama Mercredi à 6h | Boulogne Seydou/Boulaye Jeudi à 6h", "f": "1 fs / semaine", "t": "", "v": "ras"}, {"n": "CARREFOUR CITY", "a": "fodie", "adr": "", "j": "", "f": "3fs/mois", "t": "", "v": "1 fois par semaine"}, {"n": "FOR YOU", "a": "ADAMA", "adr": "", "j": "Dans la semaine", "f": "1 fs / mois", "t": "", "v": "1 fois par mois"}, {"n": "LA CONDITIION URBAINE", "a": "ADAMA", "adr": "", "j": "", "f": "2 fs/mois", "t": "", "v": "1 fois par mois"}, {"n": "UNSS PARIS", "a": "Amara FISSOUROU", "adr": "Code 1807 pour désactiver et pour activer appuyer sur la touche représentée par une maison", "j": "Mardi 18 h 30 et WE", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "LA MODELERIE PARISIENNE", "a": "Amara FISSOUROU", "adr": "", "j": "LUNDI, Mardi, mercredi et Jeudi à 16 heures", "f": "4 FS : SEMAINE", "t": "", "v": "TRIMESTRIELLE"}, {"n": "EHW ARCHITECTE", "a": "Amara FISSOUROU", "adr": "Code porte 34 A 28 - Alarme Cadenas vert 4343 et sortie appuyer sur cadenas noir", "j": "", "f": "1 fs / semaine", "t": "", "v": "1 fs/mois"}, {"n": "EUKLID", "a": "Bakary NIMAGA", "adr": "", "j": "", "f": "M,ABRIBAT SYLVAIN", "t": "", "v": "1 fs/mois"}, {"n": "EDITIONS BRUNO DOUCEY", "a": "Bakary NIMAGA", "adr": "67 rue de Reuilly 75012 Paris", "j": "WEEk end", "f": "1 FOIS / SEMAINE", "t": "", "v": "TRIMESTRIELLE"}, {"n": "COSMIC", "a": "Bakary NIMAGA", "adr": "", "j": "Du lundi au Vendredi", "f": "5 fs / semaine\nVitrerie  1 fs/ trimestre", "t": "", "v": "TRIMESTRIELLE"}, {"n": "UNIVERSITES AUTO-ECOLE SARL", "a": "BAKARY NIMAGA", "adr": "", "j": "dimanche 16 h", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "HOLISTICK MEDICAL", "a": "BOUYAGUI", "adr": "", "j": "", "f": "1 fs /semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CABINET HOUARI AVOCATS", "a": "BATHILLY", "adr": "", "j": "lundi et jeudi à 08h00", "f": "2 FOIS PAR SEMAINE", "t": "", "v": "pas nettoyage de vitres"}, {"n": "adef résidences", "a": "BATHILLY", "adr": "Gardienne absente entre 12 et 15 HEURES ET L'AGENT DOIT PASSER IMPERATIVEMENT ENTRE 9 et 11 heures", "j": "Mardi 11 heures et le vendredi", "f": "M. Dominique Bourgine", "t": "", "v": "1 fs/mois"}, {"n": "SCM DU 160 RUE DU TEMPLE", "a": "BATHILLY", "adr": "", "j": "Mardi fin d' apres midi et vendredi midi", "f": "2 FS / SEMAINE", "t": "", "v": "1 fs/mois"}, {"n": "FERMIER GOURMET", "a": "BATHILY", "adr": "Code 72Y46", "j": "Lundi et Mercredi matin ET VENDREDI", "f": "3fs/semaine", "t": "", "v": "a chaque passage"}, {"n": "POLE SANTE DU MILLENAIRE", "a": "CAMARA", "adr": "code acces local poubelle: 3487", "j": "Lundi au Vendredi", "f": "5 fs/semaine", "t": "", "v": "1 fs/mois"}, {"n": "ATELIER PAULIN", "a": "CAMARA BOUBACAR", "adr": "", "j": "", "f": "1 fs/semaine et une fois par mois", "t": "", "v": "1 fs/mois intérieur et encadrement\n1 fs/semaine extérieur et huissserie hauteur d'homme"}, {"n": "EFICIENS", "a": "CAMARA BOUBACAR", "adr": "116 BOULEVARD DIDEROT 75012 PARIS", "j": "Mercredi et samedi", "f": "2 fs/semaine", "t": "", "v": "pas de vitres contrat signé pas dans le dossier"}, {"n": "GALERIE TEMPLON", "a": "CAMARA BOUBACAR ET SANDALY", "adr": "", "j": "le mardi à 9 h 30", "f": "2 fs / mois", "t": "", "v": "2 fois par mois"}, {"n": "Monsieur GRATEAU", "a": "CAMARA CIKOU IBRAHIMA", "adr": "", "j": "Mercredi  avant 12 h", "f": "2 fs / mois", "t": "", "v": ""}, {"n": "CAPS HOME (SCHMIDT)", "a": "MOUSSA TOURE", "adr": "Code : 7272 puis cadenas ouvert  boitier 1er bureau vendeur en face de la prte d'entrée", "j": "lundi matin avant 9 h 30", "f": "Mme Priscilla LE ROUX", "t": "", "v": "extérieur 1 fs/semaine\nintérieur 1 fs/tous les 15 jours"}, {"n": "SCi 2123", "a": "CAMARA KODORE", "adr": "CODE 1218", "j": "mercredi et we", "f": "2 fs / semaine", "t": "", "v": "1 fs/mois"}, {"n": "ARCHITRIO", "a": "CAMARA KODORE", "adr": "", "j": "Samedi (avant) Apres midi", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "Le 249, Hélène G.", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Lundi et Vendredi    10 heures", "f": "1 ou 2 fs/semaine", "t": "", "v": "1 fs/semaine"}, {"n": "PVH HOTEL (MARMOTT)", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "vendredi 12h", "f": "1 fs / semaine", "t": "", "v": "1 fs/semaine"}, {"n": "NILAI (2)", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Lundi", "f": "1 fs / semaine", "t": "", "v": "1 fs/semaine intérieur\n1 fs/semaine extérieur"}, {"n": "SAS HANDRA", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Vendredi de 15h à 17h", "f": "1 fs / Semaine", "t": "", "v": "1 fs/par mois"}, {"n": "CABINET LAURENCE BLANCHARD PERETTI", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "CODE A1945", "f": "1 fs / semaine\nvitrerie  début mars,mai\nfin août, décembre", "t": "", "v": "TRIMESTRIELLE"}, {"n": "GIEPS", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "we mercredi", "f": "2 fs/semaine", "t": "", "v": "1 fs/par mois"}, {"n": "ATENOR", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Vendredi matin", "f": "1 fs/semaine", "t": "", "v": "1 fs/par mois"}, {"n": "CONCORD INTERNATIONAL", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "le vendredi à 11h00  / 2 FOIS PAR MOIS", "f": "2 FOIS PAR MOIS", "t": "", "v": "1 fs/par mois"}, {"n": "ASTER CAPITAL", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "", "f": "", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SCM VIGNON SANTE", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "", "f": "2 Fs / semaine", "t": "", "v": "1 fs/par mois"}, {"n": "TERRES INCONNUES", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "Mercredi et WE - CODE 9 HA 10", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "ICE - ICOVER EUROPE (ADVISE)", "a": "Camara Sidy (Boubacar)", "adr": "16, Rue Gaillon75002 PARIS", "j": "lundi et jeudi", "f": "2 fois/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "L'ENCRERIE", "a": "CAMARA SADIO", "adr": "", "j": "lundi, mercredi et vendredi matin avant l'ouverture", "f": "3 fs/semaine", "t": "", "v": "1 FS tous les 15 jours"}, {"n": "PMJC", "a": "Camara Sadio", "adr": "", "j": "mardi et jeudi", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "COCINELLE (SCHMIDT)", "a": "MOUSSA TOURE", "adr": "Code : 8282 puis cadenas ouvert", "j": "Lundi matin avant ouverture", "f": "Mme Priscilla LE ROUX", "t": "", "v": "extérieur 1 fs/semaine\nintérieur 1 fs/tous les 15 jours"}, {"n": "CENTRE DE SANTE LA PLAINE MONCEAU", "a": "DEMBA", "adr": "", "j": "Lundi au Vendredi", "f": "5 fs/semaine", "t": "", "v": "1 fs/mois"}, {"n": "BIRAMBEAU", "a": "DEMBA", "adr": "", "j": "mardi jeudi week-end", "f": "3fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SARL HVM PIZZA", "a": "DIADIE", "adr": "", "j": "", "f": "1 fs/semaine", "t": "", "v": "A CHAQUE PASSAGE"}, {"n": "COMELIT IMMOTEC", "a": "DIAKITE ( SOUKOUNA 2)", "adr": "", "j": "Mardi soir et vendredi soir", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "BABYCHOU NEUILLY", "a": "DIARRA", "adr": "Madame Delphine BEAUFRE - Compta: Mme Josiane DUARTE  | Code grille : 9526 Code porte : 5283 4ème étage, porte droite", "j": "VENDREDI A 17 H 30", "f": "1 fs / Semaine", "t": "", "v": "1 fois par mois"}, {"n": "CABINET ALAIN SAUZEY", "a": "DIARRA 07 53 95 94 07", "adr": "code B 715 (à compter du 10.09.2019)", "j": "mardi à 12 heures précises", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CDC 78, avenue Galliéni C/O CABINET BETTI", "a": "DIARRA", "adr": "78 AVENUE GALLIENI 93800 EPINAY SUR SEINE | 06.14.25.77.78", "j": "cleveque080467@outlook/bodin.betti@orange.fr", "f": "1 fs/semaine net et 3 fs rotation poubelle", "t": "", "v": "1 fois par mois"}, {"n": "CENTURY 21", "a": "Diarra", "adr": "", "j": "", "f": "2 fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "CLUSTER CONSEILS", "a": "Diarra", "adr": "", "j": "MERCREDI ET samedi", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "ENGAGEMENT ET ENTREPRISE", "a": "DIARRA", "adr": "CODE 2645*", "j": "WE MARDI SOIR ET JEUDI SOIR", "f": "3 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "EXPLORE STUDIO", "a": "DIARRA", "adr": "", "j": "", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "LABORATOIRE GECERAM", "a": "DIARRA", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "PHARMACIE DES BORDS DE SEINE", "a": "DIARRA", "adr": "", "j": "Mercredi et samedi à 10  heures", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "PROXEM", "a": "DIARRA", "adr": "", "j": "mercredi a partir de 19h00 - WE", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "RAY PRO MAILING", "a": "DIARRA", "adr": "code 27633", "j": "mercredi 10 h 30", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "ROOS AND ROOS", "a": "DIARRA", "adr": "", "j": "vendredi après 17h30", "f": "1 fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "SBKG & ASSOCIES", "a": "DIARRA", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "STEPEVI", "a": "DIARRA", "adr": "", "j": "mardi et vendredi à 10 h 15", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "PIERRE LAFAURIE SARL", "a": "DIAWARA", "adr": "94, avenue Albert Petit 92220 BAGNEUX", "j": "LUNDI 9 h 30 ET JEUDI 14 h", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "22 DEGRES", "a": "DIAWARA Oumar", "adr": "CODE PORTAIL 36A49", "j": "samedi", "f": "1 fois / semaine", "t": "", "v": "1 fois par mois"}, {"n": "la maison dE LA NOUVELLE CALEDONIE", "a": "DIAWARA Oumar", "adr": "", "j": "Mercredi soir et week-end", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "ATELIER MAXIM SCHMITT", "a": "DIAWARA Oumar", "adr": "", "j": "lundi et mercredi matin", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "CATHERINE CHAUVIGNE COIFFURE", "a": "DIAWARA Oumar", "adr": "", "j": "1 FOIS PAR SEMAINE", "f": "1 fois / semaine (lundi matin)", "t": "", "v": "1 fois par mois"}, {"n": "cooling système", "a": "DIAWARA Oumar", "adr": "26 rue pierre belmondo 75012 paris", "j": "le week-end", "f": "1fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "DIALECTICA", "a": "DIAWARA Oumar", "adr": "", "j": "le samedi", "f": "1 fs /semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "FAIR PLAY", "a": "DIAWARA Oumar", "adr": "", "j": "MARDI 13h30 et 16h", "f": "1 FS/SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "GOLDER & PARTNERS", "a": "DIAWARA Oumar", "adr": "#4753", "j": "WEEK END", "f": "1fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "MUSIC BUSINESS", "a": "DIAWARA Oumar", "adr": "", "j": "Mardi et Vendredi", "f": "2 fs /semaine", "t": "", "v": "1 fois par mois"}, {"n": "OFFICE DENTAL", "a": "Diawara Oumar", "adr": "", "j": "lundi 9 h à 12", "f": "1 fs/ semaine", "t": "", "v": "Cloisons tous les 2 mois\nvitres tous les mois"}, {"n": "PARTI  RADICAL DE GAUCHE (7SUR7 NETT)", "a": "DIAWARA Oumar", "adr": "", "j": "mardi et jeudi matin", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "PLANS B", "a": "DIAWARA Oumar", "adr": "", "j": "Samedi", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "SATELLITE ARCHITECTE", "a": "DIAWARA Oumar", "adr": "", "j": "SAMEDI", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "STUDIO HARMONIC", "a": "Solo   et    SEYDOU (Vitres) - Diawara Oumar & Camara Sidy (Boubacar)", "adr": "", "j": "MERCREDI ET SAMEDI DE 6 à             9 H 30", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois avec perche e échafaudage"}, {"n": "UNIQUE VENTURES LIMITED", "a": "DIAWARA Oumar", "adr": "", "j": "", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "VILLA SAID (LE BON SYnDIC)", "a": "DIAWARA Oumar", "adr": "7, Villa Saîd 75016 PARIS | CODE 9573", "j": "jeudi ou lundi après-midi", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "OPTIC 2000", "a": "FODIE CISSE", "adr": "", "j": "Mardi Matin  | Vendredi Matin", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "NILAI SAS", "a": "FODIE CISSE", "adr": "", "j": "Lundi à 11 h 00", "f": "1 fs /semaine", "t": "", "v": "1 fois par mois"}, {"n": "STUDIO ALIENS", "a": "FODIE CISSE", "adr": "", "j": "jeudi WE", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "EVTB", "a": "FODIE CISSE", "adr": "124, rue de Picpus - 75012 Paris", "j": "A824 (18,07,2018)", "f": "M. FRANCHITTI\nMarie-Ange", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CABINET MORGAN", "a": "FODIE CISSE", "adr": "", "j": "lundi au samedi", "f": "6fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "L35", "a": "FODIE CISSE", "adr": "code rue de charonne A1026-CODE passage josset 0407B", "j": "du Lundi au Vendredi (avant 9 h 15)", "f": "5/SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "M. INDUSTRIE", "a": "GANDEGA", "adr": "Cour de la Maison Brulée  | 89, Rue du Faubourg St Antoine 75011 PARIS | Alarme 978 on  | 2ème code 3141 pour l'étage", "j": "Mardi soir et vendredi soir", "f": "2 FOIS / SEMAINE", "t": "", "v": "2 fois par mois"}, {"n": "OPTIC ALEXIA", "a": "FODIE CISSE", "adr": "", "j": "", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SCM CABINET JEAN PIERRE TIMBAUD", "a": "MOUSSA TOURE", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "SCM DES DOCTEURS CADOT ET SORRIAUX", "a": "GAOUSSOU Mahamadou BAYOKO", "adr": "", "j": "Lundi, Mercredi et samedi", "f": "3 FOIS /SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "SCP CBF/SELASU DAVID LACOMBE", "a": "IBRAHIM  CISSE", "adr": "4 Place de Wagram  75017 Paris", "j": "mardi et vendredi soir OU WE", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "ROOTS TRAVEL", "a": "IBRAHIM CISSE", "adr": "26A79", "j": "mercredi et samedi", "f": "2fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "HEURITECH", "a": "IBRAHIM CISSE", "adr": "Lundi, mercredi et vendredi soir à partir de 19 h", "j": "", "f": "3 fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "SIMONETTI-MALASPINA", "a": "IBRAHIM CISSE", "adr": "code porte : 14078 1er étage", "j": "Mardi et vendredi", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "QUELLE VILLE", "a": "IBRAHIM CISSE", "adr": "", "j": "MARDI 21H00  et Samedi matin", "f": "2 fs/semaine", "t": "", "v": "pas de vitres"}, {"n": "TEDIBER (bureaux)", "a": "Ibrahima cisse", "adr": "samedi et mercredi matin", "j": "TU", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "LA MAISON DE LA NOUVELLE CALEDONIE", "a": "Ibrahima cisse", "adr": "", "j": "du lundi au vendredi", "f": "5 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CENTRE DE SANTE DENTAIRE LA BOULE", "a": "Ismaila", "adr": "", "j": "Nanterre : Lundi au Vendredi", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "FEDERATION PARISIENNE DES SCOPS DU BTP", "a": "Ismaila", "adr": "", "j": "samedi matin", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "EUROPAIN GESTION (EKIP)", "a": "ismaila", "adr": "Le badge noir est pour la 1ère porte d'entrée-le badge bleu pour l'alarme de la boutique-", "j": "mardi et samedi soir a 20h45", "f": "2 fs/semaine", "t": "", "v": "2 fois par mois"}, {"n": "BIBLIOTECA SAS  (IDENT)", "a": "Ismaïla", "adr": "", "j": "samedi dans la journee /jeudi soir 21h00 -", "f": "3 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "LA MAISON DU PRÊT IMMOBILIER", "a": "KONTE DANS LE 9eme", "adr": "la maison du prêt immobilier 9 rue clauzel 75009 paris   |   48 rue du general leclerc 92100 boulogne", "j": "", "f": "1 fs les 15 jours les 2 site", "t": "", "v": "1 fois par mois"}, {"n": "GROUPE MORGAN SERVICES", "a": "SIMAGA", "adr": "Mme DE VILLAS", "j": "78 RUE DE ROME 75008 PARIS", "f": "2 FOIS SPAR SEMAINE", "t": "", "v": "2 fois par mois"}, {"n": "E-ENFANCE", "a": "MOHAMED CISSE", "adr": "Porte gauche, escalier A appuyer sur 11 à E-enfance", "j": "mercredi a 11h", "f": "1 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "IMMEUBLE DE L'ANNONCIATION", "a": "mohamed cisse", "adr": "14, rue de l'annonciation 75016 paris", "j": "lundi et vendredi pour le nettoyage | lundi mercredi samedi pour les poubelles", "f": "2 fs/semaine partie communune et 3 fs/semaine pour poubelles", "t": "", "v": "pas de vitre"}, {"n": "LABANDORIGINALE", "a": "MOHAMED CISSE", "adr": "code 571998", "j": "mardi et vendredi soir OU WE", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SYNDIC 9 rue Lemoine", "a": "MOHAMED CISSE", "adr": "", "j": "Jeudi", "f": "1 fs/semaine", "t": "", "v": "pas de vitre"}, {"n": "LIME", "a": "MOHAMED CISSE", "adr": "code d'accès 1973  | BAT D - 3ème étage", "j": "mardi, jeudi et vendredi ou we soir", "f": "3 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CAP PERFORMANCE", "a": "MOUSSA TOURE", "adr": "Rue 8642 Cour 6594* Esc B 87512 Cave 5947 - code sanitaires  : 2006", "j": "", "f": "6 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "john arthur et Thyssen", "a": "MOUSSA TOURE", "adr": "3 fs/semaine", "j": "51, rue de l'Echiquier 75010 paris", "f": "1 fs pour parties communes\n3 fs pour rotation de poubelles", "t": "", "v": "1 fois par mois"}, {"n": "KOPP TALOS", "a": "NON ASSIGNÉ", "adr": "", "j": "", "f": "", "t": "", "v": ""}, {"n": "KOPP TALOS", "a": "NIAKATE Adama", "adr": "", "j": "samedi", "f": "1 fs/semaine", "t": "", "v": "2 fois par an"}, {"n": "FOREST", "a": "Niakate Adama", "adr": "", "j": "LUNDI, MERCREDI, VENDREDI 15H", "f": "2 fois par semaine", "t": "", "v": "1 fois par mois"}, {"n": "DYNAMIC  LED", "a": "Oumar  KEBE", "adr": "", "j": "Mardi à 15 H", "f": "1 fs/par semaine", "t": "", "v": "1 fois par mois"}, {"n": "IMMEUBLE MONTGALLET / Jean François ESMIEU", "a": "Oumar  KEBE POUR LA ROTATION DES POUBELLE ET SIMAGA POUR LE MENAGE", "adr": "14 rue Montgallet 75012 PARIS - 1er code 1842  2ème code A572", "j": "MERCREDI parties communes", "f": "1 fs/semaine + rotation de poubelle", "t": "", "v": ""}, {"n": "SARL HVM PIZZA", "a": "OUMAR CISSE", "adr": "124, Rue Parmentier 75011 Paris", "j": "", "f": "1 fs/semaine", "t": "", "v": "A CHAQUE PASSAGE"}, {"n": "BACK LIGHT", "a": "OUMAR KEBE", "adr": "", "j": "Mardi et jeudi à 5 heures jusque 8 heures et samedi journée", "f": "3 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CRISOTECH", "a": "OUMAR KEBE", "adr": "code 2485", "j": "week-end ou lundi matin", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "HASAP", "a": "OUMAR KEBE", "adr": "", "j": "", "f": "1fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "YNFLUENCE", "a": "OUMAR KEBE", "adr": "25A89", "j": "we", "f": "2 Fs / mois", "t": "", "v": "sur demande ou lorsque c'est nécessaire"}, {"n": "ACTERIS", "a": "OUMAR KEBE", "adr": "Code 47A50", "j": "SAMEDI", "f": "1 FOIS / SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "WGSN", "a": "OUMAR KEBE", "adr": "Code 22A52 1er étage", "j": "WE", "f": "1 fs/semaiine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CENTRE COMMERCIAL KIDS", "a": "OUMAR KEBE", "adr": "", "j": "Jeudi 10 h 30", "f": "1 fs / semaine", "t": "", "v": "1 fois tous les 15 jours"}, {"n": "CENTRE COMMERCIAL", "a": "OUMAR KEBE", "adr": "", "j": "Lundi à 12 h  | Jeudi à 10 h", "f": "2 fs / semaine", "t": "", "v": "1 fois tous les 15 jours"}, {"n": "PROJET ICONE", "a": "OUMAR KEBE", "adr": "", "j": "mardi", "f": "1 fs/semaine", "t": "", "v": "1 fois par trimestre"}, {"n": "BBG France", "a": "OUMAR KEBE", "adr": "6, Avenue Albert Einstein  | 78 TRAPPES", "j": "Samedi", "f": "1 fs /semaine", "t": "", "v": "1 fois par mois"}, {"n": "ALAIN BENSOUSSAN SELAS", "a": "Poubelles : agent vehicule (Adama)", "adr": "", "j": "lundi au vendredi à partir de       16 h 30", "f": "5 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "AUDISSIMO", "a": "SANDALY", "adr": "", "j": "Lundi, mercredi et vendredi : 1 h", "f": "3 fs / semaine", "t": "", "v": "1 fois par trimestre"}, {"n": "CENTRE DE SANTE DENTAIRE AUSTERLITZ", "a": "SANDALY", "adr": "", "j": "Lundi au Vendredi  | Monceau : Lundi au Vendredi", "f": "5 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "JURISBOISSIERE", "a": "SANDALY", "adr": "", "j": "week-end et mercredi à 19 heures", "f": "2fs/semaine", "t": "", "v": "COTE RUE 1 FOIS PAR MOIS\nCOTE COUR 1 FOIS PAR TRIMESTRE"}, {"n": "ILYEUM", "a": "SANDALY", "adr": "Code : 72531", "j": "lundi et jeudi à 9 h 30", "f": "1 ou 2 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "GALERIE TEMPLON", "a": "SANDALY et BOUBACAR", "adr": "", "j": "", "f": "2 fs / mois", "t": "", "v": "PLANNING ETABLI TOUTES LES 6 SEMAINES"}, {"n": "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A.M.A.S.C)", "a": "Sandaly et BOULAYE", "adr": "", "j": "LUNDI AU SAMEDI", "f": "6 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A.M.A.S.C)", "a": "Sandaly ET KONTE", "adr": "", "j": "LUNDI AU SAMEDI", "f": "6 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "SAS BE92 DOMINO'S", "a": "SEYDOU", "adr": "41, Avenue Victor Cresson 92130 Issy Les Moulineaux", "j": "mercredi 1 fois par mois", "f": "1 fs/mois", "t": "", "v": "MENSUELLE"}, {"n": "SARL HVM PIZZA", "a": "SEYDOU", "adr": "68 rue Damremont - 75018 Paris", "j": "", "f": "1fs/semaine", "t": "", "v": "A CHAQUE PASSAGE"}, {"n": "IBOS VITART", "a": "SEYDOU", "adr": "42B06  2101", "j": "jamais le samedi et dimanche après-midi passage prévu le samedi matin", "f": "1 FS/Semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SELARL DR SCHMUCKLER DOMINIQUE", "a": "SEYDOU CISSE", "adr": "", "j": "mardi et vendredi à 10 h 15", "f": "2 FOIS PAR SEMAINE", "t": "", "v": "TRIMESTRIELLE"}, {"n": "HORIZONTEL", "a": "SEYDOU CISSE", "adr": "", "j": "HORS JOURS FERIE", "f": "2 FOIS/SEMAINE \nVITRERIE 1FOIS/MOIS", "t": "", "v": "1 FS/MOIS"}, {"n": "MGS DEVELOPPEMENT", "a": "SIMAGA", "adr": "Code 2846 B Entre 8 et 10 h Local poubelle", "j": "mercredi soir et week-end", "f": "2 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "YOU FID", "a": "SIMAGA", "adr": "", "j": "lundi matin avant ouverture 9 h 30", "f": "1 fs par semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "RANK CONSULTING", "a": "SIMAGA", "adr": "10, rue de la Justice 75020 PARIS", "j": "jeudi", "f": "1 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "WART", "a": "SIMAGA", "adr": "", "j": "Lundi soir après 19 h code 1958", "f": "1fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "HOMEBOXE", "a": "SIMAGA", "adr": "", "j": "", "f": "", "t": "", "v": "1 FS/MOIS"}, {"n": "ICI LA LUNE", "a": "SIMAGA", "adr": "", "j": "WE", "f": "", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CABINET SCM MEDICAL", "a": "SOLO", "adr": "3112 Désactivation", "j": "Mercredi soir et week end", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "FINDIT CONSULTING", "a": "SOLO", "adr": "3 RUE TALMA 75016 PARIS CODE 3945", "j": "VENDREDI 12 h maximum", "f": "M.BERQUEZ Fabrice / M.BENMUSSA", "t": "", "v": "1 fois par trimestre"}, {"n": "TEDIBER BUREAUX", "a": "SOLO", "adr": "", "j": "Lundi à 9 h 30", "f": "1 fs / Semaine", "t": "", "v": "1 fois par mois"}, {"n": "FTC PARIS", "a": "SOLO", "adr": "", "j": "", "f": "1 fs/ semaine", "t": "", "v": "1 fois tous les 15 jours"}, {"n": "MARCELLA", "a": "SOLO (solo 2)", "adr": "5 IMPASSE POPINCOUR 75011 PARIS", "j": "Du Lundi au Vendredi (après fermeture)", "f": "5 fs / semaine", "t": "", "v": "1 fois tous les 2 mois"}, {"n": "MCD PROMOTION", "a": "solo 2", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "2 fois par mois"}, {"n": "ASIANA AIRLINES", "a": "SOLO", "adr": "Lundi matin, mardi soir et vendredi matin", "j": "code alarme 3009", "f": "3 fs /semaine", "t": "", "v": "1 fois par mois"}, {"n": "AD HOMINEM", "a": "SOLO", "adr": "", "j": "Mardi et jeudi entre 6h30 et 7h45", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "BRIAND AVOCAT", "a": "SOLO", "adr": "CODE 6971", "j": "Mercredi et vendredi soir (ou WE)", "f": "2 FOIS / SEMAINE", "t": "", "v": "1 fois par mois"}, {"n": "VEJA FAIR TRADE", "a": "SOLO", "adr": "Code 1358A pour toutes les portes", "j": "Lundi soir Merc Soir Vend soir", "f": "3 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "LUMAS SAINT GERMAIN", "a": "SOLO (solo 2)", "adr": "CODE 75 X 04", "j": "mercr et samedi 10h", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "ORID AVOCATS", "a": "SOLO (solo 2)", "adr": "", "j": "lundi mercredi", "f": "2 fs/ semaine", "t": "", "v": "1 fois par mois"}, {"n": "160 G SARL", "a": "SOLO", "adr": "", "j": "lundi et mercredi  avant 10 h et Vendredi", "f": "3 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "MON CAMION RESTO", "a": "SOLO", "adr": "", "j": "Mardi Matin", "f": "1 fs / Semaine", "t": "", "v": "1 fois par mois"}, {"n": "CENTRE DENTAIRE DE BOULOGNE", "a": "SOLO", "adr": "", "j": "", "f": "6 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "GCF", "a": "SOLO", "adr": "", "j": "", "f": "1  fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "OLIVIER LILIE WANG", "a": "SOLO", "adr": "le samedi de 9 à 11 h", "j": "", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois Extérieur tous les 15 jour intérieur"}, {"n": "STUDIO HARMONIC", "a": "Solo   et    SEYDOU (Vitres) - Diawara Oumar & Camara Sidy (Boubacar)", "adr": "", "j": "MERCREDI ET SAMEDI DE 6 à             9 H 30", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois avec perche e échafaudage"}, {"n": "Centre de Santé de Boulogne", "a": "SOLO 1", "adr": "", "j": "LUNDI AU SAMEDI", "f": "6 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "SAFE AND SOUND", "a": "SOLO 2", "adr": "5 BIS RUE SAINT PAUL 75004 PARIS", "j": "mercredi + WE", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "SIGHTCALL (WEEMO SAS)", "a": "NON ASSIGNÉ", "adr": "CODE #639220", "j": "WE", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "CAFE BENJAMIN", "a": "SOUKOUNA (Boubou)", "adr": "", "j": "vendredi a 17h avant que tout le monde s'en aille", "f": "7 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "DATA IMMO", "a": "SOUKOUMA BOUBOU", "adr": "", "j": "", "f": "2fs/semaine", "t": "", "v": "pas de vitre"}, {"n": "I LOVE EVENTS", "a": "SOUKOUMA BOUBOU", "adr": "Code 1530 au 1er étage", "j": "mardi - vendredi", "f": "2 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "KRYS OPTIQUE SILVERA LEWIN", "a": "SOUKOUNA BOUBOU", "adr": "", "j": "Mardi à 10 h", "f": "1 fs/semaine", "t": "", "v": "Ttes les 2 semaines : vitres intérieures et extérieures\ntoutes les semaines : extérieure"}, {"n": "NRGY", "a": "SOUKOUNA BOUBOU", "adr": "code 1er porte : A0212                          2EME PORTE : 1202A", "j": "le lundi (à confirmer)", "f": "1 fs/semaine", "t": "", "v": "1 fois par semaine"}, {"n": "VISTORY", "a": "SOUKOUNA BOUBOU", "adr": "CODE SERRURE : 69088513#", "j": "VENDREDI A 16 H", "f": "1 fs/semaine", "t": "", "v": "1 fois par trimestre"}, {"n": "VOUS FINANCER.COM", "a": "SOUKOUNA BOUBOU", "adr": "", "j": "lundi 9h", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "AGENCE 52 K (ARNAUD RAFFIN ARCHITECTE)", "a": "SOULE", "adr": "", "j": "mercredi ou jeudi à 8 heures en présence Du client", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "BAGEL CORNER", "a": "SOULE", "adr": "", "j": "1 FOIS TOUS LES 15 JOURS", "f": "2FS / MOIS", "t": "", "v": "2 fois par mois"}, {"n": "BUTTERFLY TRAINING", "a": "SOULE", "adr": "code  2903B", "j": "", "f": "", "t": "", "v": "TRIMESTRIELLE"}, {"n": "cabinet dentaire de BONDY", "a": "SOULE", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par moi"}, {"n": "CABINET DENTAIRE SOPHIE GIROMAGNY", "a": "SOULE", "adr": "", "j": "", "f": "2 fs / Semaine", "t": "", "v": "1 fois par moi"}, {"n": "CPNEF", "a": "SOULE", "adr": "", "j": "week-end", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "EDITION DU 1ER MAI", "a": "SOULE", "adr": "", "j": "WE", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "NAPOLEON CRYPTO", "a": "SOULE", "adr": "Mardi et jeudi avant ouverture", "j": "", "f": "2fs/ semaine", "t": "", "v": "1 fois tous les 2 mois"}, {"n": "SMEM", "a": "SOULE", "adr": "", "j": "Mardi en journée et Vendredi avant 14 h 30", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "TISS INFO", "a": "SOULE", "adr": "", "j": "vendredi", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "AUX MERVEILLEUX (BUREAU ST CHARLES)", "a": "TRAORE LASSANA", "adr": "", "j": "LUNDI A 10 H", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "FLEXAM INVEST", "a": "TRAORE LASSANA", "adr": "", "j": "VENDREDI A 16 H", "f": "1 fs/ semaine", "t": "", "v": "1 fois par moi"}, {"n": "CIBLE CLIC", "a": "TRAORE LASSANA", "adr": "6, Rue de Lancry 75010 PARIS", "j": "Mercredi avant 9 h 30 et le samedi", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "TREASURYXPRESS", "a": "TRAORE LASSANA", "adr": "", "j": "Mardi à 9h30 et Vendredi à partir de 14h30", "f": "2fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "ECRIN SECRET (GRIPOIX)", "a": "TRAORE LASSANA", "adr": "4, rue du vide gousset paris 2 Ouvert le samedi de 10 à 19 h (passer avant ou après)", "j": "", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "STUDIO AMV", "a": "TRAORE LASSANA", "adr": "", "j": "jeudi après 19 h", "f": "1 fs/semaine", "t": "", "v": "1 fois par moiS"}, {"n": "FIRMA DIFFUSION", "a": "TRAORE LASSANA", "adr": "6717", "j": "mercredi 12h", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "LA NEW CO (SAS GAGEP)", "a": "TRAORE LASSANA", "adr": "", "j": "", "f": "1 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "ATELIER NILS ROUSSET DIEGO", "a": "TRAORE LASSANA", "adr": "", "j": "Vendredi à partir de 15 h", "f": "1 fois par semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "DENTILYS MJ", "a": "TRAORE LASSANA", "adr": "", "j": "lundi matin", "f": "1 fs par semaine", "t": "", "v": "1 fois par mois"}, {"n": "centre dentaire val d'yerres", "a": "TRAORE LASSANA", "adr": "", "j": "lundi  samedi", "f": "ts les jours", "t": "", "v": "1 fois par mois"}, {"n": "confiture parisienne", "a": "TRAORE LASSANA", "adr": "", "j": "", "f": "2fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "GS REIM", "a": "TRAORIE LASSANA", "adr": "bureau 5  | 47a31 et 23b74  | Ascenseur cour 5eme gauche", "j": "", "f": "2  fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "GS REIM", "a": "TRAORIE LASSANA", "adr": "DE", "j": "WE et mardi soir ou avant 9 h le mercredi", "f": "2  fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "GS REIM", "a": "TRAORIE LASSANA", "adr": "bureau 18", "j": "Mercredi à  9 heures", "f": "2  fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "WINESITTING", "a": "TRAORE", "adr": "", "j": "jeudi", "f": "1 fs/semaine", "t": "", "v": ""}, {"n": "SPIN INTERACTIVE", "a": "YOUSSOUF", "adr": "emmanuel@spin-interactive.com sandrine@spin-interactive.com   gp@spin-interactive.com", "j": "LUNDI ET MERCREDI SOIR pour l'instant", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "BON PARFUMEUR", "a": "YOUSSOUF", "adr": "58, Rue Tiquetonne 75002 PARIS", "j": "Samedi", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "SARL HVM PIZZA", "a": "YOUSSOUF", "adr": "9ème", "j": "mercredi", "f": "1 fs/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "SYNDICAT COMMISSAIRES ET HAUTS FONCTIONNAIRE POLICE NATIONALE", "a": "YOUSSOUF", "adr": "", "j": "", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "INTEMPORA", "a": "YOUSSOUF", "adr": "", "j": "mercredi vers 13 ou 14h", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "ECOFUR SARL", "a": "YOUSSOUF", "adr": "", "j": "lundi mercredi vendredi", "f": "3 fs/ semaine", "t": "", "v": "2 fois par mois"}, {"n": "SBT", "a": "YOUSSOUF", "adr": "", "j": "Du LUNDI au JEUDI ET SAMEDI A 12H00", "f": "5 fs/semaine", "t": "", "v": "TRIMESTRIELLE"}, {"n": "CROSSLOG INTERNATIONAL", "a": "YOUSSOUF", "adr": "8, Rue Beauregard 75002 PARIS", "j": "Mercredi avant 11 h 30", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "EVOLUCIM", "a": "YOUSSOUF", "adr": "", "j": "", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "CABINET DENTAIRE DU DOCTEUR PARA", "a": "YOUSSOUF", "adr": "", "j": "5 fs par semaine lundi au vendredi", "f": "5 fs / semaine", "t": "", "v": "1 fois par mois"}, {"n": "VOLTA AVOCAT", "a": "YOUSSOUF", "adr": "A9746 pour la porte rue 132A pour la porte intérieure", "j": "Samedi 10à 12h", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "VOXCO", "a": "YOUSSOUF (Diadié 2)", "adr": "", "j": "CODE ASCENSEUR 02B45", "f": "1 fs/semaine", "t": "", "v": "1 fois tous les 2 mois"}, {"n": "ACT&NOTAIRES ASOCIES", "a": "solo 2", "adr": "", "j": "", "f": "1 fs/ semaine", "t": "", "v": "EXTERIEURE 1 FS/TS LES 15 JOURS\nINTERIEUR 1 FS/MOIS\nVERRIERE 1 FS/AN"}, {"n": "DEFI  RH", "a": "NON ASSIGNÉ", "adr": "WEEK END", "j": "CODE PORTE 7263", "f": "1 fs tous les 15 j", "t": "", "v": "TRIMESTRIELLE"}, {"n": "GALERIE Mariam GOODMAN", "a": "NON ASSIGNÉ", "adr": "", "j": "", "f": "", "t": "", "v": "Toutes les six semaines"}, {"n": "LE BON SYNDIC (GESIP)", "a": "NON ASSIGNÉ", "adr": "", "j": "", "f": "", "t": "", "v": ""}, {"n": "PRIMAXION", "a": "NON ASSIGNÉ", "adr": "", "j": "", "f": "", "t": "", "v": "1 FS/MOIS"}, {"n": "SGEA", "a": "Simaga", "adr": "81 boulevard jean baptiste oudry", "j": "", "f": "2 fois/semaine", "t": "", "v": "1 FS/MOIS"}, {"n": "ASSOCIATION JEUNESSE MARINE", "a": "NON ASSIGNÉ", "adr": "9 Rue de la Véga,", "j": "", "f": "", "t": "", "v": ""}, {"n": "EDICOM", "a": "NON ASSIGNÉ", "adr": "", "j": "Lundi, mercredi et vendredi avant 9 heures", "f": "3 FS/semaine", "t": "", "v": "3 Fs par an"}, {"n": "CABINET DE PSYCHOMOTRICITE", "a": "NON ASSIGNÉ", "adr": "", "j": "Mercredi 19h30 et Samedi 19h30", "f": "2 FS / semaine", "t": "", "v": "1 fs par mois"}, {"n": "MATEIA", "a": "NON ASSIGNÉ", "adr": "", "j": "Mercredi 7 h-9 h et samedi 8 h-10 h", "f": "2 FS / semaine", "t": "", "v": ""}, {"n": "FFI", "a": "", "adr": "10 BIS RUE MULHER 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "DR TIMSIT JEAN", "a": "", "adr": "10 RUE LUCIEN BOUGET 91220 BRETIGNY SUR ORGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ALTIDEM", "a": "", "adr": "201 RUE SAINT MARTIN 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AUSSI ALSO", "a": "", "adr": "6 BOULEVARD DES FILLES DU CALVAIRE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AZKAN GROUP", "a": "", "adr": "1 QUAI DE LA GARONNE 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "DIGISECUR", "a": "", "adr": "113 BOULEVARD SOULT, 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ECOLE TAXI HOCINE YOUSFI", "a": "", "adr": "38 rue Paul Belmondo 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "JASMIN CAPITAL", "a": "", "adr": "32 RUE DE CAUMARTIN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "NOVEO", "a": "", "adr": "69 BOULEVARD MALHERBES 75008 PARIS", "j": "", "f": "--M--J--S--D", "t": "", "v": ""}, {"n": "OPCC - DOUMER", "a": "", "adr": "112 RUE AMBROISE CROIZAT 93200 ST DENIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Avocat à la cour", "a": "", "adr": "137 Boulevard Magenta 75010 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCM NATION SANTE DORIAN", "a": "", "adr": "6 rue Dorian, 75016 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SPEC SALSET ET SAUVAT ASSURANCES", "a": "", "adr": "9 RUE ETEX 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "PRIMAXION MALAKOFF", "a": "", "adr": "75 RUE GUY MOQUET 92240 MALAKOFF", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "TNR", "a": "", "adr": "5 AVENUE DE L EUROPE 95400 VILLIERS LE BEL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "1G SOLUTIONS", "a": "", "adr": "77 RUE REAUMUR 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "40ème RUGISSANT GUENOT", "a": "", "adr": "6 RUE GUENOT 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "40ème RUGISSANT JARDINIER", "a": "", "adr": "5 IMPASSE DES JARDINIER 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "421 PRODUCTIONS", "a": "", "adr": "172, rue de Charonne 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "A LA MAISON DU CADEAU", "a": "", "adr": "17 RUE DE L'ANNONCIATION 75016 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ABSIS GROUPE", "a": "", "adr": "39 RUE ANATOLE FRANCE 39 RUE ANATOLE FRANCE CS 50227 92532 LEVALLOIS PERRET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AC6", "a": "", "adr": "21 rue Pierre Curie 92400 COURBEVOIE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ACT& NOTAIRES ASSOCIES", "a": "", "adr": "14 RUE OLIVIER DE SERRES 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ADESOFT", "a": "", "adr": "71 RUE DU FAUBOURG SAINT ANTOINE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ALPHAJET FAIR INVESTORS", "a": "", "adr": "18 RUE DE LA PEPINIERE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ANGELA BOWER GHIDALIA SARL", "a": "", "adr": "66 RUE DE PARIS 93100 MONTREUIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ASTER FAB", "a": "", "adr": "26, avenue de l'Opéra 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ATELIER COQLICO", "a": "", "adr": "101 RUE LEGENDRE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AURELIE   JEUNANG", "a": "", "adr": "4 RUE ESPLANADE JACQUE CHIRAC 92150 SURENES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "AXIA INTERIM", "a": "", "adr": "60 AVENUE DAUMESNIL 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "B.Braun Avitum France", "a": "", "adr": "25 rue Melingue 75019 PARIS", "j": "", "f": "---A-----O--", "t": "", "v": ""}, {"n": "BABYCHOU", "a": "", "adr": "8 RUE DE STRASBOURG 94300 VINCENNES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BERCY COPIE", "a": "", "adr": "55 RUE DE MONTREUIL 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BIBLIOTHECA SAS  (IDENT)", "a": "", "adr": "5, Boulevard des Bouvets 92000 NANTERRE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BIRAMBEAU 2", "a": "", "adr": "28 AVENUE DU PETIT PARC 94300 VINCENNES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BIZAROID", "a": "", "adr": "5 PASSAGE DU CHANTIER 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BON PARFUMEUR FAUBOURG POISSONNIERE", "a": "", "adr": "68 RUE DU FAUBOURG POISSONNIERE 75010 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "BONAPARTE PROMOTION", "a": "", "adr": "14 RUE DES MERCURIALES 67450 LAMPERTHEM", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "C2L OPHTASANTE", "a": "", "adr": "91 AVENUE DE CLICHY 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CABINET DENTAIRE PITAGORA", "a": "", "adr": "177 RUE ST HONORE 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CABINET MEDICAL ALIZEE TROTET", "a": "", "adr": "5 Place SALVADOR ALLENDE 94140 ALFORTVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CABINET ZERAH", "a": "", "adr": "7 RUE ANTOINE HAJJE 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CAFE BENJAMAIN", "a": "", "adr": "53 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CEC PARIS SARL", "a": "", "adr": "4 RUE DE FURSTEMBERG 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A M A S C)", "a": "", "adr": "1-9 Rue Pierre Expert ZAC La Marine 92700 COLOMBES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CHIMI SAS", "a": "", "adr": "127 RUE VIEILLE TEMPLE 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CHRISTOPHE ET GUILLAUME", "a": "", "adr": "12 RUE DUPETIT-THOUARS 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CINDY FASHION", "a": "", "adr": "203 RUE SAINT MAUR 75010 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO BOULOGNE", "a": "", "adr": "28 RUE GEORGES SOREL 92100 BOULOGNE BILLANCOURT", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO NATION Paris 12ème", "a": "", "adr": "24 BIS PLACE DE LA NATION 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO NATION Paris 6ème", "a": "", "adr": "32 RUE DU FOUR 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO NATION PO7", "a": "", "adr": "78 RUE ST DOMINIQUE 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CNDO PARIS 16EME", "a": "", "adr": "19 AVENUE DE LA GRANDE ARMÉE 75016 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CONSEIL REGIONNAL DE LA GUADELOUPE", "a": "", "adr": "284 BOULEVARD ST GERMAIN 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "COOLING SYSTEM", "a": "", "adr": "26 Rue Paul Belmondo 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CPNEF AUDIOVISUEL", "a": "", "adr": "48, Rue Saint-Honoré 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CPNEF Spectacle Vivant", "a": "", "adr": "48 rue Saint-Honoré 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "DOCTEUR COHEN ELISE LAURENCE", "a": "", "adr": "2 RUE PIERRE JOSEPH REDOUTE 92360 MEUDON LAFORET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ENTMV", "a": "", "adr": "25 RUE SAINT AUGUSTIN 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ENVELCOM LUXIUM", "a": "", "adr": "15 RUE JEAN PIERRE TIMBAUD 78500 SARTROUVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ESPACE ORTHO SCOLIOSE", "a": "", "adr": "1 RUE JACQUES COEUR 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "EUROPAIN GESTION", "a": "", "adr": "64, Rue Caumartin 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "EXPERT ENERGIE SERVICES", "a": "", "adr": "17 RUE CAMILLE GROULT 94400 VITRY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "FP MIROITERIE SERRURIE", "a": "", "adr": "17 RUE GEORGES MELIES BAT O.2 95240 CORNEILLES EN PARISIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "FRANCE PRO HYGIENE", "a": "", "adr": "189 RUE D'AUBERVILLIERS 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "FREDERIC LETELLIER", "a": "", "adr": "116 RUE DE MEAUX, 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "GAUTIER CONQUET PUMA", "a": "", "adr": "5 RUE CHARONNE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "GROUPE S-P-Q-R", "a": "", "adr": "10-14 RUE AUDUBON 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "GTF SIGNALETIQUE", "a": "", "adr": "132 Boulevard Serurier 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "HYGIE", "a": "", "adr": "19 RUE DE LA MAIN D'OR 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "IDY PRODUCTION", "a": "", "adr": "1 RUE DE L EGALITE 92220 BAGNEUX", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "LACOSTE ASSOCIES", "a": "", "adr": "10 RUE LABIE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "LA CREME DES DESSERTS", "a": "", "adr": "65 RUE D'AGUESSEAU 92100 BOULOGNE BILLANCOURT", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "L'ATELIER VIKEN", "a": "", "adr": "68 RUE DE LA CHAUSSÉE D'ANTIN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "MAG MAX PRODUCTIONS", "a": "", "adr": "175 AV ACHILLE PERETTI 92200 NEUILLY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "MAITRE CLAIRE BATELLIER", "a": "", "adr": "3 BIS GRAND PLACE 77600 BUSSY SAINT GEORGES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Manufacture PRELLE", "a": "", "adr": "5 Place des Victoires, 75001 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "MASSON MIETTE", "a": "", "adr": "16 RUE DE MARSEILLE 94140 ALFORTVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "MEDICAL PLUS FRANCE", "a": "", "adr": "40 rue de la réunion 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "NDS VERRES", "a": "", "adr": "9 MAIL JOLIOT CURIE 95310 SAINT-OUEN-L'AUMÔNE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "NOUS EPICERIES ANTI GASPI", "a": "", "adr": "221 Boulevard Davout 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "NUX  DIGITAL-HELLO MOJITO", "a": "", "adr": "1 VOIE FELIX EBOUE 94000 CRETEIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Olivier Lijie WANG", "a": "", "adr": "11, Place de la Nation 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "PARIS PRIVATE FINANCE", "a": "", "adr": "10 RUE DE LA BIENFAISANCE 75008 75008", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "PLANTUREUX ET ASSOCIES", "a": "", "adr": "36 RUE DE PICPUS 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "POLETTE", "a": "", "adr": "91 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "POULET O PIRI PIRI", "a": "", "adr": "18 PLACE DES QUATREE SAISONS 91270 VIGNEUX-SUR-SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "PROTOTEXTILE", "a": "", "adr": "28 RUE SAINT SABIN 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "RENOFY", "a": "", "adr": "9 Rue de Condé, 33000 BORDEAUX", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SAGIPA 1", "a": "", "adr": "25 RUE PELLEPORT 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SAGNIER", "a": "", "adr": "2 RUE DE CHAPP 93800 EPINAY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SARL ZANUSO FRANCE", "a": "", "adr": "26 RUE ST SULPICE 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SAS PARIS TRIBE", "a": "", "adr": "44 rue du Temple 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCI IMMOLAK", "a": "", "adr": "45 RUE EMILE MENIER 75116 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCI JABALLAH", "a": "", "adr": "1 RUE CHARLES GUSTAVE STOSKOPF 94000 CRETEIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "LA QUATUOR", "a": "", "adr": "1 RUE EDOUARD VAILLANT 93170 BAGNOLET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCI TIC & TOC", "a": "", "adr": "13 RUE DE TOCQUEVILLE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCM AVOCAT - PLACE DE LA BASTILLE", "a": "", "adr": "3 PLACE DE LA BASTILLE 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCM MEDICAL", "a": "", "adr": "213, Avenue de Choisy 75013 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SCPFAURE VIDECOQ & ERAUD", "a": "", "adr": "60 BOULEVARD HUSSON 91170 VITRY CHATILLON", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SEIZE CONSULTING", "a": "", "adr": "20 RUE CHAROLAIS 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SELARL QUAI DE SEINE", "a": "", "adr": "49 QUAI DE SEINE 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SELARL Dr PARA", "a": "", "adr": "6 RUE DE ROME 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Société NRGY", "a": "", "adr": "348 RUE DE VAUGIRARD 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "STAM PRODUCTION", "a": "", "adr": "34 RUE NICOLAI 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SYNDIC du 9, Rue Lemoine", "a": "", "adr": "9, Rue Lemoine 92100 BOULOGNE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "TEAMSQUARE", "a": "", "adr": "63 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "TISCO INGENIERIE", "a": "", "adr": "25 RUE DE MAUBEUGE 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "VALOMBREUSE", "a": "", "adr": "66 RUE DU FAUBOURG SAINT HONORE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "VALUE CONSEIL", "a": "", "adr": "97 RUE PELLEPORT 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "VENDIS CAPITAL MANAGEMENT SA", "a": "", "adr": "36 BOULEVARD HAUSSMANN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "YOUNG HAPPY", "a": "", "adr": "80 RUE MOUFFETARD 75005 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CDM LAVOISIER", "a": "", "adr": "18 RUE DE LA PEPINIERE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "COALLIA  BRANCION", "a": "", "adr": "10 RUE BRANCION 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "RIMADESIO", "a": "", "adr": "25 AVENUE RAPP 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "160G SARL", "a": "", "adr": "160 RUE DE MONTMARTRE 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Association Sportive et Gymnique de Bagnolet", "a": "", "adr": "172 Rue Sadi Carnot 93170 Bagnolet", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "CD 92 BASKET", "a": "", "adr": "56 RUE DES HAUTES PATURES 92000 NANTERRE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "Flexam Conseil", "a": "", "adr": "38 rue du colisée 75008 PARIS - 3EME ETAGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "KRYS OPTIQUE  LEWIN", "a": "", "adr": "78, avenue de la République 92120 MONTROUGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "LES ABBESSES IMMOBILIER", "a": "", "adr": "52 RUE D'ORSEL 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "OPTIC'ALEXIA", "a": "", "adr": "229, Rue des Pyrénées 75020 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "POLE FORMATION 93", "a": "", "adr": "193 AVENUE DU PRESIDENT WILSON 93210 SAINT DENIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "RIVECOUR", "a": "", "adr": "31 RUE DES PETITS CHAMPS 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "SARL ISABEL", "a": "", "adr": "91 RUE SAINT CHARLES 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "VALEA", "a": "", "adr": "BAT 3B ZONE D'ACTIVITE DES 4 CHEMINS 95540 MERY SUR OISE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "ZEEEGGS", "a": "", "adr": "96 RUE BLANCHE 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": ""}, {"n": "OFFICIO AVOCATS", "a": "NON ASSIGNÉ", "adr": "16 AVENUE DE LA REPUBLIQUE 75011 PARIS", "j": "", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois"}, {"n": "CEFISI", "a": "NON ASSIGNÉ", "adr": "1 Voie Felix Eboué 94000 CRETEIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "Trimestrielle"}, {"n": "ELSA GARY", "a": "NON ASSIGNÉ", "adr": "14 RUE OLIVIER DE SERRES 75015 PARIS", "j": "", "f": "", "t": "", "v": "1 fois par mois"}];
+  // Show confirmation modal
+  var msg = toArchive.length + ' site(s) absents de Pégase :\n\n';
+  var names = toArchive.slice(0,15).map(function(x){ return '• ' + x.name; }).join('\n');
+  if (toArchive.length > 15) names += '\n... et ' + (toArchive.length-15) + ' autres';
+  msg += names + '\n\nArchiver ces sites maintenant ?';
+  if (confirm(msg)) {
+    var archived = 0;
+    // Archive in reverse order to preserve indices
+    toArchive.slice().reverse().forEach(function(item) {
+      var s = DATA[item.idx];
+      ARCHIVES.push({ site: s, archivedAt: new Date().toISOString(), archivedAtStr: new Date().toLocaleDateString('fr-FR'), reason: 'Absent Pégase' });
+      addHistory(s.n, 'Archivé automatiquement — absent de Pégase');
+      DATA.splice(item.idx, 1);
+      archived++;
+    });
+    saveData();
+    saveArchives();
+    buildColorMap();
+    showToast('🗄️ ' + archived + ' site(s) archivé(s) + ' + updated + ' dates injectées');
+    render();
+  } else {
+    if (updated > 0) { showToast('📅 ' + updated + ' dates de contrat injectées'); render(); }
+  }
+}
+
+var DATA_DEFAULT = [{"n": "FFI", "a": "", "adr": "10 BIS RUE MULHER 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-10-11"}, {"n": "DR TIMSIT JEAN", "a": "", "adr": "10 RUE LUCIEN BOUGET 91220 BRETIGNY SUR ORGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-01-06"}, {"n": "ALTIDEM", "a": "", "adr": "201 RUE SAINT MARTIN 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-09-22"}, {"n": "ASSOCIATION JEUNESSE MARINE", "a": "NON ASSIGNÉ", "adr": "9 Rue de la Véga,", "j": "", "f": "", "t": "", "v": "", "dateContrat": "2020-02-07"}, {"n": "AUSSI ALSO", "a": "", "adr": "6 BOULEVARD DES FILLES DU CALVAIRE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-09-10"}, {"n": "AZKAN GROUP", "a": "", "adr": "1 QUAI DE LA GARONNE 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-03-01"}, {"n": "DIGISECUR", "a": "", "adr": "113 BOULEVARD SOULT, 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2020-02-19"}, {"n": "ECOLE TAXI HOCINE YOUSFI", "a": "", "adr": "38 rue Paul Belmondo 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-11-03"}, {"n": "EUKLID", "a": "Bakary NIMAGA", "adr": "", "j": "", "f": "M,ABRIBAT SYLVAIN", "t": "", "v": "1 fs/mois", "dateContrat": "2024-01-01"}, {"n": "GALERIE TEMPLON", "a": "SANDALY et BOUBACAR", "adr": "", "j": "", "f": "2 fs / mois", "t": "", "v": "PLANNING ETABLI TOUTES LES 6 SEMAINES", "dateContrat": "2018-10-12"}, {"n": "JASMIN CAPITAL", "a": "", "adr": "32 RUE DE CAUMARTIN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-11-08"}, {"n": "MATEIA", "a": "NON ASSIGNÉ", "adr": "", "j": "Mercredi 7 h-9 h et samedi 8 h-10 h", "f": "2 FS / semaine", "t": "", "v": "", "dateContrat": "2020-03-02"}, {"n": "NOVEO", "a": "", "adr": "69 BOULEVARD MALHERBES 75008 PARIS", "j": "", "f": "--M--J--S--D", "t": "", "v": "", "dateContrat": "2021-02-01"}, {"n": "OPCC - DOUMER", "a": "", "adr": "112 RUE AMBROISE CROIZAT 93200 ST DENIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2020-12-01"}, {"n": "Avocat à la cour", "a": "", "adr": "137 Boulevard Magenta 75010 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-04-01"}, {"n": "SCM NATION SANTE DORIAN", "a": "", "adr": "6 rue Dorian, 75016 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-04-01"}, {"n": "SPEC SALSET ET SAUVAT ASSURANCES", "a": "", "adr": "9 RUE ETEX 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-11-18"}, {"n": "PRIMAXION MALAKOFF", "a": "", "adr": "75 RUE GUY MOQUET 92240 MALAKOFF", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-10-01"}, {"n": "TNR", "a": "", "adr": "5 AVENUE DE L EUROPE 95400 VILLIERS LE BEL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-09-15"}, {"n": "1G SOLUTIONS", "a": "", "adr": "77 RUE REAUMUR 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2020-09-01"}, {"n": "40ème RUGISSANT GUENOT", "a": "", "adr": "6 RUE GUENOT 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-05-26"}, {"n": "40ème RUGISSANT JARDINIER", "a": "", "adr": "5 IMPASSE DES JARDINIER 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-04-19"}, {"n": "421 PRODUCTIONS", "a": "", "adr": "172, rue de Charonne 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2017-05-31"}, {"n": "A LA MAISON DU CADEAU", "a": "", "adr": "17 RUE DE L'ANNONCIATION 75016 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-10-15"}, {"n": "ABSIS GROUPE", "a": "", "adr": "39 RUE ANATOLE FRANCE  39 RUE ANATOLE FRANCE  CS 50227 92532 LEVALLOIS PERRET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-06-27"}, {"n": "AC6", "a": "", "adr": "21 rue Pierre Curie 92400 COURBEVOIE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-05-27"}, {"n": "ACT& NOTAIRES ASSOCIES", "a": "", "adr": "14 RUE OLIVIER DE SERRES 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2019-06-24"}, {"n": "AD HOMINEM", "a": "SOLO", "adr": "", "j": "Mardi et jeudi entre 6h30 et 7h45", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2016-10-25"}, {"n": "ADESOFT", "a": "", "adr": "71 RUE DU FAUBOURG SAINT ANTOINE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-04-02"}, {"n": "ALAIN BENSOUSSAN SELAS", "a": "Poubelles : agent vehicule (Adama)", "adr": "", "j": "lundi au vendredi à partir de       16 h 30", "f": "5 fs/semaine", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2019-11-22"}, {"n": "ALPHAJET FAIR INVESTORS", "a": "", "adr": "18 RUE DE LA PEPINIERE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-09-01"}, {"n": "ANGELA BOWER GHIDALIA SARL", "a": "", "adr": "66 RUE DE PARIS 93100 MONTREUIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-06-27"}, {"n": "ARCHITRIO", "a": "CAMARA KODORE", "adr": "", "j": "Samedi (avant) Apres midi", "f": "1 fs/semaine", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2016-04-25"}, {"n": "ASIANA AIRLINES", "a": "SOLO", "adr": "Lundi matin, mardi soir et vendredi matin", "j": "code alarme 3009", "f": "3 fs /semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2015-12-23"}, {"n": "ASTER FAB", "a": "", "adr": "26, avenue de l'Opéra 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2017-07-21"}, {"n": "ATELIER COQLICO", "a": "", "adr": "101 RUE LEGENDRE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-05-19"}, {"n": "AURELIE   JEUNANG", "a": "", "adr": "4  RUE ESPLANADE  JACQUE  CHIRAC 92150 SURENES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-02-03"}, {"n": "AXIA INTERIM", "a": "", "adr": "60 AVENUE DAUMESNIL 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-10-05"}, {"n": "B.Braun Avitum France", "a": "", "adr": "25 rue Melingue 75019 PARIS", "j": "", "f": "---A-----O--", "t": "", "v": "", "dateContrat": "2022-01-01"}, {"n": "BABYCHOU", "a": "", "adr": "8 RUE DE STRASBOURG 94300 VINCENNES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-11-03"}, {"n": "BABYCHOU NEUILLY", "a": "DIARRA", "adr": "Madame Delphine BEAUFRE - Compta: Mme Josiane DUARTE  | Code grille : 9526 Code porte : 5283 4ème étage, porte droite", "j": "VENDREDI A 17 H 30", "f": "1 fs / Semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2015-09-22"}, {"n": "BERCY COPIE", "a": "", "adr": "55 RUE DE MONTREUIL 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-01-05"}, {"n": "BIBLIOTHECA SAS  (IDENT)", "a": "", "adr": "5, Boulevard des Bouvets 92000 NANTERRE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2018-05-01"}, {"n": "BIRAMBEAU 2", "a": "", "adr": "28 AVENUE DU PETIT PARC 94300 VINCENNES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-03-09"}, {"n": "BIZAROID", "a": "", "adr": "5 PASSAGE DU CHANTIER 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-02-01"}, {"n": "BON PARFUMEUR FAUBOURG POISSONNIERE", "a": "", "adr": "68 RUE DU FAUBOURG POISSONNIERE 75010 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-12-17"}, {"n": "BONAPARTE PROMOTION", "a": "", "adr": "14 RUE DES MERCURIALES 67450 LAMPERTHEM", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2026-02-02"}, {"n": "C2L OPHTASANTE", "a": "", "adr": "91 AVENUE DE CLICHY 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-05-02"}, {"n": "CABINET DENTAIRE PITAGORA", "a": "", "adr": "177  RUE ST HONORE 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-03-25"}, {"n": "CABINET MEDICAL ALIZEE TROTET", "a": "", "adr": "5 Place SALVADOR ALLENDE 94140 ALFORTVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-11-04"}, {"n": "CABINET MORGAN", "a": "FODIE CISSE", "adr": "", "j": "lundi au samedi", "f": "6fs/ semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2019-05-02"}, {"n": "CABINET ZERAH", "a": "", "adr": "7 RUE ANTOINE HAJJE 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-10-24"}, {"n": "CAFE BENJAMAIN", "a": "", "adr": "53 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-07-01"}, {"n": "CEC PARIS SARL", "a": "", "adr": "4 RUE DE FURSTEMBERG 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-09-06"}, {"n": "CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A.M.A.S.C)", "a": "Sandaly ET KONTE", "adr": "", "j": "LUNDI AU SAMEDI", "f": "6 fs/semaine", "t": "", "v": "1 FS/MOIS", "dateContrat": "2017-10-02"}, {"n": "CHIMI SAS", "a": "", "adr": "127 RUE VIEILLE TEMPLE 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-03-27"}, {"n": "CHRISTOPHE ET GUILLAUME", "a": "", "adr": "12 RUE DUPETIT-THOUARS 75003 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-04-28"}, {"n": "CINDY FASHION", "a": "", "adr": "203 RUE SAINT MAUR 75010 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-10-01"}, {"n": "CNDO BOULOGNE", "a": "", "adr": "28 RUE GEORGES SOREL 92100 BOULOGNE BILLANCOURT", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-02-09"}, {"n": "CNDO NATION Paris 12ème", "a": "", "adr": "24 BIS PLACE DE LA NATION 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-10-02"}, {"n": "CNDO NATION Paris 6ème", "a": "", "adr": "32 RUE DU FOUR 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-10-04"}, {"n": "CNDO NATION PO7", "a": "", "adr": "78 RUE ST DOMINIQUE 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-02-09"}, {"n": "CNDO PARIS 16EME", "a": "", "adr": "19 AVENUE DE LA GRANDE ARMÉE 75016 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-10-02"}, {"n": "COMELIT IMMOTEC", "a": "DIAKITE ( SOUKOUNA 2)", "adr": "", "j": "Mardi soir et vendredi soir", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2012-07-10"}, {"n": "CONSEIL REGIONNAL DE LA GUADELOUPE", "a": "", "adr": "284  BOULEVARD ST GERMAIN 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-06-19"}, {"n": "COOLING SYSTEM", "a": "", "adr": "26 Rue Paul Belmondo 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2018-11-14"}, {"n": "CPNEF AUDIOVISUEL", "a": "", "adr": "48, Rue Saint-Honoré 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2016-06-04"}, {"n": "CPNEF Spectacle Vivant", "a": "", "adr": "48 rue Saint-Honoré 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2016-06-04"}, {"n": "DOCTEUR COHEN ELISE LAURENCE", "a": "", "adr": "2 RUE PIERRE JOSEPH REDOUTE 92360 MEUDON LAFORET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-10-03"}, {"n": "DYNAMIC  LED", "a": "Oumar  KEBE", "adr": "", "j": "Mardi à 15 H", "f": "1 fs/par semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2016-09-20"}, {"n": "ECOFUR SARL", "a": "YOUSSOUF", "adr": "", "j": "lundi mercredi vendredi", "f": "3 fs/ semaine", "t": "", "v": "2 fois par mois", "dateContrat": "2016-06-20"}, {"n": "ECRIN SECRET (GRIPOIX)", "a": "TRAORE LASSANA", "adr": "4, rue du vide gousset paris 2 Ouvert le samedi de 10 à 19 h (passer avant ou après)", "j": "", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2015-04-01"}, {"n": "EDITIONS BRUNO DOUCEY", "a": "Bakary NIMAGA", "adr": "67 rue de Reuilly 75012 Paris", "j": "WEEk end", "f": "1 FOIS / SEMAINE", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2017-09-30"}, {"n": "ENTMV", "a": "", "adr": "25 RUE SAINT AUGUSTIN 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-02-05"}, {"n": "ENVELCOM LUXIUM", "a": "", "adr": "15 RUE JEAN PIERRE TIMBAUD 78500 SARTROUVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-10-17"}, {"n": "ESPACE ORTHO SCOLIOSE", "a": "", "adr": "1 RUE JACQUES COEUR 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-06-26"}, {"n": "EUROPAIN GESTION", "a": "", "adr": "64, Rue Caumartin 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2014-12-23"}, {"n": "EVOLUCIM", "a": "YOUSSOUF", "adr": "", "j": "", "f": "1 fs/semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2015-12-21"}, {"n": "EVTB", "a": "FODIE CISSE", "adr": "124, rue de Picpus - 75012 Paris", "j": "A824 (18,07,2018)", "f": "M. FRANCHITTI
+Marie-Ange", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2017-03-10"}, {"n": "EXPERT ENERGIE SERVICES", "a": "", "adr": "17 RUE CAMILLE GROULT 94400 VITRY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-07-10"}, {"n": "FAIR PLAY", "a": "DIAWARA Oumar", "adr": "", "j": "MARDI 13h30 et 16h", "f": "1 FS/SEMAINE", "t": "", "v": "1 fois par mois", "dateContrat": "2015-12-07"}, {"n": "FOREST", "a": "Niakate Adama", "adr": "", "j": "LUNDI, MERCREDI, VENDREDI 15H", "f": "2 fois par semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2015-02-26"}, {"n": "FP MIROITERIE SERRURIE", "a": "", "adr": "17 RUE GEORGES MELIES BAT O.2 95240 CORNEILLES EN PARISIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-10-29"}, {"n": "FRANCE PRO HYGIENE", "a": "", "adr": "189 RUE D'AUBERVILLIERS 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-10-11"}, {"n": "FREDERIC LETELLIER", "a": "", "adr": "116 RUE DE MEAUX, 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-10-06"}, {"n": "GAUTIER CONQUET PUMA", "a": "", "adr": "5 RUE CHARONNE 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-02-01"}, {"n": "GIEPS", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "we mercredi", "f": "2 fs/semaine", "t": "", "v": "1 fs/par mois", "dateContrat": "2015-03-06"}, {"n": "GOLDER & PARTNERS", "a": "DIAWARA Oumar", "adr": "#4753", "j": "WEEK END", "f": "1fs/semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2016-06-25"}, {"n": "GROUPE S-P-Q-R", "a": "", "adr": "10-14 RUE AUDUBON 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-01-13"}, {"n": "GTF SIGNALETIQUE", "a": "", "adr": "132 Boulevard Serurier 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-02-24"}, {"n": "HYGIE", "a": "", "adr": "19 RUE DE LA MAIN D'OR 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-04-28"}, {"n": "IDY PRODUCTION", "a": "", "adr": "1 RUE DE L EGALITE 92220 BAGNEUX", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-03-26"}, {"n": "LACOSTE ASSOCIES", "a": "", "adr": "10 RUE LABIE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-02-08"}, {"n": "LA CREME DES DESSERTS", "a": "", "adr": "65 RUE D'AGUESSEAU 92100 BOULOGNE BILLANCOURT", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-11-17"}, {"n": "LA MODELERIE PARISIENNE", "a": "Amara FISSOUROU", "adr": "", "j": "LUNDI, Mardi, mercredi et Jeudi à 16 heures", "f": "4 FS : SEMAINE", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2019-06-03"}, {"n": "L'ATELIER VIKEN", "a": "", "adr": "68 RUE DE LA CHAUSSÉE D'ANTIN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-10-15"}, {"n": "MAG MAX PRODUCTIONS", "a": "", "adr": "175 AV ACHILLE PERETTI 92200 NEUILLY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-08-09"}, {"n": "MAITRE CLAIRE BATELLIER", "a": "", "adr": "3 BIS GRAND PLACE 77600 BUSSY SAINT GEORGES", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-01-08"}, {"n": "Manufacture PRELLE", "a": "", "adr": "5 Place des Victoires, 75001 Paris", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2020-06-03"}, {"n": "MASSON MIETTE", "a": "", "adr": "16 RUE DE MARSEILLE 94140 ALFORTVILLE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-01-06"}, {"n": "MCD PROMOTION", "a": "solo 2", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "2 fois par mois", "dateContrat": "2014-03-28"}, {"n": "MEDICAL PLUS FRANCE", "a": "", "adr": "40 rue de la réunion 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-08-28"}, {"n": "MUSIC BUSINESS", "a": "DIAWARA Oumar", "adr": "", "j": "Mardi et Vendredi", "f": "2 fs /semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2011-07-01"}, {"n": "NDS VERRES", "a": "", "adr": "9 MAIL JOLIOT CURIE 95310 SAINT-OUEN-L'AUMÔNE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-02-09"}, {"n": "NOUS EPICERIES ANTI GASPI", "a": "", "adr": "221 Boulevard Davout 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-07-29"}, {"n": "NUX  DIGITAL-HELLO MOJITO", "a": "", "adr": "1 VOIE FELIX EBOUE 94000 CRETEIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2020-11-01"}, {"n": "Olivier Lijie WANG", "a": "", "adr": "11, Place de la Nation 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2019-04-27"}, {"n": "OPTIC 2000", "a": "FODIE CISSE", "adr": "", "j": "Mardi Matin  | Vendredi Matin", "f": "2 fs / semaine", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2012-09-06"}, {"n": "PARIS PRIVATE FINANCE", "a": "", "adr": "10 RUE DE LA BIENFAISANCE 75008 75008", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-01-25"}, {"n": "PLANTUREUX ET ASSOCIES", "a": "", "adr": "36 RUE DE PICPUS 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-06-20"}, {"n": "POLETTE", "a": "", "adr": "91 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-05-11"}, {"n": "POULET O PIRI PIRI", "a": "", "adr": "18 PLACE DES QUATREE SAISONS 91270 VIGNEUX-SUR-SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-09-16"}, {"n": "PROTOTEXTILE", "a": "", "adr": "28 RUE SAINT SABIN 75011 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-11-24"}, {"n": "PVH HOTEL (MARMOTT)", "a": "Camara Sidy (Boubacar)", "adr": "", "j": "vendredi 12h", "f": "1 fs / semaine", "t": "", "v": "1 fs/semaine", "dateContrat": "2014-09-19"}, {"n": "RAY PRO MAILING", "a": "DIARRA", "adr": "code 27633", "j": "mercredi 10 h 30", "f": "1 fs / semaine", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2022-02-01"}, {"n": "RENOFY", "a": "", "adr": "9 Rue de Condé, 33000 BORDEAUX", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2026-01-10"}, {"n": "SAGIPA 1", "a": "", "adr": "25 RUE PELLEPORT 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-01-16"}, {"n": "SAGNIER", "a": "", "adr": "2 RUE DE CHAPP 93800 EPINAY SUR SEINE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-12-23"}, {"n": "SARL ZANUSO FRANCE", "a": "", "adr": "26 RUE ST SULPICE 75006 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-03-20"}, {"n": "SAS PARIS TRIBE", "a": "", "adr": "44 rue du Temple 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-02-01"}, {"n": "SCi 2123", "a": "CAMARA KODORE", "adr": "CODE 1218", "j": "mercredi et we", "f": "2 fs / semaine", "t": "", "v": "1 fs/mois", "dateContrat": "2019-05-02"}, {"n": "SCI IMMOLAK", "a": "", "adr": "45 RUE EMILE MENIER 75116 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-01-20"}, {"n": "SCI JABALLAH", "a": "", "adr": "1 RUE CHARLES GUSTAVE STOSKOPF 94000 CRETEIL", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-05-02"}, {"n": "LA QUATUOR", "a": "", "adr": "1 RUE EDOUARD VAILLANT 93170 BAGNOLET", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-04-21"}, {"n": "SCI TIC & TOC", "a": "", "adr": "13 RUE DE TOCQUEVILLE 75017 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-01-01"}, {"n": "SCM AVOCAT - PLACE DE LA BASTILLE", "a": "", "adr": "3 PLACE DE LA BASTILLE 75004 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-07-01"}, {"n": "SCM MEDICAL", "a": "", "adr": "213, Avenue de Choisy 75013 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2014-09-18"}, {"n": "SCPFAURE VIDECOQ & ERAUD", "a": "", "adr": "60 BOULEVARD HUSSON 91170 VITRY CHATILLON", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-10-15"}, {"n": "SEIZE CONSULTING", "a": "", "adr": "20 RUE CHAROLAIS 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-03-19"}, {"n": "SELARL QUAI DE SEINE", "a": "", "adr": "49 QUAI DE SEINE 75019 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-03-25"}, {"n": "SELARL Dr PARA", "a": "", "adr": "6 RUE DE ROME 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-06-01"}, {"n": "SCM CABINET JEAN PIERRE TIMBAUD", "a": "MOUSSA TOURE", "adr": "", "j": "", "f": "5 fs/semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2019-04-25"}, {"n": "Société NRGY", "a": "", "adr": "348 RUE DE VAUGIRARD 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2020-01-20"}, {"n": "STAM PRODUCTION", "a": "", "adr": "34 RUE NICOLAI 75012 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-05-17"}, {"n": "STUDIO HARMONIC", "a": "Solo   et    SEYDOU (Vitres) - Diawara Oumar & Camara Sidy (Boubacar)", "adr": "", "j": "MERCREDI ET SAMEDI DE 6 à             9 H 30", "f": "2 fs / semaine", "t": "", "v": "1 fois par mois avec perche e échafaudage", "dateContrat": "2015-03-25"}, {"n": "SYNDIC du 9, Rue Lemoine", "a": "", "adr": "9, Rue Lemoine 92100 BOULOGNE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2018-09-27"}, {"n": "TEAMSQUARE", "a": "", "adr": "63 RUE DE RIVOLI 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-03-19"}, {"n": "TISCO INGENIERIE", "a": "", "adr": "25 RUE DE MAUBEUGE 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-10-20"}, {"n": "UNSS PARIS", "a": "Amara FISSOUROU", "adr": "Code 1807 pour désactiver et pour activer appuyer sur la touche représentée par une maison", "j": "Mardi 18 h 30 et WE", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2016-05-18"}, {"n": "VALOMBREUSE", "a": "", "adr": "66 RUE DU FAUBOURG SAINT HONORE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-11-15"}, {"n": "VALUE CONSEIL", "a": "", "adr": "97 RUE PELLEPORT 75020 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-04-15"}, {"n": "VENDIS CAPITAL MANAGEMENT SA", "a": "", "adr": "36 BOULEVARD HAUSSMANN 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2022-07-02"}, {"n": "YOUNG HAPPY", "a": "", "adr": "80 RUE MOUFFETARD 75005 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-06-11"}, {"n": "CDM LAVOISIER", "a": "", "adr": "18 RUE DE LA PEPINIERE 75008 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-06-05"}, {"n": "COALLIA  BRANCION", "a": "", "adr": "10 RUE BRANCION 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-01-23"}, {"n": "RIMADESIO", "a": "", "adr": "25 AVENUE RAPP 75007 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-01-08"}, {"n": "160G SARL", "a": "", "adr": "160 RUE DE MONTMARTRE 75002 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2018-03-01"}, {"n": "Association Sportive et Gymnique de Bagnolet", "a": "", "adr": "172 Rue Sadi Carnot 93170 Bagnolet", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2020-03-13"}, {"n": "BUTTERFLY TRAINING", "a": "SOULE", "adr": "code  2903B", "j": "", "f": "", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2019-05-09"}, {"n": "CD 92 BASKET", "a": "", "adr": "56 RUE DES HAUTES PATURES 92000 NANTERRE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-10-01"}, {"n": "EFICIENS", "a": "CAMARA BOUBACAR", "adr": "116 BOULEVARD DIDEROT 75012 PARIS", "j": "Mercredi et samedi", "f": "2 fs/semaine", "t": "", "v": "pas de vitres contrat signé pas dans le dossier", "dateContrat": "2019-05-15"}, {"n": "Flexam Conseil", "a": "", "adr": "38 rue du colisée 75008 PARIS - 3EME ETAGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-06-30"}, {"n": "HASAP", "a": "OUMAR KEBE", "adr": "", "j": "", "f": "1fs/semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2018-09-25"}, {"n": "KRYS OPTIQUE  LEWIN", "a": "", "adr": "78, avenue de la République 92120 MONTROUGE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2018-09-11"}, {"n": "LES ABBESSES IMMOBILIER", "a": "", "adr": "52 RUE D'ORSEL 75018 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2019-09-06"}, {"n": "OPTIC ALEXIA", "a": "FODIE CISSE", "adr": "", "j": "", "f": "2 fs/semaine", "t": "", "v": "TRIMESTRIELLE", "dateContrat": "2019-01-16"}, {"n": "ORID AVOCATS", "a": "SOLO (solo 2)", "adr": "", "j": "lundi mercredi", "f": "2 fs/ semaine", "t": "", "v": "1 fois par mois", "dateContrat": "2019-04-05"}, {"n": "POLE FORMATION 93", "a": "", "adr": "193 AVENUE DU PRESIDENT WILSON 93210 SAINT DENIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-05-03"}, {"n": "RIVECOUR", "a": "", "adr": "31 RUE DES PETITS CHAMPS 75001 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2023-05-22"}, {"n": "SARL ISABEL", "a": "", "adr": "91 RUE SAINT CHARLES 75015 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2025-04-04"}, {"n": "VALEA", "a": "", "adr": "BAT 3B ZONE D'ACTIVITE DES 4 CHEMINS 95540 MERY SUR OISE", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2021-03-03"}, {"n": "ZEEEGGS", "a": "", "adr": "96 RUE BLANCHE 75009 PARIS", "j": "", "f": "JFMAMJJASOND", "t": "", "v": "", "dateContrat": "2024-11-13"}];
 
 // Load from localStorage or use default
 var DATA = (function() {
   try {
-    var ver = localStorage.getItem('starsnett_ver');
-    if (ver === 'pegase_2026_v3') {
-      var saved = localStorage.getItem('starsnett_data');
-      if (saved) return JSON.parse(saved);
-    }
-    localStorage.removeItem('starsnett_data');
-    localStorage.setItem('starsnett_ver', 'pegase_2026_v3');
-    return JSON.parse(JSON.stringify(DATA_DEFAULT));
+    var saved = localStorage.getItem('starsnett_data');
+    return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DATA_DEFAULT));
   } catch(e) { return JSON.parse(JSON.stringify(DATA_DEFAULT)); }
 })();
 
@@ -913,17 +899,18 @@ function setView(v) {
     if (i === 3) t.style.cssText = 'background:#E9C46A22;color:#E9C46A;';
     if (i === 4) t.style.cssText = 'background:#2A9D8F22;color:#2A9D8F;';
     if (i === 5) t.style.cssText = 'background:#FB560722;color:#FB5607;';
-    if (i === 6) t.style.cssText = 'background:#06D6A022;color:#06D6A0;';
+    if (i === 6) t.style.cssText = 'background:#E6394622;color:#E63946;';
   });
   if (v === 'compta' && !isAdminMode()) { showToast('🔒 Comptabilité réservée aux admins — connectez-vous avec votre PIN'); openPinOverlay(function(){ setView('compta'); }); return; }
-  var viewList = ['today','agents','sites','compta','calendar','archives','vitrerie'];
+  var viewList = ['today','agents','sites','compta','calendar','archives','contentieux'];
   var idx = viewList.indexOf(v);
+  if (idx < 0) return;
   var tabs = document.querySelectorAll('.tab');
   tabs[idx].className = 'tab on';
   if (idx === 3) tabs[idx].style.cssText = 'background:#E9C46A;color:#fff;';
   if (idx === 4) tabs[idx].style.cssText = 'background:#2A9D8F;color:#fff;';
   if (idx === 5) tabs[idx].style.cssText = 'background:#FB5607;color:#fff;';
-  if (idx === 6) tabs[idx].style.cssText = 'background:#06D6A0;color:#0F1117;';
+  if (idx === 6) tabs[idx].style.cssText = 'background:#E63946;color:#fff;';
   render();
 }
 
@@ -982,6 +969,26 @@ function openEdit(idx) {
     opt.value = a.name;
     dl.appendChild(opt);
   });
+  // Alertes résiliation / impayé
+  var fldResil = document.getElementById('fldResiliation');
+  var fldDateFin = document.getElementById('fldDateFin');
+  var fldNoteResil = document.getElementById('fldNoteResil');
+  var fldImpaye = document.getElementById('fldImpaye');
+  var fldMontantImpaye = document.getElementById('fldMontantImpaye');
+  var resilRow = document.getElementById('resilRow');
+  var impayeRow = document.getElementById('impayeRow');
+  if (fldResil) {
+    var hasResil = !!(s.resiliation && s.resiliation.dateFin);
+    fldResil.checked = hasResil;
+    if (resilRow) resilRow.style.display = hasResil ? 'block' : 'none';
+    if (fldDateFin) fldDateFin.value = (s.resiliation && s.resiliation.dateFin) ? s.resiliation.dateFin : '';
+    if (fldNoteResil) fldNoteResil.value = (s.resiliation && s.resiliation.note) ? s.resiliation.note : '';
+  }
+  if (fldImpaye) {
+    fldImpaye.checked = !!s.impaye;
+    if (impayeRow) impayeRow.style.display = s.impaye ? 'block' : 'none';
+    if (fldMontantImpaye) fldMontantImpaye.value = s.montantImpaye || '';
+  }
   var archRow = document.getElementById('archiveRow');
   if (archRow) archRow.style.display = (idx >= 0) ? 'block' : 'none';
   document.getElementById('editModal').classList.add('open');
@@ -1114,6 +1121,18 @@ function saveEdit() {
     dateContrat: document.getElementById('fldDateContrat').value.trim() || undefined,
     photo: (editIdx >= 0 && DATA[editIdx] ? DATA[editIdx].photo : undefined) || undefined
   };
+  // Alertes résiliation / impayé
+  var fldResil = document.getElementById('fldResiliation');
+  var fldImpaye = document.getElementById('fldImpaye');
+  if (fldResil && fldResil.checked) {
+    var dateFin = document.getElementById('fldDateFin').value;
+    var noteResil = document.getElementById('fldNoteResil').value.trim();
+    s.resiliation = { dateFin: dateFin, note: noteResil };
+  }
+  if (fldImpaye && fldImpaye.checked) {
+    s.impaye = true;
+    s.montantImpaye = document.getElementById('fldMontantImpaye').value || '';
+  }
   // If new photo was picked, it's stored via previewPhoto into a temp var
   if (window._pendingPhoto !== undefined) {
     s.photo = window._pendingPhoto;
@@ -1458,6 +1477,17 @@ function removePhoto() {
 // =====================
 // HISTORY
 // =====================
+// ── CONTENTIEUX & RÉSILIATIONS ──
+var CONTENTIEUX = (function() {
+  try { var d = localStorage.getItem('starsnett_contentieux'); return d ? JSON.parse(d) : []; } catch(e) { return []; }
+})();
+function saveContentieux() {
+  try { localStorage.setItem('starsnett_contentieux', JSON.stringify(CONTENTIEUX)); } catch(e) {}
+}
+
+// Résiliations : stockées dans le site lui-même s.resiliation = {dateResil, dateFin, note}
+// Impayés : stockés dans le site lui-même s.impaye = true/false, s.montantImpaye
+
 var HISTORY = (function() {
   try { return JSON.parse(localStorage.getItem('starsnett_history') || '[]'); } catch(e) { return []; }
 })();
@@ -1576,71 +1606,7 @@ function exportComptaPDF(items, periodLabel) {
     var tc=a.type==='absence'?'abs':a.type==='non-effectue'?'ne':'ret';
     html+='<tr><td>'+fmtDateShort(a.date)+'</td><td>'+a.site+'</td><td>'+a.agent+'</td><td class="'+tc+'">'+typeLabel(a.type)+'</td><td class="h">'+h+'</td><td>'+(a.note||'')+'</td></tr>';
   });
-  html+='</table><div class="footer">Document généré automatiquement par Starsnett — Confidentiel</div>
-<!-- Service Worker : cache offline + installation PWA -->
-<script>
-if ('serviceWorker' in navigator) {
-  // Inline Service Worker via Blob
-  var swCode = `
-self.addEventListener('install', function(e) {
-  self.skipWaiting();
-});
-self.addEventListener('activate', function(e) {
-  e.waitUntil(clients.claim());
-});
-// Strategie : Network first, fallback cache
-self.addEventListener('fetch', function(e) {
-  // Ne pas intercepter les requetes JSONBin (sync cloud)
-  if (e.request.url.includes('jsonbin.io')) return;
-  e.respondWith(
-    fetch(e.request).catch(function() {
-      return caches.match(e.request);
-    })
-  );
-});
-`;
-  var swBlob = new Blob([swCode], {type:'text/javascript'});
-  var swUrl  = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swUrl, {scope: './'}).then(function(reg) {
-    console.log('SW enregistre', reg.scope);
-  }).catch(function(err) {
-    console.log('SW non disponible (fichier local) :', err.message);
-  });
-}
-
-// Bouton "Installer l'app" sur Android Chrome
-var deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', function(e) {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Afficher le bouton d'installation dans la barre de synchro
-  var btn = document.createElement('button');
-  btn.id = 'installBtn';
-  btn.textContent = '📲 Installer';
-  btn.style.cssText = 'display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:#3A86FF22;color:#3A86FF;border:1px solid #3A86FF55;transition:all 0.2s;';
-  btn.onclick = function() {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function(r) {
-      if (r.outcome === 'accepted') {
-        btn.remove();
-        showToast('✅ App installée sur votre écran d accueil !');
-      }
-      deferredPrompt = null;
-    });
-  };
-  // Insérer dans la barre de sync
-  var syncBar = document.querySelector('.sync-bar');
-  if (syncBar) syncBar.insertBefore(btn, syncBar.firstChild);
-});
-
-window.addEventListener('appinstalled', function() {
-  showToast('✅ Starsnett installée !');
-  var btn = document.getElementById('installBtn');
-  if (btn) btn.remove();
-});
-</script>
-
-</body></html>';
+  html+='</table><div class="footer">Document généré automatiquement par Starsnett — Confidentiel</div></body></html>';
   win.document.write(html); win.document.close();
   setTimeout(function(){ win.print(); }, 500);
 }
@@ -1648,153 +1614,19 @@ window.addEventListener('appinstalled', function() {
 // =====================
 // CLOUD SYNC — JSONBin.io
 // =====================
-// SYNCHRO TEMPS RÉEL — JSONBin
-// =====================
 var JBKEY  = localStorage.getItem('jb_key')  || '';
 var JBBIN  = localStorage.getItem('jb_bin')   || '';
+var syncTimer = null;
 
-// Timers
-var syncWriteTimer  = null;   // debounce write (3 s après modif)
-var syncPollTimer   = null;   // polling lecture (toutes les 15 s)
-var lastCloudVersion = null;  // version du dernier enregistrement cloud connu
-var syncPaused = false;       // pause momentanée pendant qu'on écrit
-
-// ── Indicateur visuel ──────────────────────────────────────────────
-var _syncState = 'idle'; // 'idle' | 'writing' | 'reading' | 'ok' | 'error' | 'offline'
-function setSyncState(state, detail) {
-  _syncState = state;
-  var info = document.getElementById('syncInfo');
-  var btn  = document.getElementById('syncBtn');
-  var icons = { idle:'☁️', writing:'⬆️', reading:'⬇️', ok:'✅', error:'❌', offline:'📵' };
-  var labels = { idle:'Cloud prêt', writing:'Envoi…', reading:'Réception…', ok: detail||'Synchronisé', error: detail||'Erreur sync', offline:'Hors ligne' };
-  var colors = { idle:'#8892A4', writing:'#E9C46A', reading:'#3A86FF', ok:'#2A9D8F', error:'#E63946', offline:'#FB5607' };
-  if (info) {
-    info.innerHTML = '<span style="color:' + colors[state] + '">' + icons[state] + ' ' + labels[state] + '</span>';
-  }
-  if (btn) btn.textContent = '☁️ Sync';
+function openSyncConfig() {
+  document.getElementById('jbApiKey').value = JBKEY || '';
+  document.getElementById('jbBinId').value  = JBBIN || '';
+  document.getElementById('syncStatus').textContent = '';
+  document.getElementById('syncModal').classList.add('open');
 }
-
-// ── Ecriture cloud (sauvegarde) ────────────────────────────────────
-async function cloudWrite() {
-  if (!JBKEY || !JBBIN) return;
-  syncPaused = true;
-  setSyncState('writing');
-  try {
-    var payload = {
-      data: DATA,
-      absences: ABSENCES,
-      vitDone: VITRERIE_DONE,
-      savedAt: new Date().toISOString(),
-      app: 'starsnett',
-      v: Date.now()   // version unique pour détecter les nouveaux changements
-    };
-    var r = await fetch('https://api.jsonbin.io/v3/b/' + JBBIN, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JBKEY },
-      body: JSON.stringify(payload)
-    });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    var json = await r.json();
-    lastCloudVersion = payload.v;  // on mémorise notre propre version
-    var now = new Date();
-    setSyncState('ok', '✅ Envoyé à ' + now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}));
-  } catch(err) {
-    if (!navigator.onLine) setSyncState('offline');
-    else setSyncState('error', '❌ ' + err.message);
-  } finally {
-    syncPaused = false;
-    setTimeout(function(){ if(_syncState==='ok') setSyncState('idle'); }, 4000);
-  }
+function closeSyncConfig() {
+  document.getElementById('syncModal').classList.remove('open');
 }
-
-// ── Lecture cloud (polling) ────────────────────────────────────────
-async function cloudPoll() {
-  if (!JBKEY || !JBBIN || syncPaused) return;
-  try {
-    var r = await fetch('https://api.jsonbin.io/v3/b/' + JBBIN + '/latest', {
-      headers: { 'X-Master-Key': JBKEY, 'Cache-Control': 'no-cache' }
-    });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    var json = await r.json();
-    var payload = json.record;
-    if (!payload || !payload.data) return;
-
-    // Si la version cloud est différente de la nôtre → quelqu'un d'autre a modifié
-    if (payload.v && payload.v !== lastCloudVersion) {
-      lastCloudVersion = payload.v;
-      setSyncState('reading');
-      DATA = payload.data;
-      if (payload.absences) ABSENCES = payload.absences;
-      if (payload.vitDone) VITRERIE_DONE = payload.vitDone;
-      saveData(); saveAbsences(); saveVitDone(); buildColorMap();
-      var when = payload.savedAt
-        ? new Date(payload.savedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
-        : '';
-      render();
-      setSyncState('ok', '✅ Mis à jour' + (when ? ' à ' + when : ''));
-      showToast('🔄 Données mises à jour depuis un autre appareil');
-      setTimeout(function(){ if(_syncState==='ok') setSyncState('idle'); }, 4000);
-    }
-  } catch(err) {
-    if (!navigator.onLine) setSyncState('offline');
-    // sinon erreur silencieuse (ne pas spammer)
-  }
-}
-
-// ── Démarrer le polling ────────────────────────────────────────────
-function startPolling() {
-  if (syncPollTimer) clearInterval(syncPollTimer);
-  if (!JBKEY || !JBBIN) return;
-  cloudPoll(); // lecture immédiate au démarrage
-  syncPollTimer = setInterval(cloudPoll, 15000); // puis toutes les 15 s
-}
-
-// ── Déclenchement auto après chaque modif (debounce 3 s) ──────────
-function triggerAutoSync() {
-  if (!JBKEY || !JBBIN) return;
-  if (syncWriteTimer) clearTimeout(syncWriteTimer);
-  syncWriteTimer = setTimeout(function() { cloudWrite(); }, 3000);
-}
-
-// ── Sync manuelle (bouton ☁️ Sync) ────────────────────────────────
-async function cloudSync() {
-  if (!JBKEY || !JBBIN) { openSyncConfig(); return; }
-  await cloudWrite();
-}
-
-// ── Compatibilité : cloudLoad (utilisé au setup) ──────────────────
-async function cloudLoad(silent) {
-  if (!JBKEY || !JBBIN) return;
-  setSyncState('reading');
-  try {
-    var r = await fetch('https://api.jsonbin.io/v3/b/' + JBBIN + '/latest', {
-      headers: { 'X-Master-Key': JBKEY }
-    });
-    if (!r.ok) throw new Error('Erreur réseau');
-    var json = await r.json();
-    var payload = json.record;
-    if (payload && payload.data) {
-      lastCloudVersion = payload.v || null;
-      DATA = payload.data;
-      if (payload.absences) ABSENCES = payload.absences;
-      if (payload.vitDone) VITRERIE_DONE = payload.vitDone;
-      saveData(); saveAbsences(); saveVitDone(); buildColorMap();
-      var when = payload.savedAt
-        ? new Date(payload.savedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
-        : '';
-      setSyncState('ok', '✅ Chargé' + (when ? ' à ' + when : ''));
-      render();
-      if (!silent) showToast('✅ Données chargées depuis le cloud !');
-      setTimeout(function(){ if(_syncState==='ok') setSyncState('idle'); }, 4000);
-    }
-  } catch(err) {
-    setSyncState('error', '❌ Chargement échoué');
-    if (!silent) showToast('❌ Chargement cloud échoué');
-  }
-}
-
-// ── Configuration JSONBin ──────────────────────────────────────────
-// Modal overlay click → fermer
 document.getElementById('syncModal').addEventListener('click', function(e) {
   if (e.target === this) closeSyncConfig();
 });
@@ -1808,23 +1640,23 @@ async function setupSync() {
   var key = document.getElementById('jbApiKey').value.trim();
   var bin = document.getElementById('jbBinId').value.trim();
   if (!key) { setSyncStatus('❌ Clé API manquante', '#E63946'); return; }
-  setSyncStatus('⏳ Connexion en cours…', '#E9C46A');
+  setSyncStatus('⏳ Connexion en cours...', '#E9C46A');
+
   try {
     if (bin) {
+      // Test existing bin
       var r = await fetch('https://api.jsonbin.io/v3/b/' + bin + '/latest', {
         headers: { 'X-Master-Key': key }
       });
-      if (!r.ok) throw new Error('Coffre introuvable — vérifiez l\'ID');
+      if (!r.ok) throw new Error('Bin introuvable');
       JBKEY = key; JBBIN = bin;
       localStorage.setItem('jb_key', JBKEY);
       localStorage.setItem('jb_bin', JBBIN);
-      setSyncStatus('✅ Connecté ! Chargement des données…', '#2A9D8F');
+      setSyncStatus('✅ Connecté ! Chargement des données...', '#2A9D8F');
       await cloudLoad(true);
-      startPolling();
-      closeSyncConfig();
-      showToast('☁️ Synchro temps réel activée !');
     } else {
-      var payload = { data: DATA, absences: ABSENCES, vitDone: VITRERIE_DONE, savedAt: new Date().toISOString(), app: 'starsnett', v: Date.now() };
+      // Create new bin
+      var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString(), app: 'starsnett' };
       var r = await fetch('https://api.jsonbin.io/v3/b', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'Starsnett', 'X-Bin-Private': 'true' },
@@ -1832,39 +1664,100 @@ async function setupSync() {
       });
       if (!r.ok) throw new Error('Création échouée — vérifiez votre clé API');
       var json = await r.json();
-      JBKEY = key; JBBIN = json.metadata.id;
-      lastCloudVersion = payload.v;
+      JBKEY = key;
+      JBBIN = json.metadata.id;
       localStorage.setItem('jb_key', JBKEY);
       localStorage.setItem('jb_bin', JBBIN);
       document.getElementById('jbBinId').value = JBBIN;
-      setSyncStatus('✅ Coffre créé ! ID copié ci-dessus — partagez-le aux autres téléphones.', '#2A9D8F');
-      startPolling();
-      updateSyncBar();
-      showToast('☁️ Cloud créé ! Partagez l\'ID du coffre.');
+      setSyncStatus('✅ Coffre créé et connecté ! ID : ' + JBBIN, '#2A9D8F');
+      showToast("☁️ Cloud configuré ! Partagez l'ID du coffre aux autres appareils.");
+    }
+    updateSyncBar();
+  } catch(err) {
+    setSyncStatus('❌ Erreur : ' + err.message, '#E63946');
+  }
+}
+
+async function cloudSync() {
+  if (!JBKEY || !JBBIN) { openSyncConfig(); return; }
+  setSyncInfo('⏳ Synchronisation...');
+  var btn = document.getElementById('syncBtn');
+  if (btn) btn.textContent = '⏳ Sync...';
+  try {
+    var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString(), app: 'starsnett' };
+    var r = await fetch('https://api.jsonbin.io/v3/b/' + JBBIN, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JBKEY },
+      body: JSON.stringify(payload)
+    });
+    if (!r.ok) throw new Error('Erreur réseau');
+    var now = new Date();
+    setSyncInfo('☁️ Synchronisé à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}));
+    if (btn) btn.textContent = '☁️ Sync';
+    showToast('☁️ Synchronisé !');
+  } catch(err) {
+    setSyncInfo('❌ Sync échouée');
+    if (btn) btn.textContent = '☁️ Sync';
+    showToast('❌ Synchronisation échouée');
+  }
+}
+
+async function cloudLoad(silent) {
+  if (!JBKEY || !JBBIN) return;
+  try {
+    var r = await fetch('https://api.jsonbin.io/v3/b/' + JBBIN + '/latest', {
+      headers: { 'X-Master-Key': JBKEY }
+    });
+    if (!r.ok) throw new Error('Erreur réseau');
+    var json = await r.json();
+    var payload = json.record;
+    if (payload && payload.data) {
+      DATA = payload.data;
+      if (payload.absences) ABSENCES = payload.absences;
+      saveData(); saveAbsences(); buildColorMap();
+      var savedAt = payload.savedAt ? new Date(payload.savedAt) : null;
+      var when = savedAt ? savedAt.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}) : '';
+      setSyncInfo('☁️ Synchronisé' + (when ? ' à ' + when : ''));
+      if (!silent) { render(); showToast('✅ Données chargées depuis le cloud !'); }
+      else { render(); }
     }
   } catch(err) {
-    setSyncStatus('❌ ' + err.message, '#E63946');
+    if (!silent) showToast('❌ Chargement cloud échoué');
   }
 }
 
 function updateSyncBar() {
+  var btn = document.getElementById('syncBtn');
   if (JBKEY && JBBIN) {
-    setSyncState('idle');
+    if (btn) btn.textContent = '☁️ Sync';
+    setSyncInfo('☁️ Cloud connecté');
   } else {
-    var info = document.getElementById('syncInfo');
-    if (info) info.innerHTML = '<span style="color:#FB5607">⚠️ Non configuré — cliquez ⚙️</span>';
+    if (btn) btn.textContent = '☁️ Sync';
+    setSyncInfo('<span class="sync-pulse"></span>Non configuré — cliquez ⚙️');
   }
 }
 
-// ── Reconnexion auto si réseau retrouvé ───────────────────────────
-window.addEventListener('online',  function() { setSyncState('idle'); cloudPoll(); });
-window.addEventListener('offline', function() { setSyncState('offline'); });
+// Auto-sync after each data change (debounced 3s)
+function triggerAutoSync() {
+  if (!JBKEY || !JBBIN) return;
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(function() { cloudSync(); }, 3000);
+}
 
 // =====================
 // EXPORT / IMPORT JSON (sauvegarde manuelle)
 // =====================
 function saveJSON() {
-  var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString() };
+  var payload = {
+    data: DATA,
+    absences: ABSENCES,
+    archives: ARCHIVES,
+    agents: AGENTS_LIST,
+    contentieux: CONTENTIEUX,
+    history: HISTORY,
+    savedAt: new Date().toISOString(),
+    version: 2
+  };
   var json = JSON.stringify(payload, null, 2);
   var blob = new Blob([json], { type: 'application/json' });
   var url = URL.createObjectURL(blob);
@@ -1874,7 +1767,7 @@ function saveJSON() {
   a.href = url; a.download = 'starsnett_' + dateStr + '.json';
   document.body.appendChild(a); a.click();
   document.body.removeChild(a); URL.revokeObjectURL(url);
-  showToast('💾 Fichier sauvegardé !');
+  showToast('💾 Sauvegarde complète exportée !');
 }
 
 function loadJSON(event) {
@@ -1884,14 +1777,29 @@ function loadJSON(event) {
   reader.onload = function(e) {
     try {
       var payload = JSON.parse(e.target.result);
-      if (Array.isArray(payload)) { DATA = payload; }
-      else { if (payload.data) DATA = payload.data; if (payload.absences) ABSENCES = payload.absences; }
-      saveData(); saveAbsences(); buildColorMap(); render();
+      if (Array.isArray(payload)) {
+        DATA = payload;
+      } else {
+        if (payload.data) DATA = payload.data;
+        if (payload.absences) ABSENCES = payload.absences;
+        if (payload.archives) ARCHIVES = payload.archives;
+        if (payload.agents) AGENTS_LIST = payload.agents;
+        if (payload.contentieux) CONTENTIEUX = payload.contentieux;
+        if (payload.history) HISTORY = payload.history;
+      }
+      saveData(); saveAbsences(); saveArchives(); saveAgents(); saveContentieux();
+      try { localStorage.setItem('starsnett_history', JSON.stringify(HISTORY)); } catch(e) {}
+      buildColorMap(); render();
       showToast('✅ Données importées (' + DATA.length + ' sites) !');
     } catch(err) { showToast('❌ Fichier invalide'); }
   };
   reader.readAsText(file);
   event.target.value = '';
+}
+
+function setSyncInfo(msg) {
+  var el = document.getElementById('syncInfo');
+  if (el) el.innerHTML = msg;
 }
 
 function showToast(msg) {
@@ -1984,14 +1892,14 @@ function render() {
   }
 
   // Archives view
-  if (view === 'vitrerie') {
-    m.innerHTML = '';
-    renderVitrerie(m);
+  if (view === 'archives') {
+    renderArchives(m);
     return;
   }
 
-  if (view === 'archives') {
-    renderArchives(m);
+  // Contentieux view
+  if (view === 'contentieux') {
+    renderContentieux(m);
     return;
   }
 
@@ -2016,6 +1924,8 @@ function mkCard(s, idx) {
     + (s.f ? '<div style="font-size:11px;color:#E9C46A">🔄 ' + s.f + '</div>' : '')
     + (s.duree ? '<div style="font-size:11px;color:#2A9D8F">⏱️ ' + s.duree + 'h / passage</div>' : '')
     + (function(){ var badge = ancienneteBadge(s.n, s.dateContrat); return badge ? '<div style="margin-top:3px">'+badge+'</div>' : ''; })()
+    + (s.resiliation && s.resiliation.dateFin ? '<div style="margin-top:4px"><span class="badge-resil">🔴 RÉSILIATION — fin le ' + (function(d){ var p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; })(s.resiliation.dateFin) + '</span></div>' : '')
+    + (s.impaye ? '<div style="margin-top:2px"><span class="badge-impaye">⚠️ IMPAYÉ' + (s.montantImpaye ? ' — '+s.montantImpaye+' €' : '') + '</span></div>' : '')
     + (s.notes ? '<div class="notes-section"><div class="notes-label">💬 Consignes</div><div class="notes-text">' + s.notes.substring(0,120) + (s.notes.length>120?'...':'') + '</div></div>' : '')
     + (s.photo ? '<div style="margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid #2A2D3E;cursor:pointer" onclick="event.stopPropagation();showPhotoIdx(' + DATA.indexOf(s) + ')"><img src="' + s.photo + '" style="width:100%;max-height:120px;object-fit:cover;display:block"></div>' : '');
 
@@ -2128,6 +2038,203 @@ function getPeriodLabel() {
     return months[parseInt(p[1])] + ' ' + p[0];
   }
   return 'Toutes périodes';
+}
+
+
+// =====================
+// CONTENTIEUX
+// =====================
+var STATUTS_CONTENTIEUX = [
+  { val: 'relance', label: '📨 Relance amiable', cls: 'statut-relance' },
+  { val: 'mise-en-demeure', label: '⚠️ Mise en demeure', cls: 'statut-mise-en-demeure' },
+  { val: 'huissier', label: '⚖️ Huissier', cls: 'statut-huissier' },
+  { val: 'tribunal', label: '🏛️ Tribunal', cls: 'statut-tribunal' },
+  { val: 'resolu', label: '✅ Résolu', cls: 'statut-resolu' }
+];
+
+function getStatutInfo(val) {
+  return STATUTS_CONTENTIEUX.find(function(s){ return s.val === val; }) || STATUTS_CONTENTIEUX[0];
+}
+
+function renderContentieux(m) {
+  // ─── Header + bouton ajout ───
+  var hdr = document.createElement('div');
+  hdr.innerHTML = '<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:4px">⚖️ Dossiers contentieux <span style="font-size:12px;color:#8892A4;font-weight:400">(' + CONTENTIEUX.filter(function(d){return d.statut!=='resolu';}).length + ' actif' + (CONTENTIEUX.filter(function(d){return d.statut!=='resolu';}).length>1?'s':'') + ')</span></div>';
+  m.appendChild(hdr);
+
+  // ─── Tableau récap des résiliations ───
+  var resilSites = DATA.filter(function(s){ return s.resiliation && s.resiliation.dateFin; });
+  resilSites.sort(function(a,b){ return a.resiliation.dateFin.localeCompare(b.resiliation.dateFin); });
+  if (resilSites.length > 0) {
+    var resilBlock = document.createElement('div');
+    resilBlock.style.cssText = 'background:#E6394611;border:1px solid #E6394644;border-radius:12px;padding:14px;margin-bottom:16px;';
+    var resilTitle = '<div style="font-size:13px;font-weight:800;color:#E63946;margin-bottom:10px">🔴 Résiliations en cours (' + resilSites.length + ')</div>';
+    var resilRows = resilSites.map(function(s) {
+      var parts = s.resiliation.dateFin.split('-');
+      var dateFmt = parts[2]+'/'+parts[1]+'/'+parts[0];
+      var today = new Date(); today.setHours(0,0,0,0);
+      var fin = new Date(s.resiliation.dateFin);
+      var diff = Math.round((fin-today)/(1000*60*60*24));
+      var diffColor = diff < 0 ? '#E63946' : diff <= 14 ? '#FB5607' : '#2A9D8F';
+      var diffLabel = diff < 0 ? 'Expiré depuis ' + Math.abs(diff) + 'j' : diff === 0 ? 'Aujourd'hui !' : 'J-' + diff;
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2A2D3E22;">'
+        + '<div><div style="font-size:13px;font-weight:700;color:#fff">' + s.n + '</div>'
+        + '<div style="font-size:11px;color:#8892A4">👤 ' + (s.a||'—') + (s.resiliation.note ? ' — ' + s.resiliation.note : '') + '</div></div>'
+        + '<div style="text-align:right;flex-shrink:0;margin-left:10px">'
+        + '<div style="font-size:12px;font-weight:700;color:#E8ECF0">📅 ' + dateFmt + '</div>'
+        + '<div style="font-size:11px;font-weight:700;color:' + diffColor + '">' + diffLabel + '</div></div></div>';
+    }).join('');
+    resilBlock.innerHTML = resilTitle + resilRows;
+    m.appendChild(resilBlock);
+  }
+
+  // ─── Impayés récap ───
+  var impaySites = DATA.filter(function(s){ return s.impaye; });
+  if (impaySites.length > 0) {
+    var impayBlock = document.createElement('div');
+    impayBlock.style.cssText = 'background:#FB560711;border:1px solid #FB560744;border-radius:12px;padding:14px;margin-bottom:16px;';
+    var totalImpaye = impaySites.reduce(function(acc,s){ return acc + (parseFloat(s.montantImpaye)||0); }, 0);
+    var impayTitle = '<div style="font-size:13px;font-weight:800;color:#FB5607;margin-bottom:10px">⚠️ Impayés en cours (' + impaySites.length + ')' + (totalImpaye > 0 ? ' — Total : ' + totalImpaye.toLocaleString('fr-FR') + ' €' : '') + '</div>';
+    var impayRows = impaySites.map(function(s) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2A2D3E22;">'
+        + '<div style="font-size:13px;font-weight:700;color:#fff">' + s.n + '</div>'
+        + '<div style="font-size:12px;font-weight:700;color:#FB5607">' + (s.montantImpaye ? s.montantImpaye + ' €' : 'Montant non renseigné') + '</div></div>';
+    }).join('');
+    impayBlock.innerHTML = impayTitle + impayRows;
+    m.appendChild(impayBlock);
+  }
+
+  if (resilSites.length === 0 && impaySites.length === 0 && CONTENTIEUX.length === 0) {
+    var emp = document.createElement('div'); emp.className = 'empty';
+    emp.textContent = 'Aucun dossier contentieux, résiliation ou impayé en cours. ✅';
+    m.appendChild(emp);
+  }
+
+  // ─── Dossiers contentieux ───
+  if (isAdminMode()) {
+    var addBtn = document.createElement('button');
+    addBtn.className = 'contentieux-add-btn';
+    addBtn.innerHTML = '➕ Nouveau dossier contentieux';
+    addBtn.onclick = function() { openContentieuxForm(-1); };
+    m.appendChild(addBtn);
+  }
+
+  if (CONTENTIEUX.length > 0) {
+    var title2 = document.createElement('div');
+    title2.style.cssText = 'font-size:13px;font-weight:800;color:#E63946;margin-bottom:10px;';
+    title2.textContent = '📁 Dossiers en cours';
+    m.appendChild(title2);
+    var sorted = CONTENTIEUX.slice().sort(function(a,b){
+      if (a.statut === 'resolu' && b.statut !== 'resolu') return 1;
+      if (b.statut === 'resolu' && a.statut !== 'resolu') return -1;
+      return (b.dateOuverture||'').localeCompare(a.dateOuverture||'');
+    });
+    sorted.forEach(function(d, rawIdx) {
+      var realIdx = CONTENTIEUX.indexOf(d);
+      var st = getStatutInfo(d.statut);
+      var card = document.createElement('div');
+      card.className = 'contentieux-card statut-' + d.statut;
+      var relancesHtml = (d.relances && d.relances.length > 0)
+        ? '<div style="margin-top:8px;font-size:11px;font-weight:700;color:#8892A4;margin-bottom:4px">📋 Historique des relances</div>'
+          + d.relances.map(function(r){ return '<div class="relance-item"><span class="r-date">' + r.date + '</span> — ' + r.note + '</div>'; }).join('')
+        : '';
+      var addRelanceHtml = isAdminMode()
+        ? '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">'
+          + '<input type="date" id="rdate_'+realIdx+'" style="background:#0F1117;border:1px solid #2A2D3E;border-radius:6px;color:#E8ECF0;font-size:11px;padding:5px;flex:0 0 140px">'
+          + '<input type="text" id="rnote_'+realIdx+'" placeholder="Note de relance..." style="background:#0F1117;border:1px solid #2A2D3E;border-radius:6px;color:#E8ECF0;font-size:11px;padding:5px;flex:1;min-width:120px">'
+          + '<button onclick="addRelance('+realIdx+')" style="background:#3A86FF22;border:1px solid #3A86FF;color:#3A86FF;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;white-space:nowrap">+ Ajouter relance</button></div>'
+        : '';
+      card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">'
+        + '<div style="flex:1;min-width:0">'
+        + '<div class="contentieux-nom">' + d.siteName + '</div>'
+        + '<span class="contentieux-statut ' + st.cls + '">' + st.label + '</span>'
+        + '<div class="contentieux-meta">'
+        + (d.montantDu ? '<span>💶 ' + d.montantDu + ' €</span>' : '')
+        + (d.dateOuverture ? '<span>📅 Ouvert le ' + d.dateOuverture + '</span>' : '')
+        + (d.dateResiliation ? '<span>🔴 Fin contrat : ' + d.dateResiliation + '</span>' : '')
+        + '</div>'
+        + (d.note ? '<div style="font-size:12px;color:#8892A4;margin-bottom:6px;font-style:italic">' + d.note + '</div>' : '')
+        + relancesHtml
+        + addRelanceHtml
+        + '</div>'
+        + (isAdminMode() ? '<div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">'
+          + '<button onclick="openContentieuxForm('+realIdx+')" style="background:#3A86FF22;border:1px solid #3A86FF;color:#3A86FF;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer">✏️</button>'
+          + '<button onclick="deleteContentieux('+realIdx+')" style="background:#E6394622;border:1px solid #E63946;color:#E63946;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer">🗑️</button>'
+          + '</div>' : '')
+        + '</div>';
+      m.appendChild(card);
+    });
+  }
+}
+
+function addRelance(idx) {
+  var dateEl = document.getElementById('rdate_' + idx);
+  var noteEl = document.getElementById('rnote_' + idx);
+  if (!dateEl || !noteEl) return;
+  var d = dateEl.value; var n = noteEl.value.trim();
+  if (!d || !n) { showToast('⚠️ Renseignez la date et la note'); return; }
+  if (!CONTENTIEUX[idx].relances) CONTENTIEUX[idx].relances = [];
+  CONTENTIEUX[idx].relances.push({ date: d, note: n });
+  saveContentieux();
+  render();
+  showToast('✅ Relance ajoutée');
+}
+
+function deleteContentieux(idx) {
+  if (!confirm('Supprimer ce dossier contentieux ?')) return;
+  CONTENTIEUX.splice(idx, 1);
+  saveContentieux();
+  render();
+  showToast('🗑️ Dossier supprimé');
+}
+
+function openContentieuxForm(idx) {
+  var d = idx === -1 ? { siteName:'', montantDu:'', statut:'relance', dateOuverture: todayStr(), dateResiliation:'', note:'', relances:[] } : CONTENTIEUX[idx];
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:#000000CC;z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  var box = document.createElement('div');
+  box.style.cssText = 'background:#1A1D2E;border-radius:16px;padding:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;';
+  var siteOptions = DATA.map(function(s){ return '<option value="'+s.n+'"'+(s.n===d.siteName?' selected':'')+'>'+s.n+'</option>'; }).join('');
+  var statutOptions = STATUTS_CONTENTIEUX.map(function(s){ return '<option value="'+s.val+'"'+(s.val===d.statut?' selected':'')+'>'+s.label+'</option>'; }).join('');
+  box.innerHTML = '<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:16px">' + (idx===-1?'➕ Nouveau dossier':'✏️ Modifier le dossier') + '</div>'
+    + '<label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">🏢 Site concerné</label>'
+    + '<select id="ctxSite" style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px;margin-bottom:10px"><option value="">-- Choisir un site --</option>' + siteOptions + '</select>'
+    + '<label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">📊 Statut du dossier</label>'
+    + '<select id="ctxStatut" style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px;margin-bottom:10px">' + statutOptions + '</select>'
+    + '<label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">💶 Montant dû (€)</label>'
+    + '<input type="number" id="ctxMontant" value="'+(d.montantDu||'')+'" placeholder="Ex: 2500" style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px;margin-bottom:10px">'
+    + '<label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">📅 Date d'ouverture du dossier</label>'
+    + '<input type="date" id="ctxDateOuv" value="'+(d.dateOuverture||'')+'" style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px;margin-bottom:10px">'
+    + '<label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">🔴 Date fin de contrat (si résiliation)</label>'
+    + '<input type="date" id="ctxDateResil" value="'+(d.dateResiliation||'')+'" style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px;margin-bottom:10px">'
+    + '<label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">📝 Notes</label>'
+    + '<textarea id="ctxNote" placeholder="Détails du dossier..." style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#E8ECF0;font-size:13px;padding:8px;resize:vertical;min-height:70px;font-family:inherit;margin-bottom:14px">'+(d.note||'')+'</textarea>'
+    + '<div style="display:flex;gap:8px">'
+    + '<button id="ctxSaveBtn" style="flex:1;background:#E63946;border:none;color:#fff;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer">💾 Enregistrer</button>'
+    + '<button id="ctxCancelBtn" style="flex:0 0 90px;background:#2A2D3E;border:none;color:#8892A4;border-radius:8px;padding:12px;font-size:13px;cursor:pointer">Annuler</button>'
+    + '</div>';
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  document.getElementById('ctxCancelBtn').onclick = function() { document.body.removeChild(overlay); };
+  document.getElementById('ctxSaveBtn').onclick = function() {
+    var sn = document.getElementById('ctxSite').value.trim();
+    if (!sn) { alert('Sélectionnez un site'); return; }
+    var entry = {
+      siteName: sn,
+      statut: document.getElementById('ctxStatut').value,
+      montantDu: document.getElementById('ctxMontant').value,
+      dateOuverture: document.getElementById('ctxDateOuv').value,
+      dateResiliation: document.getElementById('ctxDateResil').value,
+      note: document.getElementById('ctxNote').value.trim(),
+      relances: d.relances || []
+    };
+    if (idx === -1) { CONTENTIEUX.push(entry); showToast('✅ Dossier créé'); }
+    else { CONTENTIEUX[idx] = entry; showToast('✅ Dossier mis à jour'); }
+    saveContentieux();
+    document.body.removeChild(overlay);
+    render();
+  };
+  overlay.onclick = function(e) { if (e.target === overlay) document.body.removeChild(overlay); };
 }
 
 function renderCompta(m) {
@@ -2409,163 +2516,6 @@ function renderCompta(m) {
   }
 }
 
-// ===== VITRERIE PLANNING =====
-var VITRERIE_TASKS = [
-  // ── TÂCHES EN RETARD (passées) ──
-  { date:'2026-03-04', name:'ACT ET NOTAIRE — Vitres Int (1×/mois)', addr:'14 RUE OLIVIER DE SERRES 75015 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-04', name:'ACT ET NOTAIRE ASSOCIES — Vitres Ext (2×/mois)', addr:'71 RUE DU FAUBOURG ST ANTOINE 75011 PARIS', freq:'2×/mois' },
-  { date:'2026-03-05', name:'ADESOFT — Nett. Vitres', addr:'135 rue de Billancourt 92100 BOULOGNE BILLANCOURT', freq:'1 fois/mois' },
-  { date:'2026-03-05', name:'AD HOMINEM — Nett. Vitreries', addr:'', freq:'Trimestrielle' },
-  { date:'2026-03-06', name:'16 PARIS — 5 RUE ABEL / 189 RUE D\'AUBERVILLIERS', addr:'5 RUE ABEL 75012 | 189 RUE D\'AUBERVILLIERS 75018 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-06', name:'FRANCE PRO HYGIENE — Vitres Int/Ext', addr:'5 PLACE SALVADOR ALLENDE 94140 ALFORTVILLE', freq:'1 fois/mois' },
-  { date:'2026-03-07', name:'CABINET MEDICAL — Nett. Vitres', addr:'24 BIS PLACE DE LA NATION 75012 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-10', name:'CNDO 12 — Nett. Vitres', addr:'19 AVENUE DE LA GRANDE ARMEE PARIS 75016', freq:'1 fois/mois' },
-  { date:'2026-03-10', name:'CNDO 16 — Nett. Vitres', addr:'', freq:'1 fois/mois' },
-  { date:'2026-03-10', name:'VITRES ELSA GARY', addr:'14 RUE OLIVIER DE SERRES 75015 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-11', name:'ACT&NOTAIRES — Vitres Extérieur (Fodie Cissé)', addr:'9 RUE ETEX 75018 PARIS', freq:'2×/mois' },
-  { date:'2026-03-11', name:'CABINET SALSET-SAUVAT — Vitres', addr:'18 RUE DE LA PEPINIERE 75008 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-11', name:'ALPHAJET FAIR INVESTORS', addr:'4 RUE DE FURSTEMBERG 75006 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-12', name:'CEC PARIS SARL (MILANO) — Vitres', addr:'32 RUE DUFOUR PARIS 75006', freq:'1 fois/mois' },
-  { date:'2026-03-13', name:'CNDO 6 — Nett. Vitres', addr:'25 AVENUE RAPP 75007 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-14', name:'RIMADESIO', addr:'66 RUE DE PARIS 93100 MONTREUIL', freq:'Mensuelle' },
-  { date:'2026-03-16', name:'ANGELA BOWER — Nettoyage Vitres', addr:'64, rue de Caumartin 75009 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-16', name:'EUROPAIN GESTION SAS', addr:'1 RUE GEORGES SAND 94400 CRETEIL', freq:'2×/mois' },
-  // ── À FAIRE CETTE SEMAINE ──
-  { date:'2026-03-17', name:'CNDO 16 + Encadrement V. BGAZ', addr:'19 AVENUE DE LA GRANDE ARMEE PARIS 75016/17', freq:'1 fois/mois' },
-  { date:'2026-03-17', name:'CNDO 16 13h/13h30 — Vitres', addr:'14 RUE OLIVIER DE SERRES 75015 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-18', name:'ACT&NOTAIRES ASSOCIES — Vitres Intérieur', addr:'1 VOIE FELIX EBOUE 94000 CRETEIL', freq:'1 fois/mois' },
-  { date:'2026-03-19', name:'CEFISI — Vitres', addr:'18 RUE DE LA PEPINIERE 75008 PARIS', freq:'Trimestrielle' },
-  { date:'2026-03-19', name:'CDM LAVOISIER — Vitres', addr:'213 AVENUE DE CHOISY 75013 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-19', name:'SCM MEDICAL — Vitrerie', addr:'213 AVENUE DE CHOISY 75013 PARIS', freq:'1 fois/mois' },
-  // ── SEMAINE DU 21 MARS ──
-  { date:'2026-03-21', name:'SCM MEDICAL — Vitres (cabinet)', addr:'68 RUE DU FAUBOURG POISSONNIERE 75010 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-22', name:'BON PARFUMEUR', addr:'17 RUE SAINT CROIX DE LA BRETONNERIE 75004 PARIS', freq:'Trimestrielle' },
-  { date:'2026-03-22', name:'BON PARFUMEUR (2e adresse)', addr:'76 RUE DU CAPITAINE GUYENEMER 92400 COURBEVOIE', freq:'Trimestrielle' },
-  // ── SEMAINE DU 25 MARS ──
-  { date:'2026-03-25', name:'MUSIC BUSINESS — Vitres', addr:'18 RUE DE LA PEPINIERE 75008 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-26', name:'CDM LAVOISIER — Vitres', addr:'58, BOULEVARD GOUVION SAINT CYR 75017 PARIS', freq:'1 fois/mois' },
-  { date:'2026-03-27', name:'ALAIN BENSOUSSAN — Vitres', addr:'', freq:'Trimestrielle' },
-  { date:'2026-03-27', name:'MANUFACTURE PRELLE — Vitres Int+Ext', addr:'25 AVENUE RAPP 75007 PARIS', freq:'Trimestrielle' },
-  // ── AVRIL ──
-  { date:'2026-04-02', name:'RIMADESIO', addr:'25 AVENUE RAPP 75007 PARIS', freq:'Mensuelle' },
-  { date:'2026-04-04', name:'EDITIONS BRUNO DOUCEY + Encadrement V. BGAZ', addr:'67 RUE DE REUILLY 75012 PARIS', freq:'Trimestrielle' },
-  { date:'2026-04-06', name:'EDITIONS BRUNO DOUCEY', addr:'16 AVENUE DE LA REPUBLIQUE 75011 — 17€/mois', freq:'1×/mois' },
-  { date:'2026-04-07', name:'OFFICIO AVOCAT', addr:'63 RUE DE RIVOLI 75001 PARIS', freq:'1 fois/mois' },
-  { date:'2026-04-10', name:'TEAMSQUARE — Vitres (10h–12h)', addr:'48 RUE SAINT HONORE 75001 PARIS', freq:'Mensuelle' },
-  { date:'2026-04-12', name:'CPNEF AUDIO — Vitres', addr:'39 RUE ANATOLE FRANCE 92300 LEVALLOIS-PERRET', freq:'Trimestrielle' },
-  { date:'2026-04-22', name:'ABSIS GROUPE — Surfaces Vitrées Trimestrielles', addr:'5 RUE CHARONNE 75011 PARIS', freq:'Trimestrielle' },
-  // ── MAI ──
-  { date:'2026-05-21', name:'GAUTIER-CONQUET PUMA', addr:'63 RUE DE RIVOLI 75001 PARIS', freq:'Mensuelle' },
-  // ── JUIN ──
-  { date:'2026-06-01', name:'TEAMSQUARE — Vitres (10h–12h) ⚠️ Déjà facturé mai', addr:'RIMADESIO 25 AVENUE RAPP 75007 PARIS', freq:'Mensuelle' },
-  { date:'2026-06-07', name:'ENVELCOM LUXIUM — Nett. Vitres', addr:'172 RUE SADI CARNOT 93170 BAGNOLET', freq:'Trimestrielle' },
-  { date:'2026-06-23', name:'ASGB — Association Sportive Gymnique de Bagnolet', addr:'(voir planning)', freq:'Annuelle' },
-  // ── RÉCURRENT SANS DATE FIXE ──
-  { date:'2029-06-26', name:'PLANTUREUX ET ASSOCIES — Nett. Vitres', addr:'', freq:'Récurrent' }
-];
-
-// Viterie completion tracking
-var VITRERIE_DONE = (function() {
-  try { return JSON.parse(localStorage.getItem('starsnett_vitrerie_done') || '{}'); } catch(e) { return {}; }
-})();
-function saveVitDone() { try { localStorage.setItem('starsnett_vitrerie_done', JSON.stringify(VITRERIE_DONE)); } catch(e) {} }
-var vitrerieFilter = 'all';
-
-function renderVitrerie(m) {
-  var today = todayStr();
-  var hdr = document.createElement('div');
-  hdr.className = 'vitrerie-hdr';
-  hdr.innerHTML = '<div class="vitrerie-title">🪟 Planning Vitrerie</div>'
-    + '<div class="vitrerie-sub">Suivi des passages de nettoyage de vitres</div>'
-    + '<div class="vitrerie-filters">'
-    + '<button class="vitrerie-filter' + (vitrerieFilter==='all'?' on':'') + '" onclick="vitFilter(\'all\')">Tous</button>'
-    + '<button class="vitrerie-filter' + (vitrerieFilter==='overdue'?' on':'') + '" onclick="vitFilter(\'overdue\')" style="color:#E63946">⚠️ En retard</button>'
-    + '<button class="vitrerie-filter' + (vitrerieFilter==='pending'?' on':'') + '" onclick="vitFilter(\'pending\')" style="color:#E9C46A">📅 À venir</button>'
-    + '<button class="vitrerie-filter' + (vitrerieFilter==='done'?' on':'') + '" onclick="vitFilter(\'done\')" style="color:#06D6A0">✅ Effectués</button>'
-    + '</div>';
-  m.appendChild(hdr);
-
-  // Stats
-  var overdue = 0, pending = 0, done = 0;
-  VITRERIE_TASKS.forEach(function(t) {
-    var key = t.date + '|' + t.name;
-    if (VITRERIE_DONE[key]) { done++; return; }
-    if (t.date < today) overdue++;
-    else pending++;
-  });
-  var stats = document.createElement('div');
-  stats.style.cssText = 'display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;';
-  stats.innerHTML = '<div style="background:#E6394622;border:1px solid #E6394644;border-radius:10px;padding:8px 14px;flex:1;text-align:center"><div style="font-size:20px;font-weight:800;color:#E63946">' + overdue + '</div><div style="font-size:10px;color:#8892A4">En retard</div></div>'
-    + '<div style="background:#E9C46A22;border:1px solid #E9C46A44;border-radius:10px;padding:8px 14px;flex:1;text-align:center"><div style="font-size:20px;font-weight:800;color:#E9C46A">' + pending + '</div><div style="font-size:10px;color:#8892A4">À venir</div></div>'
-    + '<div style="background:#06D6A022;border:1px solid #06D6A044;border-radius:10px;padding:8px 14px;flex:1;text-align:center"><div style="font-size:20px;font-weight:800;color:#06D6A0">' + done + '</div><div style="font-size:10px;color:#8892A4">Effectués</div></div>';
-  m.appendChild(stats);
-
-  var days = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
-  var months = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-  function fmtVitDate(d) {
-    var dt = new Date(d + 'T12:00:00');
-    return days[dt.getDay()] + ' ' + dt.getDate() + ' ' + months[dt.getMonth()] + ' ' + dt.getFullYear();
-  }
-
-  var lastGroup = '';
-  var shown = 0;
-  VITRERIE_TASKS.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }).forEach(function(t) {
-    var key = t.date + '|' + t.name;
-    var isDone = !!VITRERIE_DONE[key];
-    var status = isDone ? 'done' : (t.date < today ? 'overdue' : (t.date === today ? 'today' : 'upcoming'));
-    if (t.date > today && status !== 'today') status = t.date <= '2026-04-30' ? 'upcoming' : 'future';
-
-    // filter
-    if (vitrerieFilter === 'overdue' && status !== 'overdue') return;
-    if (vitrerieFilter === 'pending' && (status === 'overdue' || status === 'done')) return;
-    if (vitrerieFilter === 'done' && !isDone) return;
-
-    // group header
-    var group = isDone ? '✅ Effectués' : (status === 'overdue' ? '⚠️ En retard' : (status === 'today' ? '📅 Aujourd\'hui' : '📆 À venir'));
-    if (group !== lastGroup) {
-      var gh = document.createElement('div');
-      gh.className = 'vtask-group-hdr';
-      gh.textContent = group;
-      m.appendChild(gh);
-      lastGroup = group;
-    }
-    shown++;
-
-    var card = document.createElement('div');
-    card.className = 'vtask-card ' + (isDone ? '' : status);
-    var dateLabel = fmtVitDate(t.date);
-    var dateCls = isDone ? 'done' : status;
-    card.innerHTML = '<span class="vtask-date ' + dateCls + '">' + dateLabel + '</span>'
-      + (t.freq ? '<span style="float:right;font-size:10px;color:#8892A4;border:1px solid #2A2D3E;border-radius:8px;padding:1px 7px">' + t.freq + '</span>' : '')
-      + '<div class="vtask-name' + (isDone?' style="text-decoration:line-through;opacity:0.5"':'"') + '>' + t.name + '</div>'
-      + (t.addr ? '<div class="vtask-addr">📍 ' + t.addr + '</div>' : '');
-    var btn = document.createElement('button');
-    btn.className = 'vtask-done-btn' + (isDone ? ' done' : '');
-    btn.textContent = isDone ? '✅ Fait' : '✓ Marquer fait';
-    (function(k, isDone2) {
-      btn.onclick = function() {
-        if (isDone2) { delete VITRERIE_DONE[k]; } else { VITRERIE_DONE[k] = todayStr(); }
-        saveVitDone();
-        renderVitrerie(document.getElementById('main'));
-      };
-    })(key, isDone);
-    card.appendChild(btn);
-    m.appendChild(card);
-  });
-
-  if (shown === 0) {
-    var emp = document.createElement('div');
-    emp.className = 'empty';
-    emp.textContent = 'Aucune tâche dans cette catégorie.';
-    m.appendChild(emp);
-  }
-}
-
-function vitFilter(f) {
-  vitrerieFilter = f;
-  renderVitrerie(document.getElementById('main'));
-}
-
 function exportComptaCSV(items) {
   var rows = [['Date','Site','Agent','Type','Note']];
   var sorted = items.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
@@ -2585,116 +2535,6 @@ function exportComptaCSV(items) {
   showToast('📥 CSV exporté !');
 }
 render();
-
-// ===== DÉMARRAGE SYNCHRO TEMPS RÉEL =====
-// Copier l'ID du coffre dans le presse-papier
-function copyBinId() {
-  var val = document.getElementById('jbBinId') ? document.getElementById('jbBinId').value : '';
-  if (!val) val = JBBIN;
-  if (!val) { showToast('❌ Aucun ID à copier'); return; }
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(val).then(function(){ showToast('📋 ID copié !'); });
-  } else {
-    showToast('ID : ' + val);
-  }
-}
-
-// Déconnecter ce téléphone du cloud
-function disconnectSync() {
-  if (!confirm('Déconnecter ce téléphone du cloud ?\nLes données locales sont conservées.')) return;
-  JBKEY = ''; JBBIN = ''; lastCloudVersion = null;
-  localStorage.removeItem('jb_key');
-  localStorage.removeItem('jb_bin');
-  if (syncPollTimer) clearInterval(syncPollTimer);
-  if (syncWriteTimer) clearTimeout(syncWriteTimer);
-  closeSyncConfig();
-  updateSyncBar();
-  showToast('🔌 Déconnecté du cloud');
-}
-
-// Banniere premiere visite
-(function checkWelcome() {
-  if (!localStorage.getItem('wb_dismissed') && !JBKEY) {
-    var b = document.getElementById('welcomeBanner');
-    if (b) b.style.display = 'block';
-  }
-})();
-
-// Alerte si fichier ouvert en local (file://) -> synchro impossible
-(function checkFileProtocol() {
-  if (window.location.protocol === 'file:') {
-    var info = document.getElementById('syncInfo');
-    if (info) {
-      info.innerHTML = '<span style="color:#E63946;font-weight:700">⚠️ Fichier local — synchro impossible. Hébergez sur GitHub Pages !</span>';
-    }
-    // Ajouter une alerte persistante sous la barre
-    var bar = document.querySelector('.sync-bar');
-    if (bar && !document.getElementById('localAlert')) {
-      var alert = document.createElement('div');
-      alert.id = 'localAlert';
-      alert.style.cssText = 'width:100%;background:#E6394611;border:1px solid #E6394433;border-radius:8px;padding:8px 12px;font-size:11px;color:#E63946;line-height:1.6;margin-top:6px;';
-      alert.innerHTML = '<b>⚠️ Fichier ouvert en local</b> — Chrome Android bloque la synchro.<br>'
-        + '<b style="color:#E9C46A">Solution :</b> Hébergez sur '
-        + '<a href="https://github.com" target="_blank" style="color:#3A86FF">GitHub Pages</a> (gratuit, 5 min) '
-        + 'puis ouvrez l'URL sur tous vos téléphones.'
-        + '<button onclick="this.parentNode.remove()" style="float:right;background:none;border:none;color:#E63946;cursor:pointer;font-size:14px">✕</button>';
-      bar.parentNode.insertBefore(alert, bar.nextSibling);
-    }
-  }
-})();
-
-// Démarrage automatique du polling si déjà configuré
-(function autoStartSync() {
-  if (JBKEY && JBBIN) {
-    setSyncState('idle');
-    startPolling();
-  }
-})();
-function startVoiceSearch() {
-  var btn = document.getElementById('micBtn');
-  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    showToast('❌ Recherche vocale non supportée sur ce navigateur');
-    return;
-  }
-  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  var recognition = new SpeechRecognition();
-  recognition.lang = 'fr-FR';
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
-  
-  btn.textContent = '🔴';
-  btn.style.color = '#E63946';
-  btn.style.borderColor = '#E63946';
-  
-  recognition.onresult = function(event) {
-    var transcript = event.results[0][0].transcript;
-    document.getElementById('search').value = transcript;
-    onSearch();
-    btn.textContent = '🎤';
-    btn.style.color = '#2A9D8F';
-    btn.style.borderColor = '#2A9D8F55';
-    showToast('🎤 "' + transcript + '"');
-  };
-  
-  recognition.onerror = function(event) {
-    btn.textContent = '🎤';
-    btn.style.color = '#2A9D8F';
-    btn.style.borderColor = '#2A9D8F55';
-    if (event.error === 'not-allowed') {
-      showToast('❌ Autorisez le microphone dans votre navigateur');
-    } else {
-      showToast('❌ Erreur vocale : ' + event.error);
-    }
-  };
-  
-  recognition.onend = function() {
-    btn.textContent = '🎤';
-    btn.style.color = '#2A9D8F';
-    btn.style.borderColor = '#2A9D8F55';
-  };
-  
-  recognition.start();
-}
 </script>
 </body>
 </html>
