@@ -244,6 +244,56 @@ tbody td { padding: 10px 14px; vertical-align: top; }
 }
 
 
+
+/* ── COMPTABLE GÉRANT ── */
+.compta-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:24px; }
+.compta-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:18px 20px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+.compta-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.cc-bleu::before { background:var(--blue); }
+.cc-vert::before { background:var(--green); }
+.cc-rouge::before { background:var(--red); }
+.cc-orange::before { background:var(--orange); }
+.cc-violet::before { background:var(--purple); }
+.cc-val { font-family:'Fraunces',serif; font-size:26px; font-weight:600; line-height:1.1; margin-bottom:4px; }
+.cc-val.bleu { color:var(--navy); }
+.cc-val.vert { color:var(--green); }
+.cc-val.rouge { color:var(--red); }
+.cc-val.orange { color:var(--orange); }
+.cc-val.violet { color:var(--purple); }
+.cc-lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:6px; }
+.cc-detail { font-size:12px; color:var(--muted); line-height:1.5; border-top:1px solid var(--border); padding-top:8px; margin-top:8px; }
+.cc-sub { font-size:11.5px; color:var(--muted); }
+
+.repartition-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+@media(max-width:600px){ .repartition-grid { grid-template-columns:1fr; } }
+.repartition-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:18px 20px; box-shadow:var(--shadow); }
+.rc-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:14px; }
+.bar-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.bar-label { font-size:12px; color:var(--text); min-width:120px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bar-track { flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; transition:width .6s ease; }
+.bar-val { font-size:12px; font-weight:700; color:var(--text); min-width:70px; text-align:right; }
+
+.evol-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:18px 20px; box-shadow:var(--shadow); margin-bottom:20px; }
+.evol-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:16px; }
+.evol-row { display:flex; align-items:flex-end; gap:6px; height:100px; margin-bottom:8px; padding:0 4px; }
+.evol-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end; }
+.evol-bar { width:100%; border-radius:4px 4px 0 0; transition:height .5s ease; }
+.evol-month { font-size:10.5px; color:var(--muted); text-align:center; }
+.evol-amount { font-size:10px; color:var(--text); font-weight:600; text-align:center; }
+.evol-legend { display:flex; gap:16px; margin-top:8px; }
+.evol-leg-item { display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--muted); }
+.evol-leg-dot { width:10px; height:10px; border-radius:2px; }
+
+.section-compta { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--muted); margin:20px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.honoraires-table { width:100%; border-collapse:collapse; }
+.honoraires-table th { font-size:11px; text-transform:uppercase; letter-spacing:0.4px; font-weight:700; color:var(--muted); padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); background:var(--surface2); }
+.honoraires-table td { padding:10px 12px; border-bottom:1px solid var(--border); font-size:13px; }
+.honoraires-table tr:last-child td { border-bottom:none; }
+.ht-total { background:var(--surface2); font-weight:700; }
+.tag-impaye { background:var(--rbg); color:var(--red); font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:4px; margin-left:6px; }
+.tag-ok { background:var(--gbg); color:var(--green); font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:4px; margin-left:6px; }
+
 /* ── GÉRANT DASHBOARD ── */
 .gerant-screen { display:none; }
 .gerant-screen.active { display:block; }
@@ -401,6 +451,149 @@ tbody td { padding: 10px 14px; vertical-align: top; }
         <div class="gw-sub">Voici les actions en attente de votre décision ou validation</div>
       </div>
       <div class="gw-badge" id="gw-count">— actions en attente</div>
+    </div>
+
+
+    <!-- ── KPIs COMPTABLES ── -->
+    <div class="section-compta">📊 Situation financière contentieux</div>
+    <div class="compta-grid">
+      <div class="compta-card cc-bleu">
+        <div class="cc-lbl">Créances totales en cours</div>
+        <div class="cc-val bleu">222 968 €</div>
+        <div class="cc-detail">
+          E.RECOVE actif : 193 695 €<br>
+          Courage Villiers (direct) : 24 497 €<br>
+          Me LAHIANI : montants non communiqués
+        </div>
+      </div>
+      <div class="compta-card cc-vert">
+        <div class="cc-lbl">Montant recouvré</div>
+        <div class="cc-val vert">400 €</div>
+        <div class="cc-detail">
+          SPRINGVOICE — virement 09/03/2026<br>
+          Net après coûts : <strong>298 €</strong><br>
+          Taux de recouvrement global : <strong>0,18 %</strong>
+        </div>
+      </div>
+      <div class="compta-card cc-rouge">
+        <div class="cc-lbl">Montant à risque</div>
+        <div class="cc-val rouge">30 263 €</div>
+        <div class="cc-detail">
+          Jeffrey Cagnes Paris (RJ) : 2 810 €<br>
+          Courage Villiers (contesté) : 19 541 €<br>
+          Tabac des Ternes (forcemaj.) : 7 859 €<br>
+          <span style="font-size:11px;color:var(--red)">⚠️ Recouvrement incertain</span>
+        </div>
+      </div>
+      <div class="compta-card cc-orange">
+        <div class="cc-lbl">Honoraires dus (à régler)</div>
+        <div class="cc-val orange">663 €</div>
+        <div class="cc-detail">
+          E.RECOVE — DR GRÉGOIRE : 450 € TTC<br>
+          E.RECOVE — OH MY JERK : 211,80 € TTC<br>
+          + Me LAHIANI : montant à confirmer
+        </div>
+      </div>
+      <div class="compta-card cc-violet">
+        <div class="cc-lbl">Coûts E.RECOVE engagés</div>
+        <div class="cc-val violet">1 826 €</div>
+        <div class="cc-detail">
+          Honoraires résultat (SPRINGVOICE) : 72 €<br>
+          IP DR GRÉGOIRE : 450 € TTC<br>
+          IP OH MY JERK : 211,80 € TTC<br>
+          IP simplifiées × 4 (150€HT/u) : 720 €<br>
+          IP standards × 2 (350€HT/u) : 840 €<br>
+          Phase amiable (30€) : 30 €
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RÉPARTITION ── -->
+    <div class="repartition-grid">
+      <div class="repartition-card">
+        <div class="rc-title">Créances par statut</div>
+        <div class="bar-row">
+          <div class="bar-label">⚖️ Judiciaire</div>
+          <div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--purple)"></div></div>
+          <div class="bar-val" style="color:var(--purple)">160 714 €</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">🟠 IP en cours</div>
+          <div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--orange)"></div></div>
+          <div class="bar-val" style="color:var(--orange)">40 207 €</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">🔴 Contesté / RJ</div>
+          <div class="bar-track"><div class="bar-fill" style="width:14%;background:var(--red)"></div></div>
+          <div class="bar-val" style="color:var(--red)">30 263 €</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">🟡 À confirmer</div>
+          <div class="bar-track"><div class="bar-fill" style="width:5%;background:var(--yellow)"></div></div>
+          <div class="bar-val" style="color:var(--yellow)">11 158 €</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">✅ Clôturé</div>
+          <div class="bar-track"><div class="bar-fill" style="width:1%;background:var(--green)"></div></div>
+          <div class="bar-val" style="color:var(--green)">400 €</div>
+        </div>
+      </div>
+
+      <div class="repartition-card">
+        <div class="rc-title">Top 5 créances</div>
+        <div class="bar-row">
+          <div class="bar-label" title="BERNIER CONSEILS">BERNIER CONSEILS</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--navy)"></div></div>
+          <div class="bar-val">124 637 €</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" title="MARCELLA">MARCELLA</div>
+          <div class="bar-track"><div class="bar-fill" style="width:23%;background:var(--navy2)"></div></div>
+          <div class="bar-val">28 457 €</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" title="COURAGE VILLIERS">COURAGE VILLIERS</div>
+          <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--red)"></div></div>
+          <div class="bar-val">24 497 €</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" title="FRANCE FORMALITES">FRANCE FORMALITÉS</div>
+          <div class="bar-track"><div class="bar-fill" style="width:11%;background:var(--orange)"></div></div>
+          <div class="bar-val">13 677 €</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" title="TABAC DES TERNES">TABAC DES TERNES</div>
+          <div class="bar-track"><div class="bar-fill" style="width:6%;background:var(--muted)"></div></div>
+          <div class="bar-val">7 859 €</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ÉVOLUTION MENSUELLE ── -->
+    <div class="evol-card">
+      <div class="evol-title">Évolution mensuelle — Actions contentieux engagées</div>
+      <div class="evol-row" id="evol-bars"></div>
+      <div class="evol-legend">
+        <div class="evol-leg-item"><div class="evol-leg-dot" style="background:var(--navy)"></div> Dossiers actifs</div>
+        <div class="evol-leg-item"><div class="evol-leg-dot" style="background:var(--green)"></div> Recouvré (€)</div>
+      </div>
+    </div>
+
+    <!-- ── HONORAIRES DÉTAIL ── -->
+    <div class="section-compta">💶 Détail honoraires & coûts</div>
+    <div class="tbl-wrap" style="margin-bottom:24px">
+      <table class="honoraires-table">
+        <thead><tr><th>Prestataire</th><th>Référence</th><th>Montant TTC</th><th>Dossier</th><th>Statut</th></tr></thead>
+        <tbody>
+          <tr><td>E.RECOVE</td><td>Note 2025-0137</td><td style="font-weight:700">30,00 €</td><td>DR GRÉGOIRE / SPRINGVOICE</td><td><span class="tag-impaye">IMPAYÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>Note 2026-0019</td><td style="font-weight:700">420,00 €</td><td>DR GRÉGOIRE</td><td><span class="tag-impaye">IMPAYÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>Note 2026-0022</td><td style="font-weight:700">211,80 €</td><td>OH MY JERK</td><td><span class="tag-impaye">IMPAYÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>Note 2026-0021</td><td style="font-weight:700">72,00 €</td><td>SPRINGVOICE (résultat 15%)</td><td><span class="tag-impaye">IMPAYÉE</span></td></tr>
+          <tr><td>Me LAHIANI</td><td>Note honoraires assignations</td><td style="font-weight:700">À confirmer</td><td>7 dossiers TC Paris</td><td><span class="tag-impaye">À RÉGLER</span></td></tr>
+          <tr><td>E.RECOVE</td><td>Note 2025-0137 (SPRINGVOICE)</td><td style="font-weight:700">30,00 €</td><td>SPRINGVOICE</td><td><span class="tag-ok">RÉGLÉE</span></td></tr>
+          <tr class="ht-total"><td colspan="2"><strong>Total honoraires impayés identifiés</strong></td><td style="font-weight:700;color:var(--red)">733,80 € + Me LAHIANI</td><td colspan="2"></td></tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="gerant-nav">
@@ -654,6 +847,28 @@ let gerantFilter = 'all';
 let gerantDone = {};
 
 function renderGerant() {
+
+  // Evolution chart
+  const evolData = [
+    { m:'Oct 25', actifs:8,  recov:0 },
+    { m:'Nov 25', actifs:10, recov:0 },
+    { m:'Dec 25', actifs:12, recov:0 },
+    { m:'Jan 26', actifs:15, recov:0 },
+    { m:'Fév 26', actifs:18, recov:0 },
+    { m:'Mar 26', actifs:21, recov:400 },
+  ];
+  const maxA = Math.max(...evolData.map(d=>d.actifs));
+  const maxR = Math.max(...evolData.map(d=>d.recov)) || 1;
+  document.getElementById('evol-bars').innerHTML = evolData.map(d => `
+    <div class="evol-bar-wrap">
+      <div class="evol-amount" style="color:var(--green);visibility:${d.recov?'visible':'hidden'}">${d.recov}€</div>
+      <div style="display:flex;align-items:flex-end;gap:3px;height:80px;width:100%">
+        <div class="evol-bar" style="background:var(--navy);height:${Math.round(d.actifs/maxA*80)}px;flex:1" title="${d.actifs} dossiers"></div>
+        <div class="evol-bar" style="background:var(--green);height:${Math.round(d.recov/400*80)}px;flex:1" title="${d.recov}€ recouvré"></div>
+      </div>
+      <div class="evol-month">${d.m}</div>
+    </div>`).join('');
+
   const actions = gerantActions.filter(a => gerantFilter === 'all' || a.cat === gerantFilter);
   const pending = gerantActions.filter(a => !gerantDone[a.id]);
   // counts
