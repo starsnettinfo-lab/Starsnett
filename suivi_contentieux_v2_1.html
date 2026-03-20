@@ -245,6 +245,107 @@ tbody td { padding: 10px 14px; vertical-align: top; }
 
 
 
+
+
+/* ── RELANCES NIMAGA ── */
+.relance-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:18px 20px; box-shadow:var(--shadow); margin-bottom:12px; display:flex; gap:14px; }
+.rc-prio { width:4px; border-radius:4px; align-self:stretch; flex-shrink:0; }
+.rc-body { flex:1; min-width:0; }
+.rc-cat { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:3px; }
+.rc-titre { font-size:14px; font-weight:700; margin-bottom:5px; }
+.rc-detail { font-size:12.5px; color:var(--muted); margin-bottom:8px; line-height:1.5; }
+.rc-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.rc-montant { font-family:'Fraunces',serif; font-size:18px; font-weight:600; flex-shrink:0; text-align:right; }
+.relance-log-row { display:flex; gap:10px; padding:9px 14px; border-bottom:1px solid var(--border); font-size:13px; align-items:flex-start; }
+.relance-log-row:last-child { border-bottom:none; }
+.rl-status-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.dot-envoyee { background:var(--blue); }
+.dot-vue { background:var(--green); }
+.dot-en-attente { background:var(--orange); }
+.relance-summary { background:linear-gradient(135deg,#fff8ee,#fff3e0); border:1px solid #f0c070; border-radius:var(--r); padding:16px 20px; margin-bottom:16px; }
+.rs-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--orange); margin-bottom:10px; }
+.rs-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+@media(max-width:500px){ .rs-grid{grid-template-columns:1fr;} }
+.rs-item { text-align:center; }
+.rs-val { font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--navy); }
+.rs-lbl { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
+.msg-preview { background:#f0f4fa; border:1px solid #c0d4ea; border-radius:8px; padding:14px 16px; font-size:13px; line-height:1.7; white-space:pre-wrap; margin:10px 0; font-family:'DM Sans',sans-serif; color:var(--text); }
+.msg-overlay { position:fixed; inset:0; background:rgba(15,12,8,0.5); z-index:300; display:none; align-items:center; justify-content:center; padding:20px; }
+.msg-overlay.open { display:flex; }
+.msg-modal { background:var(--surface); border-radius:14px; width:100%; max-width:580px; box-shadow:var(--shadow-lg); overflow:hidden; animation:su .2s ease; }
+.msg-modal-hdr { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.msg-modal-title { font-family:'Fraunces',serif; font-size:18px; font-weight:600; }
+.msg-modal-body { padding:18px 22px; }
+.msg-modal-ftr { padding:14px 22px; background:var(--surface2); border-top:1px solid var(--border); display:flex; gap:8px; }
+
+/* ── PROFIL COMPTABLE FLORENT ── */
+.compta-screen { display:none; }
+.compta-screen.active { display:block; }
+.compta-welcome { background:linear-gradient(135deg,#1a5c3a 0%,#0f3d26 100%); color:white; border-radius:var(--r); padding:20px 24px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.cw-title { font-family:'Fraunces',serif; font-size:20px; font-weight:600; }
+.cw-sub { font-size:13px; opacity:0.7; margin-top:3px; }
+.cw-badge { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); border-radius:20px; padding:6px 14px; font-size:12px; font-weight:600; }
+
+.florent-tabs { display:flex; gap:6px; margin-bottom:20px; border-bottom:2px solid var(--border); padding-bottom:0; flex-wrap:wrap; }
+.ftab { padding:9px 18px; border-radius:8px 8px 0 0; border:1px solid transparent; background:none; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer; color:var(--muted); font-weight:500; transition:all .14s; border-bottom:2px solid transparent; margin-bottom:-2px; }
+.ftab:hover { color:var(--text); background:var(--surface2); }
+.ftab.active { color:var(--green); border-bottom:2px solid var(--green); font-weight:700; background:var(--surface); }
+.ftab .cnt { background:var(--rbg); color:var(--red); font-size:10.5px; font-weight:700; padding:1px 6px; border-radius:8px; margin-left:5px; }
+
+.ftab-content { display:none; }
+.ftab-content.active { display:block; }
+
+/* Lettrage */
+.lettrage-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+@media(max-width:600px){ .lettrage-grid{grid-template-columns:1fr;} }
+.lettrage-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:16px 18px; box-shadow:var(--shadow); }
+.lc-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.lc-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); }
+.lc-total { font-family:'Fraunces',serif; font-size:20px; font-weight:600; }
+.lc-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.lc-row:last-child { border-bottom:none; }
+.lc-ref { color:var(--muted); font-size:12px; }
+.lc-date { color:var(--muted); font-size:11.5px; }
+.lc-montant { font-weight:700; }
+.lc-lettree { color:var(--green); }
+.lc-nonlettree { color:var(--red); }
+.lc-attente { color:var(--orange); }
+
+/* Saisie règlement */
+.saisie-form { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:22px 24px; box-shadow:var(--shadow); margin-bottom:16px; }
+.saisie-title { font-family:'Fraunces',serif; font-size:17px; color:var(--navy); margin-bottom:16px; }
+.saisie-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+@media(max-width:600px){ .saisie-grid{grid-template-columns:1fr;} }
+.reglements-log { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow); }
+.rl-head { background:var(--surface2); padding:10px 14px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); }
+.rl-row { display:flex; gap:12px; align-items:center; padding:10px 14px; border-bottom:1px solid var(--border); font-size:13px; flex-wrap:wrap; }
+.rl-row:last-child { border-bottom:none; }
+.rl-date { color:var(--muted); font-size:12px; min-width:80px; }
+.rl-dossier { font-weight:600; flex:1; }
+.rl-montant { font-weight:700; color:var(--green); min-width:80px; text-align:right; }
+.rl-auteur { font-size:11.5px; color:var(--muted); }
+
+/* Provisions */
+.prov-table tbody tr td:first-child { font-weight:600; }
+.prov-risque-fort { background:#fdf5f5; }
+.prov-risque-moy  { background:#fef9f0; }
+.prov-taux { font-size:12px; font-weight:700; }
+.prov-taux.fort { color:var(--red); }
+.prov-taux.moy  { color:var(--orange); }
+.prov-taux.faib { color:var(--yellow); }
+
+/* KPIs Florent */
+.florent-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:20px; }
+.fkpi { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:15px 18px; box-shadow:var(--shadow); border-top:3px solid transparent; }
+.fkpi.vert { border-top-color:var(--green); }
+.fkpi.rouge { border-top-color:var(--red); }
+.fkpi.orange { border-top-color:var(--orange); }
+.fkpi.bleu { border-top-color:var(--blue); }
+.fkpi.violet { border-top-color:var(--purple); }
+.fkpi-val { font-family:'Fraunces',serif; font-size:22px; font-weight:600; color:var(--navy); line-height:1.1; margin-bottom:3px; }
+.fkpi-lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--muted); }
+.fkpi-sub { font-size:11.5px; color:var(--muted); margin-top:4px; }
+
 /* ── COMPTABLE GÉRANT ── */
 .compta-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:24px; }
 .compta-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:18px 20px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
@@ -442,6 +543,295 @@ tbody td { padding: 10px 14px; vertical-align: top; }
     </div>
   </div>
 
+
+
+  <!-- ═══ PROFIL COMPTABLE FLORENT ═══ -->
+  <div class="compta-screen" id="compta-screen">
+
+    <div class="compta-welcome">
+      <div>
+        <div class="cw-title">Espace comptable — Florent</div>
+        <div class="cw-sub">Suivi financier contentieux · Grand-livre E.RECOVE · Provisions</div>
+      </div>
+      <div class="cw-badge" id="cw-alerte">0 factures à lettrer</div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="florent-kpis">
+      <div class="fkpi rouge">
+        <div class="fkpi-val">3 172,76 €</div>
+        <div class="fkpi-lbl">Solde dû E.RECOVE</div>
+        <div class="fkpi-sub">Au 19/03/2026</div>
+      </div>
+      <div class="fkpi orange">
+        <div class="fkpi-val" id="fkpi-nonlettrees">703,80 €</div>
+        <div class="fkpi-lbl">Factures non lettrées 2026</div>
+        <div class="fkpi-sub">3 notes impayées</div>
+      </div>
+      <div class="fkpi violet">
+        <div class="fkpi-val">27 118,96 €</div>
+        <div class="fkpi-lbl">Provisions à constituer</div>
+        <div class="fkpi-sub">Créances douteuses/irrécouvrables</div>
+      </div>
+      <div class="fkpi bleu">
+        <div class="fkpi-val">0,18 %</div>
+        <div class="fkpi-lbl">Taux recouvrement global</div>
+        <div class="fkpi-sub">400 € / 222 968 € en cours</div>
+      </div>
+      <div class="fkpi vert">
+        <div class="fkpi-val" id="fkpi-regle">4 472 €</div>
+        <div class="fkpi-lbl">Total réglé E.RECOVE</div>
+        <div class="fkpi-sub">2025 + 2026 cumulé</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="florent-tabs">
+      <button class="ftab active" onclick="switchFTab('lettrage',this)">📒 Lettrage <span class="cnt" id="ft-cnt-l">3</span></button>
+      <button class="ftab" onclick="switchFTab('saisie',this)">💶 Saisie règlements</button>
+      <button class="ftab" onclick="switchFTab('provisions',this)">⚠️ Provisions créances douteuses</button>
+      <button class="ftab" onclick="switchFTab('taux',this)">📊 Taux recouvrement</button>
+      <button class="ftab" onclick="switchFTab('relances',this)">📨 Relances M. Nimaga <span class="cnt" id="ft-cnt-r">6</span></button>
+    </div>
+
+    <!-- TAB 1 : LETTRAGE -->
+    <div class="ftab-content active" id="ftab-lettrage">
+      <div class="lettrage-grid">
+
+        <!-- Lettrées soldées -->
+        <div class="lettrage-card">
+          <div class="lc-head">
+            <div class="lc-title">✅ Lettrées soldées</div>
+            <div class="lc-total" style="color:var(--green)">4 472 €</div>
+          </div>
+          <div class="lc-row"><span>Lettre A — BERNIER CONSEILS</span><span class="lc-montant lc-lettree">3 600,00 €</span></div>
+          <div class="lc-row"><span>Lettre B — SEDEK KADER</span><span class="lc-montant lc-lettree">212,00 €</span></div>
+          <div class="lc-row"><span>Lettre C — 19 dossiers (×30€)</span><span class="lc-montant lc-lettree">570,00 €</span></div>
+          <div class="lc-row"><span>Lettres D*/E*/F* — 3 dossiers</span><span class="lc-montant lc-lettree">90,00 €</span></div>
+          <div class="lc-row" style="background:var(--gbg);border-radius:6px;padding:7px 8px;margin-top:4px">
+            <span style="font-weight:700">Total réglé</span>
+            <span class="lc-montant lc-lettree">4 472,00 €</span>
+          </div>
+        </div>
+
+        <!-- Non lettrées -->
+        <div class="lettrage-card">
+          <div class="lc-head">
+            <div class="lc-title">❌ Non lettrées — à solder</div>
+            <div class="lc-total" style="color:var(--red)">3 172,76 €</div>
+          </div>
+          <div class="lc-row">
+            <div><div>2025-0054 — DEVI MARK HAIR</div><div class="lc-date">25/05/2025</div></div>
+            <span class="lc-montant lc-nonlettree">2 160,00 €</span>
+          </div>
+          <div class="lc-row">
+            <div><div>2025-0075 — Divers</div><div class="lc-date">20/06/2025</div></div>
+            <span class="lc-montant lc-nonlettree">308,96 €</span>
+          </div>
+          <div class="lc-row">
+            <div><div>2025-0137 — Phase amiable (D*)</div><div class="lc-date">24/12/2025</div></div>
+            <span class="lc-montant lc-attente">30,00 €</span>
+          </div>
+          <div class="lc-row">
+            <div><div>2026-0019 — DR GRÉGOIRE (IP)</div><div class="lc-date">11/03/2026</div></div>
+            <span class="lc-montant lc-nonlettree">420,00 €</span>
+          </div>
+          <div class="lc-row">
+            <div><div>2026-0022 — OH MY JERK (IP)</div><div class="lc-date">12/03/2026</div></div>
+            <span class="lc-montant lc-nonlettree">211,80 €</span>
+          </div>
+          <div class="lc-row">
+            <div><div>2026-0021 — SPRINGVOICE (résultat)</div><div class="lc-date">12/03/2026</div></div>
+            <span class="lc-montant lc-nonlettree">72,00 €</span>
+          </div>
+          <div class="lc-row" style="background:var(--rbg);border-radius:6px;padding:7px 8px;margin-top:4px">
+            <span style="font-weight:700">Solde dû (dont report 2025 : 2 498,96 €)</span>
+            <span class="lc-montant lc-nonlettree">3 172,76 €</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Détail HT / TTC / TVA -->
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Référence</th><th>Dossier</th><th>HT</th><th>TVA 20%</th><th>TTC</th><th>Statut</th></tr></thead>
+          <tbody>
+            <tr><td>2026-0019</td><td>DR GRÉGOIRE — IP >5 000€</td><td>350,00 €</td><td>70,00 €</td><td style="font-weight:700">420,00 €</td><td><span class="badge bg-r">Impayée</span></td></tr>
+            <tr><td>2026-0022</td><td>OH MY JERK — IP</td><td>176,50 €</td><td>35,30 €</td><td style="font-weight:700">211,80 €</td><td><span class="badge bg-r">Impayée</span></td></tr>
+            <tr><td>2026-0021</td><td>SPRINGVOICE — résultat 15%</td><td>60,00 €</td><td>12,00 €</td><td style="font-weight:700">72,00 €</td><td><span class="badge bg-r">Impayée</span></td></tr>
+            <tr><td>2025-0054</td><td>DEVI MARK HAIR</td><td>1 800,00 €</td><td>360,00 €</td><td style="font-weight:700">2 160,00 €</td><td><span class="badge bg-r">Non lettrée</span></td></tr>
+            <tr><td>2025-0075</td><td>Divers (non identifié)</td><td>257,47 €</td><td>51,49 €</td><td style="font-weight:700">308,96 €</td><td><span class="badge bg-r">Non lettrée</span></td></tr>
+            <tr style="background:var(--surface2);font-weight:700"><td colspan="2">Total impayé</td><td>2 643,97 €</td><td>528,79 €</td><td>3 172,76 €</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2 : SAISIE RÈGLEMENTS -->
+    <div class="ftab-content" id="ftab-saisie">
+      <div class="saisie-form">
+        <div class="saisie-title">Saisir un règlement reçu</div>
+        <div class="saisie-grid">
+          <div class="fl"><label>Dossier / Débiteur</label>
+            <select id="sr-dossier">
+              <option value="">— Sélectionner —</option>
+              <option>SPRINGVOICE</option><option>DR GRÉGOIRE</option><option>OH MY JERK</option>
+              <option>BERNIER CONSEILS</option><option>MARCELLA</option><option>FRANCE FORMALITÉS</option>
+              <option>COURAGE VILLIERS</option><option>FRENCH DONUTS</option><option>IMMOCOM</option>
+              <option>SNC CHARONNE</option><option>SNC MABROUK</option><option>SNC MEAUX</option>
+              <option>SNC JOSEPH</option><option>DEVI MARK HAIR</option><option>Autre</option>
+            </select>
+          </div>
+          <div class="fl"><label>Montant TTC reçu (€)</label><input type="text" id="sr-montant" placeholder="Ex : 420,00"></div>
+          <div class="fl"><label>Date du virement</label><input type="date" id="sr-date"></div>
+          <div class="fl"><label>Référence bancaire</label><input type="text" id="sr-ref" placeholder="Ex : BNP0329239"></div>
+          <div class="fl"><label>Lettre de rapprochement</label><input type="text" id="sr-lettre" placeholder="Ex : G, H, I…"></div>
+          <div class="fl"><label>Nature</label>
+            <select id="sr-nature">
+              <option>Règlement débiteur (créance)</option>
+              <option>Règlement honoraires E.RECOVE</option>
+              <option>Règlement honoraires Me LAHIANI</option>
+              <option>Autre</option>
+            </select>
+          </div>
+        </div>
+        <div class="fl" style="margin-top:4px"><label>Note comptable</label><input type="text" id="sr-note" placeholder="Précisions éventuelles…"></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-p" onclick="saisirReglement()" style="background:var(--green)">💾 Enregistrer le règlement</button>
+          <button class="btn btn-sec" onclick="clearSaisie()">Effacer</button>
+        </div>
+      </div>
+      <div class="reglements-log">
+        <div class="rl-head">Règlements saisis — historique</div>
+        <div id="rl-list"><div style="text-align:center;padding:28px;color:var(--muted);font-size:13px">Aucun règlement saisi pour l'instant</div></div>
+      </div>
+    </div>
+
+    <!-- TAB 3 : PROVISIONS -->
+    <div class="ftab-content" id="ftab-provisions">
+      <div style="background:var(--ybg);border:1px solid #e8d080;border-radius:var(--r);padding:12px 16px;margin-bottom:16px;font-size:13px">
+        <strong>Base comptable :</strong> Les créances douteuses doivent faire l'objet d'une provision pour dépréciation (compte 491 — Dépréciation des comptes clients). Taux appliqués selon le risque estimé.
+      </div>
+      <div class="tbl-wrap">
+        <table class="prov-table">
+          <thead><tr><th>Débiteur</th><th>Créance TTC</th><th>Taux risque</th><th>Provision HT</th><th>Risque</th><th>Motif</th></tr></thead>
+          <tbody>
+            <tr class="prov-risque-fort">
+              <td>JEFFREY CAGNES PARIS</td><td>2 810,00 €</td>
+              <td><span class="prov-taux fort">100%</span></td>
+              <td style="font-weight:700;color:var(--red)">2 341,67 €</td>
+              <td><span class="badge bg-r">Fort</span></td>
+              <td style="font-size:12px">Redressement judiciaire — recouvrement très incertain</td>
+            </tr>
+            <tr class="prov-risque-fort">
+              <td>COURAGE VILLIERS</td><td>24 497,27 €</td>
+              <td><span class="prov-taux fort">80%</span></td>
+              <td style="font-weight:700;color:var(--red)">16 331,51 €</td>
+              <td><span class="badge bg-r">Fort</span></td>
+              <td style="font-size:12px">Contestation formelle LRAR — écart 19 540 €</td>
+            </tr>
+            <tr class="prov-risque-fort">
+              <td>TABAC DES TERNES</td><td>7 858,80 €</td>
+              <td><span class="prov-taux fort">70%</span></td>
+              <td style="font-weight:700;color:var(--red)">4 583,47 €</td>
+              <td><span class="badge bg-r">Fort</span></td>
+              <td style="font-size:12px">Force majeure invoquée — débiteur changé</td>
+            </tr>
+            <tr class="prov-risque-moy">
+              <td>DEVI MARK HAIR</td><td>4 712,40 €</td>
+              <td><span class="prov-taux moy">50%</span></td>
+              <td style="font-weight:700;color:var(--orange)">1 963,50 €</td>
+              <td><span class="badge bg-o">Moyen</span></td>
+              <td style="font-size:12px">Judiciaire en cours — facture E.RECOVE non réglée</td>
+            </tr>
+            <tr class="prov-risque-moy">
+              <td>IYU EUROPE</td><td>2 266,85 €</td>
+              <td><span class="prov-taux moy">40%</span></td>
+              <td style="font-weight:700;color:var(--orange)">755,62 €</td>
+              <td><span class="badge bg-o">Moyen</span></td>
+              <td style="font-size:12px">Dossier suspendu sur instruction Starsnett</td>
+            </tr>
+            <tr>
+              <td>FRANCE FORMALITÉS</td><td>13 677,18 €</td>
+              <td><span class="prov-taux faib">20%</span></td>
+              <td style="font-weight:700;color:var(--yellow)">2 279,53 €</td>
+              <td><span class="badge bg-y">Faible</span></td>
+              <td style="font-size:12px">IP à diligenter — décision en attente</td>
+            </tr>
+            <tr style="background:var(--surface2)">
+              <td colspan="2" style="font-weight:700">Total provisions recommandées</td>
+              <td></td>
+              <td style="font-weight:700;color:var(--red);font-size:15px">28 255,30 €</td>
+              <td colspan="2" style="font-size:12px;color:var(--muted)">HT — à comptabiliser en compte 491</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- TAB 5 : RELANCES M. NIMAGA -->
+    <div class="ftab-content" id="ftab-relances">
+
+      <!-- Résumé -->
+      <div class="relance-summary">
+        <div class="rs-title">⚠️ En attente de M. Nimaga</div>
+        <div class="rs-grid">
+          <div class="rs-item"><div class="rs-val" id="rs-nb">6</div><div class="rs-lbl">Actions en attente</div></div>
+          <div class="rs-item"><div class="rs-val" style="color:var(--red)">3 836 €</div><div class="rs-lbl">Virements à effectuer</div></div>
+          <div class="rs-item"><div class="rs-val" id="rs-relances-sent">0</div><div class="rs-lbl">Relances envoyées</div></div>
+        </div>
+      </div>
+
+      <!-- Liste actions -->
+      <div id="relances-list"></div>
+
+      <!-- Historique relances -->
+      <div class="section-head" style="margin-top:20px">📋 Historique des relances envoyées</div>
+      <div class="tbl-wrap">
+        <div id="relances-history"><div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">Aucune relance envoyée pour l'instant</div></div>
+      </div>
+
+    </div>
+
+    <!-- TAB 4 : TAUX RECOUVREMENT -->
+    <div class="ftab-content" id="ftab-taux">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Dossier</th><th>Créance initiale</th><th>Recouvré</th><th>Coûts engagés</th><th>Net récupéré</th><th>Taux</th><th>Statut</th></tr></thead>
+          <tbody>
+            <tr style="background:var(--gbg)">
+              <td style="font-weight:700">SPRINGVOICE</td>
+              <td>1 230,55 €</td>
+              <td style="color:var(--green);font-weight:700">400,00 €</td>
+              <td>102,00 €</td>
+              <td style="color:var(--green);font-weight:700">298,00 €</td>
+              <td><span class="badge bg-g">32,5%</span></td>
+              <td><span class="badge bg-g">✅ Clôturé</span></td>
+            </tr>
+            <tr><td style="font-weight:700">DR GRÉGOIRE</td><td>7 156,80 €</td><td>—</td><td>450,00 €</td><td style="color:var(--red)">-450,00 €</td><td><span class="badge bg-p">En cours</span></td><td><span class="badge bg-p">🟣 IP Melun</span></td></tr>
+            <tr><td style="font-weight:700">OH MY JERK</td><td>3 586,80 €</td><td>—</td><td>211,80 €</td><td style="color:var(--red)">-211,80 €</td><td><span class="badge bg-o">En cours</span></td><td><span class="badge bg-o">🟠 IP Paris</span></td></tr>
+            <tr><td style="font-weight:700">BERNIER CONSEILS</td><td>124 637,74 €</td><td>—</td><td>3 600,00 €</td><td style="color:var(--red)">-3 600,00 €</td><td><span class="badge bg-o">En cours</span></td><td><span class="badge bg-o">⚖️ Fond</span></td></tr>
+            <tr><td style="font-weight:700">MARCELLA</td><td>28 457,27 €</td><td>—</td><td>600,00 €</td><td style="color:var(--red)">-600,00 €</td><td><span class="badge bg-o">En cours</span></td><td><span class="badge bg-o">⚖️ IP</span></td></tr>
+            <tr><td style="font-weight:700">COURAGE VILLIERS</td><td>24 497,27 €</td><td>—</td><td>—</td><td>—</td><td><span class="badge bg-r">Bloqué</span></td><td><span class="badge bg-r">🔴 Contesté</span></td></tr>
+            <tr style="background:var(--surface2);font-weight:700">
+              <td>GLOBAL</td>
+              <td>222 968 €</td>
+              <td style="color:var(--green)">400 €</td>
+              <td>4 963,80 €</td>
+              <td style="color:var(--red)">-4 563,80 €</td>
+              <td><span class="badge bg-r">0,18%</span></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="background:var(--bbg);border:1px solid #b5d4f4;border-radius:var(--r);padding:14px 18px;margin-top:14px;font-size:13px;line-height:1.7">
+        <strong style="color:var(--blue)">📌 Note pour Florent :</strong> Le taux de recouvrement global de 0,18% reflète le fait que la majorité des procédures sont encore en cours (judiciaire, IP). Les dossiers DR GRÉGOIRE (7 156 €) et OH MY JERK (3 586 €) devraient aboutir à un titre exécutoire d'ici 2–4 mois. En cas de succès sur ces deux dossiers seuls, le taux monterait à <strong>5,2%</strong>.
+      </div>
+    </div>
+
+  </div><!-- /compta-screen -->
 
   <!-- ═══ GÉRANT DASHBOARD ═══ -->
   <div class="gerant-screen" id="gerant-screen">
@@ -786,6 +1176,202 @@ const dossiersD = [{
 }];
 
 
+
+// ─── PROFIL FLORENT ──────────────────────────────────────────────────────────
+let reglementsLog = [];
+
+function switchFTab(id, el) {
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.ftab-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('ftab-' + id).classList.add('active');
+}
+
+function saisirReglement() {
+  const dossier  = document.getElementById('sr-dossier').value;
+  const montant  = document.getElementById('sr-montant').value.trim();
+  const date     = document.getElementById('sr-date').value;
+  const ref      = document.getElementById('sr-ref').value.trim();
+  const lettre   = document.getElementById('sr-lettre').value.trim();
+  const nature   = document.getElementById('sr-nature').value;
+  const note     = document.getElementById('sr-note').value.trim();
+  if (!dossier || !montant) { toast('Dossier et montant obligatoires.', 'err'); return; }
+  const entry = { dossier, montant, date: date||new Date().toISOString().split('T')[0], ref, lettre, nature, note, auteur: 'Florent', ts: Date.now() };
+  reglementsLog.unshift(entry);
+  // Mettre à jour le total recouvré si c'est un règlement débiteur
+  if (nature === 'Règlement débiteur (créance)') {
+    const val = parseFloat(montant.replace(/\s/g,'').replace(',','.')) || 0;
+    totalRecouverte += val;
+    updateKpiRecov();
+  }
+  saveData();
+  renderReglementsLog();
+  clearSaisie();
+  toast('✅ Règlement enregistré', 'ok');
+}
+
+function clearSaisie() {
+  ['sr-dossier','sr-montant','sr-date','sr-ref','sr-lettre','sr-note'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function renderReglementsLog() {
+  const list = document.getElementById('rl-list');
+  if (!list) return;
+  const all = [...reglementsLog];
+  if (!all.length) {
+    list.innerHTML = '<div style="text-align:center;padding:28px;color:var(--muted);font-size:13px">Aucun règlement saisi</div>';
+    return;
+  }
+  list.innerHTML = all.map(e => `
+    <div class="rl-row">
+      <div class="rl-date">${e.date}</div>
+      <div class="rl-dossier">${e.dossier}<div style="font-size:11.5px;color:var(--muted)">${e.nature}${e.lettre?' · Lettre '+e.lettre:''}</div></div>
+      <div class="rl-montant">+${e.montant} €</div>
+      <div class="rl-auteur">${e.auteur}${e.ref?' · '+e.ref:''}</div>
+    </div>`).join('');
+}
+
+
+
+// ─── RELANCES NIMAGA ─────────────────────────────────────────────────────────
+const relancesNimaga = [
+  {
+    id:'rn1', prio:'rouge', cat:'💶 Virement urgent',
+    titre:'Régler honoraires E.RECOVE — DR GRÉGOIRE',
+    detail:'Notes 2026-0019 (420 €) + 2025-0137 (30 €) signalées impayées le 18/03/2026.\nDossier IP bloqué faute de règlement — Tribunal de Melun en attente.',
+    montant:'450,00 €', montantVal:450,
+    destinataire:'M. Nimaga', echeance:'URGENT',
+    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nJe me permets de vous relancer concernant le règlement des honoraires E.RECOVE pour le dossier DR GRÉGOIRE :\n\n• Note 2026-0019 : 420,00 € TTC\n• Note 2025-0137 : 30,00 € TTC\nTotal à régler : 450,00 €\n\nCes factures sont signalées impayées par E.RECOVE depuis le 18/03/2026. Le dossier IP au Tribunal de Melun est bloqué en attendant ce règlement.\n\nMerci de procéder au virement dès que possible.\n\nCordialement,\nFlorent`
+  },
+  {
+    id:'rn2', prio:'rouge', cat:'💶 Virement urgent',
+    titre:'Régler honoraires E.RECOVE — OH MY JERK',
+    detail:'Note 2026-0022 (211,80 €) signalée impayée le 18/03/2026.\nIP déposée au Tribunal de Paris le 11/03/2026.',
+    montant:'211,80 €', montantVal:211.80,
+    destinataire:'M. Nimaga', echeance:'URGENT',
+    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nRelance pour le règlement de la note E.RECOVE 2026-0022 concernant le dossier OH MY JERK :\n\n• Note 2026-0022 : 211,80 € TTC\n\nCette facture est signalée impayée depuis le 18/03/2026. L'injonction de payer a été déposée au Tribunal de Paris le 11/03/2026.\n\nMerci de procéder au virement.\n\nCordialement,\nFlorent`
+  },
+  {
+    id:'rn3', prio:'rouge', cat:'💶 Virement',
+    titre:'Régler honoraires Me LAHIANI — 7 audiences TC Paris',
+    detail:'Note d\'honoraires pour placement des assignations.\nRIB SL PRO.pdf joint à l\'email du 08/01/2026. Audiences le 16/04/2026 — délai serré.',
+    montant:'Montant à confirmer', montantVal:0,
+    destinataire:'M. Nimaga', echeance:'Avant 16/04/2026',
+    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nJe vous relance au sujet du règlement des honoraires de Me LAHIANI pour le placement des assignations au Tribunal de Commerce de Paris (7 dossiers : FRENCH DONUTS, IMMOCOM, SNC CHARONNE, SNC MABROUK, SNC MEAUX, SNC JOSEPH, SNC VILLARS).\n\nLe RIB (SL PRO.pdf) a été joint à l\'email du 08/01/2026.\nLes premières audiences sont fixées au 16/04/2026 — il est important de régulariser ce paiement avant cette date.\n\nPouvez-vous me confirmer le montant exact de la note et procéder au virement ?\n\nCordialement,\nFlorent`
+  },
+  {
+    id:'rn4', prio:'orange', cat:'⚖️ Décision requise',
+    titre:'Autoriser lancement IP — FRANCE FORMALITÉS',
+    detail:'Créance 13 677,18 €. E.RECOVE attend votre accord pour lancer la procédure IP (500 € HT + frais).\nEmail Eva SOLEIL du 18/03/2026.',
+    montant:'13 677,18 €', montantVal:13677.18,
+    destinataire:'M. Nimaga', echeance:'Email Eva SOLEIL 18/03/2026',
+    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nE.RECOVE attend votre décision pour lancer la procédure d\'injonction de payer contre FRANCE FORMALITÉS (créance : 13 677,18 €).\n\nLeur proposition amiable a été refusée le 17/03/2026. E.RECOVE propose :\n• Injonction de payer (>10 000€) : 500 € HT + frais de greffe + commissaire de justice\n\nMerci de me confirmer votre accord afin que je transmette l\'instruction à Eva SOLEIL (E.RECOVE).\n\nCordialement,\nFlorent`
+  },
+  {
+    id:'rn5', prio:'orange', cat:'⚖️ Décision requise',
+    titre:'Accord amiable ou maintien créance — COURAGE VILLIERS',
+    detail:'Starsnett réclame 24 497 €, débiteur propose 4 956,35 €. Écart de 19 540 €.\nVotre décision est nécessaire avant toute action judiciaire.',
+    montant:'24 497,27 €', montantVal:24497.27,
+    destinataire:'M. Nimaga', echeance:'LRAR 04/11/2025',
+    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nLe dossier COURAGE VILLIERS nécessite votre décision :\n\n• Montant réclamé par Starsnett : 24 497,27 €\n• Montant proposé par le débiteur : 4 956,35 € (grand livre au 30/09/2025)\n• Écart : 19 540,92 €\n\nDeux options :\n1. Accepter l\'accord amiable à 4 956,35 € → règlement rapide\n2. Maintenir la créance à 24 497,27 € → preuves documentaires obligatoires\n\nMerci de me communiquer votre décision afin de débloquer le dossier.\n\nCordialement,\nFlorent`
+  },
+  {
+    id:'rn6', prio:'bleu', cat:'📋 Document',
+    titre:'Retrouver contrat FACILITIES pour Me LAHIANI',
+    detail:'Me LAHIANI ne peut pas déterminer la juridiction compétente sans ce contrat.\nSans transmission, la procédure ne peut pas être engagée.',
+    montant:'—', montantVal:0,
+    destinataire:'M. Nimaga', echeance:'À transmettre à Me LAHIANI',
+    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nMe LAHIANI attend le contrat FACILITIES pour pouvoir déterminer la juridiction applicable et engager la procédure.\n\nPouvez-vous rechercher ce contrat dans nos archives et me le transmettre afin que je le communique à Me LAHIANI ?\n\nCordialement,\nFlorent`
+  },
+];
+
+let relancesLog = [];
+let currentRelance = null;
+
+function renderRelances() {
+  const list = document.getElementById('relances-list');
+  if (!list) return;
+  const pending = relancesNimaga.filter(r => !relancesLog.find(l => l.id === r.id && l.statut === 'Traité'));
+  document.getElementById('rs-nb').textContent = pending.length;
+  document.getElementById('ft-cnt-r').textContent = pending.length;
+  const sent = relancesLog.length;
+  document.getElementById('rs-relances-sent').textContent = sent;
+  list.innerHTML = pending.map(r => `
+    <div class="relance-card">
+      <div class="rc-prio" style="background:${r.prio==='rouge'?'var(--red)':r.prio==='orange'?'var(--orange)':'var(--blue)'}"></div>
+      <div class="rc-body">
+        <div class="rc-cat">${r.cat}</div>
+        <div class="rc-titre">${r.titre}</div>
+        <div class="rc-detail">${r.detail.replace(/\n/g,'<br>')}</div>
+        <div class="rc-actions">
+          <button class="btn btn-p" style="font-size:12px;padding:7px 14px;background:var(--navy)" onclick="ouvrirRelance('${r.id}')">✉️ Rédiger la relance</button>
+          <button class="btn btn-sec" style="font-size:12px;padding:7px 14px" onclick="marquerRelanceTraitee('${r.id}')">✅ Marquer traité</button>
+        </div>
+      </div>
+      <div class="rc-montant" style="color:${r.prio==='rouge'?'var(--red)':r.prio==='orange'?'var(--orange)':'var(--muted)'}">${r.montant}</div>
+    </div>`).join('') || '<div style="text-align:center;padding:32px;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px">✅</div>Toutes les actions sont traitées</div>';
+  renderRelancesHistory();
+}
+
+function ouvrirRelance(id) {
+  currentRelance = relancesNimaga.find(r => r.id === id);
+  const msg = currentRelance.msgTemplate();
+  document.getElementById('msg-content').value = msg;
+  document.getElementById('msg-overlay').classList.add('open');
+}
+
+function fermerMsgModal() {
+  document.getElementById('msg-overlay').classList.remove('open');
+  currentRelance = null;
+}
+
+function envoyerRelance() {
+  if (!currentRelance) return;
+  const msg = document.getElementById('msg-content').value;
+  relancesLog.unshift({
+    id: currentRelance.id,
+    titre: currentRelance.titre,
+    date: new Date().toISOString().split('T')[0],
+    auteur: 'Florent',
+    statut: 'Envoyée',
+    msg
+  });
+  saveData();
+  fermerMsgModal();
+  renderRelances();
+  toast('✅ Relance enregistrée', 'ok');
+}
+
+function marquerRelanceTraitee(id) {
+  relancesLog.unshift({
+    id, date: new Date().toISOString().split('T')[0],
+    auteur: 'Florent', statut: 'Traité',
+    titre: relancesNimaga.find(r=>r.id===id)?.titre || id
+  });
+  saveData();
+  renderRelances();
+  toast('✅ Marqué comme traité', 'ok');
+}
+
+function renderRelancesHistory() {
+  const hist = document.getElementById('relances-history');
+  if (!hist) return;
+  if (!relancesLog.length) {
+    hist.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">Aucune relance envoyée</div>';
+    return;
+  }
+  hist.innerHTML = relancesLog.map(e => `
+    <div class="relance-log-row">
+      <div class="rl-status-dot ${e.statut==='Traité'?'dot-vue':e.statut==='Envoyée'?'dot-envoyee':'dot-en-attente'}"></div>
+      <div style="flex:1"><div style="font-weight:600;font-size:13px">${e.titre}</div><div style="font-size:11.5px;color:var(--muted)">${e.date} · par ${e.auteur}</div></div>
+      <span class="badge ${e.statut==='Traité'?'bg-g':e.statut==='Envoyée'?'bg-b':'bg-y'}">${e.statut}</span>
+    </div>`).join('');
+}
+
+
 // ─── GÉRANT ACTIONS ──────────────────────────────────────────────────────────
 const gerantActions = [
   {
@@ -956,21 +1542,32 @@ function enterApp() {
   document.getElementById('ro-badge').style.display = p.readonly ? 'inline-block' : 'none';
   document.getElementById('btn-add').style.display = p.readonly ? 'none' : 'flex';
   // Gérant : show action dashboard, hide main tables
-  const isGerant = currentUser === 'gerant';
+  const isGerant  = currentUser === 'gerant';
+  const isComptable = currentUser === 'compta';
+  const isSpecial = isGerant || isComptable;
   document.getElementById('gerant-screen').classList.toggle('active', isGerant);
-  // Hide/show main content for gerant
+  document.getElementById('compta-screen').classList.toggle('active', isComptable);
+  // Hide main tables for special profiles
   ['kpi-grid-wrap','toolbar','add-form','sect-E'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.style.display = isGerant ? 'none' : '';
+    if (el) el.style.display = isSpecial ? 'none' : '';
   });
   document.querySelectorAll('.section-head, .tbl-wrap').forEach(el => {
-    el.style.display = isGerant ? 'none' : '';
+    el.style.display = isSpecial ? 'none' : '';
   });
+  document.querySelector('.alert-banner').style.display = isComptable ? 'none' : '';
   loadData();
   if (isGerant) {
     const gd = JSON.parse(sessionStorage.getItem('starsnett_contentieux') || '{}');
     if (gd.gerantDone) gerantDone = gd.gerantDone;
     renderGerant();
+  } else if (isComptable) {
+    const gd = JSON.parse(sessionStorage.getItem('starsnett_contentieux') || '{}');
+    if (gd.reglementsLog) reglementsLog = gd.reglementsLog;
+    if (gd.relancesLog) relancesLog = gd.relancesLog;
+    renderReglementsLog();
+    document.getElementById('cw-alerte').textContent = '3 factures à lettrer';
+    renderRelances();
   } else {
     renderAll();
   }
@@ -1029,7 +1626,7 @@ async function saveData() {
       updates[d.id] = { action: d.action, bl: d.bl };
     }
   });
-  const payload = { newDossiers, histories, totalRecouverte, updates };
+  const payload = { newDossiers, histories, totalRecouverte, updates, reglementsLog, relancesLog };
   sessionStorage.setItem('starsnett_contentieux', JSON.stringify(payload));
   if (!USE_JSONBIN) return;
   try {
@@ -1331,6 +1928,14 @@ function exportExcel() {
 }
 
 // ─── TOAST ────────────────────────────────────────────────────────────────────
+function copyMsg() {
+  const txt = document.getElementById('msg-content').value;
+  navigator.clipboard.writeText(txt).then(() => toast('✅ Message copié !', 'ok')).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove(); toast('✅ Message copié !', 'ok');
+  });
+}
 function toast(msg, type='ok') {
   const t = document.createElement('div');
   t.className = `toast ${type}`; t.textContent = msg;
@@ -1338,5 +1943,27 @@ function toast(msg, type='ok') {
   setTimeout(() => t.remove(), 2800);
 }
 </script>
+
+<!-- ═══ MODAL RELANCE ═══ -->
+<div class="msg-overlay" id="msg-overlay" onclick="if(event.target===this)fermerMsgModal()">
+  <div class="msg-modal">
+    <div class="msg-modal-hdr">
+      <div class="msg-modal-title">✉️ Relance à M. Nimaga</div>
+      <button class="modal-close" onclick="fermerMsgModal()">✕</button>
+    </div>
+    <div class="msg-modal-body">
+      <div class="fl"><label>Message (modifiable)</label>
+        <textarea id="msg-content" style="width:100%;min-height:280px;padding:12px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.7;resize:vertical"></textarea>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Vous pouvez modifier le message avant de l'enregistrer. Copiez-le ensuite pour l'envoyer par email ou WhatsApp à M. Nimaga.</div>
+    </div>
+    <div class="msg-modal-ftr">
+      <button class="btn btn-p" onclick="envoyerRelance()">💾 Enregistrer la relance</button>
+      <button class="btn" style="background:var(--gbg);color:var(--green);border:1px solid #b8ddc8" onclick="copyMsg()">📋 Copier le message</button>
+      <button class="btn btn-sec" onclick="fermerMsgModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
