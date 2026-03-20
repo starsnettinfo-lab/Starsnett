@@ -243,6 +243,42 @@ tbody td { padding: 10px 14px; vertical-align: top; }
   .profile-grid { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 }
 
+
+/* ── GÉRANT DASHBOARD ── */
+.gerant-screen { display:none; }
+.gerant-screen.active { display:block; }
+.gerant-nav { display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; flex-wrap:wrap; align-items:center; }
+.gnav-btn { padding:7px 16px; border-radius:20px; border:1px solid var(--border); background:var(--surface); font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer; color:var(--muted); font-weight:500; transition:all .14s; }
+.gnav-btn:hover { border-color:var(--navy); color:var(--navy); }
+.gnav-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+.gnav-btn .cnt { display:inline-flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.25); border-radius:10px; padding:0 6px; font-size:11px; margin-left:5px; min-width:18px; }
+.gnav-btn:not(.active) .cnt { background:var(--rbg); color:var(--red); }
+.action-cards { display:flex; flex-direction:column; gap:12px; }
+.action-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:18px 20px; box-shadow:var(--shadow); display:flex; gap:16px; align-items:flex-start; transition:box-shadow .15s; }
+.action-card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.1); }
+.action-card.done { opacity:0.55; }
+.action-card.done .ac-title { text-decoration:line-through; color:var(--muted); }
+.ac-prio { width:4px; border-radius:4px; align-self:stretch; flex-shrink:0; }
+.prio-rouge { background:var(--red); }
+.prio-orange { background:var(--orange); }
+.prio-bleu { background:var(--blue); }
+.ac-icon { font-size:22px; flex-shrink:0; margin-top:1px; }
+.ac-body { flex:1; min-width:0; }
+.ac-cat { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:4px; }
+.ac-title { font-size:15px; font-weight:600; color:var(--text); line-height:1.3; margin-bottom:6px; }
+.ac-detail { font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:8px; white-space:pre-line; }
+.ac-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.ac-dossier { font-size:11.5px; background:var(--bbg); color:var(--blue); padding:2px 9px; border-radius:10px; font-weight:600; }
+.ac-deadline { font-size:11.5px; color:var(--red); font-weight:600; }
+.ac-check { flex-shrink:0; margin-top:2px; }
+.ac-check input[type=checkbox] { width:20px; height:20px; cursor:pointer; accent-color:var(--green); }
+.empty-state { text-align:center; padding:48px 24px; color:var(--muted); }
+.empty-icon { font-size:40px; margin-bottom:12px; }
+.gerant-welcome { background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%); color:white; border-radius:var(--r); padding:20px 24px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.gw-title { font-family:'Fraunces',serif; font-size:20px; font-weight:600; }
+.gw-sub { font-size:13px; opacity:0.7; margin-top:3px; }
+.gw-badge { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); border-radius:20px; padding:6px 14px; font-size:12px; font-weight:600; white-space:nowrap; }
+
 /* ── TOAST ── */
 .toast { position: fixed; bottom: 28px; right: 28px; padding: 13px 20px; border-radius: 10px; font-weight: 700; font-size: 13px; z-index: 999; box-shadow: var(--shadow-lg); animation: fdin 0.25s ease; color: white; }
 @keyframes fdin { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
@@ -307,13 +343,14 @@ tbody td { padding: 10px 14px; vertical-align: top; }
   </div>
 
   <!-- KPIs -->
+  <div id="kpi-grid-wrap">
   <div class="kpi-grid">
     <div class="kpi-card kk-b"><div class="kpi-val" id="kpi-total">21</div><div class="kpi-lbl">Dossiers actifs</div></div>
     <div class="kpi-card kk-o"><div class="kpi-val">7</div><div class="kpi-lbl">Audiences fixées</div></div>
     <div class="kpi-card kk-o"><div class="kpi-val">7</div><div class="kpi-lbl">Mises en demeure</div></div>
     <div class="kpi-card kk-r"><div class="kpi-val">193 695 €</div><div class="kpi-lbl">Créances E.RECOVE</div></div>
     <div class="kpi-card kk-g"><div class="kpi-val" id="kpi-recov">400 €</div><div class="kpi-lbl">Recouvré</div></div>
-  </div>
+  </div></div>
 
   <!-- Toolbar -->
   <div class="toolbar">
@@ -353,6 +390,27 @@ tbody td { padding: 10px 14px; vertical-align: top; }
       <button class="btn btn-p" onclick="saveNewDossier()">💾 Enregistrer le dossier</button>
       <button class="btn btn-sec" onclick="toggleAddForm()">Annuler</button>
     </div>
+  </div>
+
+
+  <!-- ═══ GÉRANT DASHBOARD ═══ -->
+  <div class="gerant-screen" id="gerant-screen">
+    <div class="gerant-welcome">
+      <div>
+        <div class="gw-title">Bonjour M. Nimaga 👋</div>
+        <div class="gw-sub">Voici les actions en attente de votre décision ou validation</div>
+      </div>
+      <div class="gw-badge" id="gw-count">— actions en attente</div>
+    </div>
+
+    <div class="gerant-nav">
+      <button class="gnav-btn active" onclick="filterGerant('all',this)">Toutes <span class="cnt" id="gc-all">0</span></button>
+      <button class="gnav-btn" onclick="filterGerant('virement',this)">💶 Virements <span class="cnt" id="gc-vir">0</span></button>
+      <button class="gnav-btn" onclick="filterGerant('decision',this)">⚖️ Décisions <span class="cnt" id="gc-dec">0</span></button>
+      <button class="gnav-btn" onclick="filterGerant('document',this)">📋 Documents <span class="cnt" id="gc-doc">0</span></button>
+    </div>
+
+    <div class="action-cards" id="gerant-cards"></div>
   </div>
 
   <!-- Section A -->
@@ -524,6 +582,131 @@ const dossiersD = [{
   notes:'LRAR reçue 04/11/2025\nDébiteur conteste formellement\nE.RECOVE n\'a pas répondu aux 3 relances du débiteur\n\nActions requises :\n• Demander décompte détaillé à E.RECOVE\n• Évaluer accord amiable à 4 956,35 €\n• Si maintien créance : preuves documentaires obligatoires'
 }];
 
+
+// ─── GÉRANT ACTIONS ──────────────────────────────────────────────────────────
+const gerantActions = [
+  {
+    id:'g1', cat:'virement', prio:'rouge', icon:'💶',
+    titre:'Virement honoraires Me LAHIANI',
+    detail:'Règlement des honoraires et débours pour placement des assignations au Tribunal de Commerce de Paris.\nRIB joint à l\'email du 08/01/2026 (SL PRO.pdf).',
+    dossiers:['FRENCH DONUTS','IMMOCOM','SNC CHARONNE','SNC MABROUK','SNC MEAUX','SNC JOSEPH'],
+    deadline:'Avant audience 16/04/2026', done:false
+  },
+  {
+    id:'g2', cat:'virement', prio:'rouge', icon:'💶',
+    titre:'Régler facture E.RECOVE — DR GRÉGOIRE',
+    detail:'Note honoraires 2026-0019 : 420 € TTC (IP tarif >5 000 €)\nNote 2025-0137 : 30 € TTC (relancée le 18/03/2026)\nTotal à régler : 450 € TTC — dossiers bloqués faute de règlement.',
+    dossiers:['DR GRÉGOIRE'],
+    deadline:'Urgent — dossier bloqué', done:false
+  },
+  {
+    id:'g3', cat:'virement', prio:'rouge', icon:'💶',
+    titre:'Régler facture E.RECOVE — OH MY JERK',
+    detail:'Note honoraires 2026-0022 : 211,80 € TTC\nSignalée impayée par E.RECOVE le 18/03/2026.',
+    dossiers:['OH MY JERK'],
+    deadline:'Urgent — signalé impayé', done:false
+  },
+  {
+    id:'g4', cat:'decision', prio:'rouge', icon:'⚖️',
+    titre:'Autoriser lancement IP — FRANCE FORMALITÉS',
+    detail:'Créance : 13 677,18 €\nProposition amiable refusée par Starsnett le 17/03/2026.\nE.RECOVE propose IP (>10 000 €) : 500 € HT + frais greffe + commissaire justice.\nDécision de M. Nimaga requise pour donner instruction à E.RECOVE (contact : Eva SOLEIL).',
+    dossiers:['FRANCE FORMALITÉS'],
+    deadline:'Email Eva SOLEIL 18/03/2026', done:false
+  },
+  {
+    id:'g5', cat:'decision', prio:'orange', icon:'⚖️',
+    titre:'Décision accord amiable — COURAGE VILLIERS',
+    detail:'Starsnett réclame 24 497,27 €. Débiteur conteste et propose 4 956,35 € (grand livre au 30/09/2025).\nÉcart : 19 540,92 €.\nQuestion : accepter l\'accord à 4 956,35 € ou maintenir la créance et fournir les preuves documentaires ?',
+    dossiers:['COURAGE VILLIERS'],
+    deadline:'LRAR reçue 04/11/2025', done:false
+  },
+  {
+    id:'g6', cat:'decision', prio:'orange', icon:'⚖️',
+    titre:'Instructions pour dossier JEFFREY CAGNES PARIS',
+    detail:'Créance : 2 810,00 €\nSociété en REDRESSEMENT JUDICIAIRE.\nLa créance doit être déclarée au mandataire judiciaire pour être prise en compte dans la procédure.',
+    dossiers:['JEFFREY CAGNES PARIS'],
+    deadline:'À déclarer au RJ — urgent', done:false
+  },
+  {
+    id:'g7', cat:'decision', prio:'orange', icon:'⚖️',
+    titre:'Confirmer réception paiement — GROUPE SOLUTION',
+    detail:'Facture NH25020353 (357,60 €) contestée — virement reçu ?\nSi oui : confirmer à E.RECOVE pour débloquer la procédure IP sur le solde restant.',
+    dossiers:['GROUPE SOLUTION ÉCOLOGIQUE'],
+    deadline:'Vérification requise', done:false
+  },
+  {
+    id:'g8', cat:'document', prio:'bleu', icon:'📋',
+    titre:'Retrouver contrat FACILITIES',
+    detail:'Me LAHIANI a besoin du contrat pour déterminer la juridiction applicable.\nSans ce document, impossible de saisir le bon tribunal.\nResponsable : Ketty Burel / M. Nimaga.',
+    dossiers:['FACILITIES'],
+    deadline:'Transmission à Me LAHIANI', done:false
+  },
+  {
+    id:'g9', cat:'document', prio:'bleu', icon:'📋',
+    titre:'Émettre facture de clôture — LE PALAIS DU SOURIRE',
+    detail:'IP proposée par E.RECOVE — en attente de la facture de clôture de Starsnett avant de pouvoir lancer la procédure.',
+    dossiers:['LE PALAIS DU SOURIRE'],
+    deadline:'Bloquer IP en attente', done:false
+  },
+];
+
+let gerantFilter = 'all';
+let gerantDone = {};
+
+function renderGerant() {
+  const actions = gerantActions.filter(a => gerantFilter === 'all' || a.cat === gerantFilter);
+  const pending = gerantActions.filter(a => !gerantDone[a.id]);
+  // counts
+  document.getElementById('gc-all').textContent = gerantActions.filter(a=>!gerantDone[a.id]).length;
+  document.getElementById('gc-vir').textContent = gerantActions.filter(a=>a.cat==='virement'&&!gerantDone[a.id]).length;
+  document.getElementById('gc-dec').textContent = gerantActions.filter(a=>a.cat==='decision'&&!gerantDone[a.id]).length;
+  document.getElementById('gc-doc').textContent = gerantActions.filter(a=>a.cat==='document'&&!gerantDone[a.id]).length;
+  document.getElementById('gw-count').textContent = pending.length + ' action' + (pending.length>1?'s':'') + ' en attente';
+
+  const cards = document.getElementById('gerant-cards');
+  if (!actions.length) {
+    cards.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div>Aucune action pour ce filtre</div></div>';
+    return;
+  }
+  cards.innerHTML = actions.map(a => {
+    const done = gerantDone[a.id] || false;
+    return `<div class="action-card ${done?'done':''}" id="card-${a.id}">
+      <div class="ac-prio prio-${a.prio}"></div>
+      <div class="ac-icon">${a.icon}</div>
+      <div class="ac-body">
+        <div class="ac-cat">${a.cat==='virement'?'💶 Virement à effectuer':a.cat==='decision'?'⚖️ Décision requise':'📋 Document / Action'}</div>
+        <div class="ac-title">${a.titre}</div>
+        <div class="ac-detail">${a.detail}</div>
+        <div class="ac-meta">
+          ${a.dossiers.map(d=>`<span class="ac-dossier">${d}</span>`).join('')}
+          <span class="ac-deadline">⏰ ${a.deadline}</span>
+        </div>
+      </div>
+      <div class="ac-check">
+        <input type="checkbox" ${done?'checked':''} onchange="toggleGerantAction('${a.id}',this.checked)" title="Marquer comme traité">
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterGerant(f, el) {
+  gerantFilter = f;
+  document.querySelectorAll('.gnav-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderGerant();
+}
+
+function toggleGerantAction(id, checked) {
+  gerantDone[id] = checked;
+  // save to session
+  const d = JSON.parse(sessionStorage.getItem('starsnett_contentieux') || '{}');
+  d.gerantDone = gerantDone;
+  sessionStorage.setItem('starsnett_contentieux', JSON.stringify(d));
+  renderGerant();
+  if (checked) toast('✅ Action marquée comme traitée', 'ok');
+}
+
+
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
 function selectProfile(key, el) {
   document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('selected'));
@@ -542,8 +725,25 @@ function enterApp() {
   document.getElementById('hdr-name').textContent = p.nom + ' — ' + p.role;
   document.getElementById('ro-badge').style.display = p.readonly ? 'inline-block' : 'none';
   document.getElementById('btn-add').style.display = p.readonly ? 'none' : 'flex';
+  // Gérant : show action dashboard, hide main tables
+  const isGerant = currentUser === 'gerant';
+  document.getElementById('gerant-screen').classList.toggle('active', isGerant);
+  // Hide/show main content for gerant
+  ['kpi-grid-wrap','toolbar','add-form','sect-E'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = isGerant ? 'none' : '';
+  });
+  document.querySelectorAll('.section-head, .tbl-wrap').forEach(el => {
+    el.style.display = isGerant ? 'none' : '';
+  });
   loadData();
-  renderAll();
+  if (isGerant) {
+    const gd = JSON.parse(sessionStorage.getItem('starsnett_contentieux') || '{}');
+    if (gd.gerantDone) gerantDone = gd.gerantDone;
+    renderGerant();
+  } else {
+    renderAll();
+  }
 }
 
 function switchUser() {
