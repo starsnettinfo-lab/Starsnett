@@ -487,10 +487,13 @@ tbody td { padding: 10px 14px; vertical-align: top; }
 <div class="container">
 
   <!-- Alertes -->
-  <div class="alert-banner">
-    <span style="font-size:16px">🔔</span>
-    <div style="font-size:13px"><strong style="color:var(--red)">3 actions urgentes :</strong>
-    Confirmer IP FRANCE FORMALITÉS à E.RECOVE · Vérifier réception 357,60€ GROUPE SOLUTION · Émettre facture clôture LE PALAIS DU SOURIRE</div>
+  <div class="alert-banner" style="background:#fdf0ee;border-color:#f5b7b1">
+    <span style="font-size:16px">🚨</span>
+    <div style="font-size:13px">
+      <strong style="color:var(--red)">NOUVEAU — Me Lahiani (20/03/2026) :</strong>
+      Lettre résiliation <strong>IMMOCOM manquante</strong> — placement TC Paris bloqué · Contrat OSCAR DÉVELOPPEMENT signé à confirmer · Honoraires placement à régler<br>
+      <span style="font-size:12px;color:var(--muted)">+ Confirmer IP FRANCE FORMALITÉS · Vérifier 357,60€ GROUPE SOLUTION · Facture clôture LE PALAIS DU SOURIRE</span>
+    </div>
   </div>
 
   <!-- KPIs -->
@@ -591,7 +594,7 @@ tbody td { padding: 10px 14px; vertical-align: top; }
       <button class="ftab" onclick="switchFTab('saisie',this)">💶 Saisie règlements</button>
       <button class="ftab" onclick="switchFTab('provisions',this)">⚠️ Provisions créances douteuses</button>
       <button class="ftab" onclick="switchFTab('taux',this)">📊 Taux recouvrement</button>
-      <button class="ftab" onclick="switchFTab('relances',this)">📨 Relances M. Nimaga <span class="cnt" id="ft-cnt-r">6</span></button>
+      <button class="ftab" onclick="switchFTab('relances',this)">📨 Relances M. Nimaga <span class="cnt" id="ft-cnt-r">8</span></button>
     </div>
 
     <!-- TAB 1 : LETTRAGE -->
@@ -777,7 +780,7 @@ tbody td { padding: 10px 14px; vertical-align: top; }
       <div class="relance-summary">
         <div class="rs-title">⚠️ En attente de M. Nimaga</div>
         <div class="rs-grid">
-          <div class="rs-item"><div class="rs-val" id="rs-nb">6</div><div class="rs-lbl">Actions en attente</div></div>
+          <div class="rs-item"><div class="rs-val" id="rs-nb">8</div><div class="rs-lbl">Actions en attente</div></div>
           <div class="rs-item"><div class="rs-val" style="color:var(--red)">3 836 €</div><div class="rs-lbl">Virements à effectuer</div></div>
           <div class="rs-item"><div class="rs-val" id="rs-relances-sent">0</div><div class="rs-lbl">Relances envoyées</div></div>
         </div>
@@ -1140,8 +1143,8 @@ const dossiersA = [
 
 const dossiersB = [
   { id:'B1', nom:'FRENCH DONUTS', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI' },
-  { id:'B2', nom:'IMMOCOM', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI' },
-  { id:'B3', nom:'SNC CHARONNE', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI' },
+  { id:'B2', nom:'IMMOCOM', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'⚠️ BLOQUÉ', bc:'bg-r', action:'🔴 Lettre résiliation manquante — Me LAHIANI ne peut pas placer', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI\n⚠️ Me Lahiani (20/03/2026) : lettre de résiliation du contrat client manquante\nSans ce document, placement au tribunal impossible avant le 16/04/2026\nACTION URGENTE : Retrouver et transmettre lettre résiliation à Me Lahiani' },
+  { id:'B3', nom:'SNC CHARONNE', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'✅ Résiliation transmise à Me LAHIANI (20/03/2026)', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI\nCourrier de résiliation transmis le 20/03/2026 ✅\nPlacement au tribunal débloqué' },
   { id:'B4', nom:'SNC MABROUK', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI' },
   { id:'B5', nom:'SNC MEAUX', audience:'28/05/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 28/05/2026 10h — Me LAHIANI' },
   { id:'B6', nom:'SNC JOSEPH', audience:'28/05/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 28/05/2026 10h — Me LAHIANI' },
@@ -1255,12 +1258,20 @@ const relancesNimaga = [
     msgTemplate: (d) => `Bonjour M. Nimaga,\n\nRelance pour le règlement de la note E.RECOVE 2026-0022 concernant le dossier OH MY JERK :\n\n• Note 2026-0022 : 211,80 € TTC\n\nCette facture est signalée impayée depuis le 18/03/2026. L'injonction de payer a été déposée au Tribunal de Paris le 11/03/2026.\n\nMerci de procéder au virement.\n\nCordialement,\nFlorent`
   },
   {
+    id:'rn3b', prio:'rouge', cat:'🔴 BLOQUANT — Document manquant',
+    titre:'Lettre résiliation IMMOCOM à transmettre à Me Lahiani',
+    detail:'Me Lahiani (email 20/03/2026) : lettre de résiliation du contrat client IMMOCOM manquante.\nSans ce document, le placement au tribunal est impossible.\nAudience fixée le 16/04/2026 — placement prévu semaine du 24/03.',
+    montant:'Bloque audience', montantVal:0,
+    destinataire:'M. Nimaga', echeance:'⚠️ URGENT — avant fin de semaine',
+    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nACTION URGENTE — dossier IMMOCOM\n\nMe Lahiani m'a informée ce jour (20/03/2026) qu'il n'a pas la lettre de résiliation du contrat par le client IMMOCOM.\n\nSans ce document, il ne peut pas effectuer le placement au Tribunal de Commerce de Paris pour l'audience du 16/04/2026.\n\nPouvez-vous retrouver ce courrier de résiliation dans nos archives et me le transmettre aujourd'hui afin que je le transmette immédiatement à Me Lahiani ?\n\nCordialement,\nFlorent`
+  },
+  {
     id:'rn3', prio:'rouge', cat:'💶 Virement',
-    titre:'Régler honoraires Me LAHIANI — 7 audiences TC Paris',
-    detail:'Note d\'honoraires pour placement des assignations.\nRIB SL PRO.pdf joint à l\'email du 08/01/2026. Audiences le 16/04/2026 — délai serré.',
+    titre:'Régler honoraires Me LAHIANI — placement TC Paris (7 dossiers)',
+    detail:'Me Lahiani (email 20/03/2026) : demande expressément le règlement de sa note d\'honoraires pour les frais de placement.\nRIB SL PRO.pdf joint à l\'email du 08/01/2026. Audiences le 16/04/2026.',
     montant:'Montant à confirmer', montantVal:0,
-    destinataire:'M. Nimaga', echeance:'Avant 16/04/2026',
-    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nJe vous relance au sujet du règlement des honoraires de Me LAHIANI pour le placement des assignations au Tribunal de Commerce de Paris (7 dossiers : FRENCH DONUTS, IMMOCOM, SNC CHARONNE, SNC MABROUK, SNC MEAUX, SNC JOSEPH, SNC VILLARS).\n\nLe RIB (SL PRO.pdf) a été joint à l\'email du 08/01/2026.\nLes premières audiences sont fixées au 16/04/2026 — il est important de régulariser ce paiement avant cette date.\n\nPouvez-vous me confirmer le montant exact de la note et procéder au virement ?\n\nCordialement,\nFlorent`
+    destinataire:'M. Nimaga', echeance:'⚠️ Avant placement semaine du 24/03',
+    msgTemplate: (d) => `Bonjour M. Nimaga,\n\nMe Lahiani m'a relancée ce jour (20/03/2026) pour le règlement de sa note d\'honoraires concernant les frais de placement des 7 dossiers au Tribunal de Commerce de Paris (FRENCH DONUTS, IMMOCOM, SNC CHARONNE, SNC MABROUK, SNC MEAUX, SNC JOSEPH, SNC VILLARS).\n\nLes audiences sont fixées au 16/04/2026. Sans règlement, il y a un risque de blocage des placements.\n\nLe RIB (SL PRO.pdf) a été joint à son email du 08/01/2026.\n\nMerci de procéder au virement dans les meilleurs délais et de me confirmer le montant exact de la note.\n\nCordialement,\nFlorent`
   },
   {
     id:'rn4', prio:'orange', cat:'⚖️ Décision requise',
@@ -1297,6 +1308,7 @@ function renderRelances() {
   const pending = relancesNimaga.filter(r => !relancesLog.find(l => l.id === r.id && l.statut === 'Traité'));
   document.getElementById('rs-nb').textContent = pending.length;
   document.getElementById('ft-cnt-r').textContent = pending.length;
+  document.getElementById('rs-nb').textContent = pending.length;
   const sent = relancesLog.length;
   document.getElementById('rs-relances-sent').textContent = sent;
   list.innerHTML = pending.map(r => `
@@ -1424,7 +1436,28 @@ const gerantActions = [
     deadline:'Vérification requise', done:false
   },
   {
-    id:'g8', cat:'document', prio:'bleu', icon:'📋',
+    id:'g8', cat:'document', prio:'rouge', icon:'🔴',
+    titre:'Lettre résiliation IMMOCOM — URGENT avant 16/04',
+    detail:'Me Lahiani (email 20/03/2026) : la lettre de résiliation du contrat client est manquante.\nSans ce document, le placement au Tribunal de Commerce est impossible.\nAudience fixée au 16/04/2026 — délai : quelques jours seulement.',
+    dossiers:['IMMOCOM'],
+    deadline:'Avant placement semaine du 24/03/2026', done:false
+  },
+  {
+    id:'g8b', cat:'virement', prio:'rouge', icon:'💶',
+    titre:'Régler note honoraires Me LAHIANI — placement TC Paris',
+    detail:'Me Lahiani (email 20/03/2026) : règlement de la note d\'honoraires pour frais de placement expressément demandé.\nSans règlement, risque de blocage des placements pour les 7 audiences du 16/04/2026.',
+    dossiers:['FRENCH DONUTS','IMMOCOM','SNC CHARONNE','SNC MABROUK','SNC MEAUX','SNC JOSEPH','SNC VILLARS'],
+    deadline:'Avant placement — semaine du 24/03/2026', done:false
+  },
+  {
+    id:'g8c', cat:'document', prio:'orange', icon:'📋',
+    titre:'Contrat OSCAR DÉVELOPPEMENT — version signée à confirmer',
+    detail:'Me Lahiani (email 20/03/2026) : contrat OSCAR non signé reçu le 17/03.\nTu as transmis le 20/03 le contrat LA VARENNE SAINT HILAIRE signé électroniquement (page 7).\nÀ confirmer : Me Lahiani a-t-il validé cette version ?',
+    dossiers:['OSCAR DÉVELOPPEMENT / LA VARENNE ST HILAIRE'],
+    deadline:'Confirmation Me Lahiani attendue', done:false
+  },
+  {
+    id:'g9', cat:'document', prio:'bleu', icon:'📋',
     titre:'Retrouver contrat FACILITIES',
     detail:'Me LAHIANI a besoin du contrat pour déterminer la juridiction applicable.\nSans ce document, impossible de saisir le bon tribunal.\nResponsable : Ketty Burel / M. Nimaga.',
     dossiers:['FACILITIES'],
