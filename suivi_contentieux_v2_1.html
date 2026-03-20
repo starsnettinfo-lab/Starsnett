@@ -487,23 +487,23 @@ tbody td { padding: 10px 14px; vertical-align: top; }
       </div>
       <div class="compta-card cc-orange">
         <div class="cc-lbl">Honoraires dus (à régler)</div>
-        <div class="cc-val orange">663 €</div>
+        <div class="cc-val orange">3 172,76 €</div>
         <div class="cc-detail">
-          E.RECOVE — DR GRÉGOIRE : 450 € TTC<br>
-          E.RECOVE — OH MY JERK : 211,80 € TTC<br>
+          Solde comptable E.RECOVE au 19/03/2026<br>
+          Dont non lettrées 2026 : 703,80 €<br>
+          Report non apuré 2025 : 2 498,96 €<br>
           + Me LAHIANI : montant à confirmer
         </div>
       </div>
       <div class="compta-card cc-violet">
         <div class="cc-lbl">Coûts E.RECOVE engagés</div>
-        <div class="cc-val violet">1 826 €</div>
+        <div class="cc-val violet">7 644,76 €</div>
         <div class="cc-detail">
-          Honoraires résultat (SPRINGVOICE) : 72 €<br>
-          IP DR GRÉGOIRE : 450 € TTC<br>
-          IP OH MY JERK : 211,80 € TTC<br>
-          IP simplifiées × 4 (150€HT/u) : 720 €<br>
-          IP standards × 2 (350€HT/u) : 840 €<br>
-          Phase amiable (30€) : 30 €
+          Total facturé 2025 : 6 880,96 €<br>
+          Total facturé 2026 : 763,80 €<br>
+          Réglé 2025 : 4 382,00 € ✅<br>
+          Réglé 2026 : 90,00 € ✅<br>
+          Solde restant dû : <strong style="color:var(--red)">3 172,76 €</strong>
         </div>
       </div>
     </div>
@@ -574,8 +574,9 @@ tbody td { padding: 10px 14px; vertical-align: top; }
       <div class="evol-title">Évolution mensuelle — Actions contentieux engagées</div>
       <div class="evol-row" id="evol-bars"></div>
       <div class="evol-legend">
-        <div class="evol-leg-item"><div class="evol-leg-dot" style="background:var(--navy)"></div> Dossiers actifs</div>
-        <div class="evol-leg-item"><div class="evol-leg-dot" style="background:var(--green)"></div> Recouvré (€)</div>
+        <div class="evol-leg-item"><div class="evol-leg-dot" style="background:var(--navy);opacity:0.7"></div> Dossiers actifs</div>
+        <div class="evol-leg-item"><div class="evol-leg-dot" style="background:var(--red);opacity:0.8"></div> Factures E.RECOVE</div>
+        <div class="evol-leg-item"><div class="evol-leg-dot" style="background:var(--green)"></div> Réglé</div>
       </div>
     </div>
 
@@ -585,13 +586,22 @@ tbody td { padding: 10px 14px; vertical-align: top; }
       <table class="honoraires-table">
         <thead><tr><th>Prestataire</th><th>Référence</th><th>Montant TTC</th><th>Dossier</th><th>Statut</th></tr></thead>
         <tbody>
-          <tr><td>E.RECOVE</td><td>Note 2025-0137</td><td style="font-weight:700">30,00 €</td><td>DR GRÉGOIRE / SPRINGVOICE</td><td><span class="tag-impaye">IMPAYÉE</span></td></tr>
-          <tr><td>E.RECOVE</td><td>Note 2026-0019</td><td style="font-weight:700">420,00 €</td><td>DR GRÉGOIRE</td><td><span class="tag-impaye">IMPAYÉE</span></td></tr>
-          <tr><td>E.RECOVE</td><td>Note 2026-0022</td><td style="font-weight:700">211,80 €</td><td>OH MY JERK</td><td><span class="tag-impaye">IMPAYÉE</span></td></tr>
-          <tr><td>E.RECOVE</td><td>Note 2026-0021</td><td style="font-weight:700">72,00 €</td><td>SPRINGVOICE (résultat 15%)</td><td><span class="tag-impaye">IMPAYÉE</span></td></tr>
-          <tr><td>Me LAHIANI</td><td>Note honoraires assignations</td><td style="font-weight:700">À confirmer</td><td>7 dossiers TC Paris</td><td><span class="tag-impaye">À RÉGLER</span></td></tr>
-          <tr><td>E.RECOVE</td><td>Note 2025-0137 (SPRINGVOICE)</td><td style="font-weight:700">30,00 €</td><td>SPRINGVOICE</td><td><span class="tag-ok">RÉGLÉE</span></td></tr>
-          <tr class="ht-total"><td colspan="2"><strong>Total honoraires impayés identifiés</strong></td><td style="font-weight:700;color:var(--red)">733,80 € + Me LAHIANI</td><td colspan="2"></td></tr>
+          <tr style="background:#f9f8f6"><td colspan="5" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:8px 12px">✅ Réglées (lettrées)</td></tr>
+          <tr><td>E.RECOVE</td><td>19 factures lettre C — avr/mai/jun 2025</td><td style="font-weight:700;color:var(--green)">570,00 €</td><td>19 dossiers divers</td><td><span class="tag-ok">LETTRÉE C — RÉGLÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>2025-0053 — lettre A</td><td style="font-weight:700;color:var(--green)">3 600,00 €</td><td>BERNIER CONSEILS</td><td><span class="tag-ok">LETTRÉE A — RÉGLÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>2025-0055 — lettre B</td><td style="font-weight:700;color:var(--green)">212,00 €</td><td>SEDEK KADER</td><td><span class="tag-ok">LETTRÉE B — RÉGLÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>Règlements lettre D*, E*, F* (jan/fév 2026)</td><td style="font-weight:700;color:var(--green)">90,00 €</td><td>3 dossiers × 30 €</td><td><span class="tag-ok">LETTRÉES — RÉGLÉES</span></td></tr>
+          <tr style="background:#f9f8f6"><td colspan="5" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:8px 12px">❌ Impayées (non lettrées)</td></tr>
+          <tr><td>E.RECOVE</td><td>2025-0137 — lettre D*</td><td style="font-weight:700;color:var(--red)">30,00 €</td><td>Phase amiable (dossier non précisé)</td><td><span class="tag-impaye">D* — EN ATTENTE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>2025-0054 — DEVI MARK HAIR</td><td style="font-weight:700;color:var(--red)">2 160,00 €</td><td>DEVI MARK HAIR</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>2025-0075 — divers</td><td style="font-weight:700;color:var(--red)">308,96 €</td><td>Non identifié</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>2026-0019</td><td style="font-weight:700;color:var(--red)">420,00 €</td><td>DR GRÉGOIRE (IP)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>2026-0022</td><td style="font-weight:700;color:var(--red)">211,80 €</td><td>OH MY JERK (IP)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
+          <tr><td>E.RECOVE</td><td>2026-0021</td><td style="font-weight:700;color:var(--red)">72,00 €</td><td>SPRINGVOICE (résultat 15%)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
+          <tr><td>Me LAHIANI</td><td>Note honoraires assignations TC Paris</td><td style="font-weight:700;color:var(--red)">À confirmer</td><td>7 dossiers (email 08/01/2026)</td><td><span class="tag-impaye">À RÉGLER</span></td></tr>
+          <tr style="background:#f9f8f6"><td colspan="5" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:8px 12px">📊 Report comptable</td></tr>
+          <tr><td colspan="2"><strong>Report au 01/01/2026 (solde non apuré 2025)</strong></td><td style="font-weight:700;color:var(--orange)">2 498,96 €</td><td colspan="2" style="font-size:12px;color:var(--muted)">Reporté du grand-livre 2025</td></tr>
+          <tr class="ht-total"><td colspan="2"><strong>Solde dû E.RECOVE au 19/03/2026</strong></td><td style="font-weight:700;color:var(--red);font-size:15px">3 172,76 €</td><td colspan="2" style="font-size:12px;color:var(--muted)">Dont 703,80 € nouvelles factures 2026</td></tr>
         </tbody>
       </table>
     </div>
@@ -850,24 +860,29 @@ function renderGerant() {
 
   // Evolution chart
   const evolData = [
-    { m:'Oct 25', actifs:8,  recov:0 },
-    { m:'Nov 25', actifs:10, recov:0 },
-    { m:'Dec 25', actifs:12, recov:0 },
-    { m:'Jan 26', actifs:15, recov:0 },
-    { m:'Fév 26', actifs:18, recov:0 },
-    { m:'Mar 26', actifs:21, recov:400 },
+    { m:'Avr 25', actifs:4,  regle:0,    facture:990 },
+    { m:'Mai 25', actifs:8,  regle:3812, facture:6212 },
+    { m:'Jun 25', actifs:12, regle:570,  facture:338.96 },
+    { m:'Jul 25', actifs:14, regle:570,  facture:0 },
+    { m:'Déc 25', actifs:15, regle:0,    facture:30 },
+    { m:'Jan 26', actifs:18, regle:0,    facture:60 },
+    { m:'Fév 26', actifs:19, regle:90,   facture:0 },
+    { m:'Mar 26', actifs:21, regle:400,  facture:703.80 },
   ];
   const maxA = Math.max(...evolData.map(d=>d.actifs));
-  const maxR = Math.max(...evolData.map(d=>d.recov)) || 1;
-  document.getElementById('evol-bars').innerHTML = evolData.map(d => `
-    <div class="evol-bar-wrap">
-      <div class="evol-amount" style="color:var(--green);visibility:${d.recov?'visible':'hidden'}">${d.recov}€</div>
-      <div style="display:flex;align-items:flex-end;gap:3px;height:80px;width:100%">
-        <div class="evol-bar" style="background:var(--navy);height:${Math.round(d.actifs/maxA*80)}px;flex:1" title="${d.actifs} dossiers"></div>
-        <div class="evol-bar" style="background:var(--green);height:${Math.round(d.recov/400*80)}px;flex:1" title="${d.recov}€ recouvré"></div>
+  const maxF = Math.max(...evolData.map(d=>d.facture||0)) || 1;
+  const maxRG = Math.max(...evolData.map(d=>d.regle||0)) || 1;
+  document.getElementById('evol-bars').innerHTML = evolData.map(d => {
+    const hF = d.facture ? Math.max(4, Math.round(d.facture/maxF*70)) : 0;
+    const hR = d.regle   ? Math.max(4, Math.round(d.regle/maxRG*70))  : 0;
+    return `<div class="evol-bar-wrap">
+      <div style="display:flex;align-items:flex-end;gap:2px;height:80px;width:100%">
+        <div class="evol-bar" style="background:var(--navy);height:${Math.round(d.actifs/maxA*80)}px;flex:1;opacity:0.7" title="${d.actifs} dossiers actifs"></div>
+        <div class="evol-bar" style="background:var(--red);height:${hF}px;flex:1;opacity:0.8" title="Factures E.RECOVE: ${d.facture||0}€"></div>
+        <div class="evol-bar" style="background:var(--green);height:${hR}px;flex:1" title="Réglé: ${d.regle||0}€"></div>
       </div>
       <div class="evol-month">${d.m}</div>
-    </div>`).join('');
+    </div>`;}).join('');
 
   const actions = gerantActions.filter(a => gerantFilter === 'all' || a.cat === gerantFilter);
   const pending = gerantActions.filter(a => !gerantDone[a.id]);
