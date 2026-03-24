@@ -487,12 +487,12 @@ tbody td { padding: 10px 14px; vertical-align: top; }
 <div class="container">
 
   <!-- Alertes -->
-  <div class="alert-banner" style="background:#fdf0ee;border-color:#f5b7b1">
-    <span style="font-size:16px">🚨</span>
+  <div class="alert-banner" style="background:#eaf4ee;border-color:#b8ddc8">
+    <span style="font-size:16px">✅</span>
     <div style="font-size:13px">
-      <strong style="color:var(--red)">NOUVEAU — Me Lahiani (20/03/2026) :</strong>
-      Lettre résiliation <strong>IMMOCOM manquante</strong> — placement TC Paris bloqué · Contrat OSCAR DÉVELOPPEMENT signé à confirmer · Honoraires placement à régler<br>
-      <span style="font-size:12px;color:var(--muted)">+ Confirmer IP FRANCE FORMALITÉS · Vérifier 357,60€ GROUPE SOLUTION · Facture clôture LE PALAIS DU SOURIRE</span>
+      <strong style="color:var(--green)">MIS À JOUR le 20/03/2026 :</strong>
+      E.RECOVE <strong>703,80 € virés</strong> (18/03) · IMMOCOM résiliation transmise à Me Lahiani (20/03 15h46) · SNC CHARONNE & LA VARENNE débloqués — Me Lahiani : "Merci"<br>
+      <span style="font-size:12px;color:var(--muted)">⚠️ Reste : Honoraires Me LAHIANI placement · IP FRANCE FORMALITÉS · 357,60€ GROUPE SOLUTION · Facture clôture LE PALAIS DU SOURIRE</span>
     </div>
   </div>
 
@@ -562,14 +562,14 @@ tbody td { padding: 10px 14px; vertical-align: top; }
     <!-- KPIs -->
     <div class="florent-kpis">
       <div class="fkpi rouge">
-        <div class="fkpi-val">3 172,76 €</div>
+        <div class="fkpi-val">2 468,96 €</div>
         <div class="fkpi-lbl">Solde dû E.RECOVE</div>
-        <div class="fkpi-sub">Au 19/03/2026</div>
+        <div class="fkpi-sub">Après virement 703,80€ — 20/03/2026</div>
       </div>
       <div class="fkpi orange">
-        <div class="fkpi-val" id="fkpi-nonlettrees">703,80 €</div>
-        <div class="fkpi-lbl">Factures non lettrées 2026</div>
-        <div class="fkpi-sub">3 notes impayées</div>
+        <div class="fkpi-val" id="fkpi-nonlettrees">0 €</div>
+        <div class="fkpi-lbl">Factures 2026 lettrées</div>
+        <div class="fkpi-sub">✅ Virement 703,80€ reçu par E.RECOVE</div>
       </div>
       <div class="fkpi violet">
         <div class="fkpi-val">27 118,96 €</div>
@@ -582,9 +582,9 @@ tbody td { padding: 10px 14px; vertical-align: top; }
         <div class="fkpi-sub">400 € / 222 968 € en cours</div>
       </div>
       <div class="fkpi vert">
-        <div class="fkpi-val" id="fkpi-regle">4 472 €</div>
+        <div class="fkpi-val" id="fkpi-regle">5 175,80 €</div>
         <div class="fkpi-lbl">Total réglé E.RECOVE</div>
-        <div class="fkpi-sub">2025 + 2026 cumulé</div>
+        <div class="fkpi-sub">4 472€ (2025) + 703,80€ (18/03/2026)</div>
       </div>
     </div>
 
@@ -611,9 +611,10 @@ tbody td { padding: 10px 14px; vertical-align: top; }
           <div class="lc-row"><span>Lettre B — SEDEK KADER</span><span class="lc-montant lc-lettree">212,00 €</span></div>
           <div class="lc-row"><span>Lettre C — 19 dossiers (×30€)</span><span class="lc-montant lc-lettree">570,00 €</span></div>
           <div class="lc-row"><span>Lettres D*/E*/F* — 3 dossiers</span><span class="lc-montant lc-lettree">90,00 €</span></div>
+          <div class="lc-row"><span>Notes 2026-0019 + 0021 + 0022</span><span class="lc-montant lc-lettree">703,80 €</span></div>
           <div class="lc-row" style="background:var(--gbg);border-radius:6px;padding:7px 8px;margin-top:4px">
             <span style="font-weight:700">Total réglé</span>
-            <span class="lc-montant lc-lettree">4 472,00 €</span>
+            <span class="lc-montant lc-lettree">5 175,80 €</span>
           </div>
         </div>
 
@@ -647,9 +648,10 @@ tbody td { padding: 10px 14px; vertical-align: top; }
             <div><div>2026-0021 — SPRINGVOICE (résultat)</div><div class="lc-date">12/03/2026</div></div>
             <span class="lc-montant lc-nonlettree">72,00 €</span>
           </div>
+          <div class="lc-row"><span style="color:var(--green)">✅ Notes 2026-0019/0021/0022 — virées 18/03/2026</span><span class="lc-montant lc-lettree">-703,80 €</span></div>
           <div class="lc-row" style="background:var(--rbg);border-radius:6px;padding:7px 8px;margin-top:4px">
             <span style="font-weight:700">Solde dû (dont report 2025 : 2 498,96 €)</span>
-            <span class="lc-montant lc-nonlettree">3 172,76 €</span>
+            <span class="lc-montant lc-nonlettree">2 468,96 €</span>
           </div>
         </div>
       </div>
@@ -664,7 +666,8 @@ tbody td { padding: 10px 14px; vertical-align: top; }
             <tr><td>2026-0021</td><td>SPRINGVOICE — résultat 15%</td><td>60,00 €</td><td>12,00 €</td><td style="font-weight:700">72,00 €</td><td><span class="badge bg-r">Impayée</span></td></tr>
             <tr><td>2025-0054</td><td>DEVI MARK HAIR</td><td>1 800,00 €</td><td>360,00 €</td><td style="font-weight:700">2 160,00 €</td><td><span class="badge bg-r">Non lettrée</span></td></tr>
             <tr><td>2025-0075</td><td>Divers (non identifié)</td><td>257,47 €</td><td>51,49 €</td><td style="font-weight:700">308,96 €</td><td><span class="badge bg-r">Non lettrée</span></td></tr>
-            <tr style="background:var(--surface2);font-weight:700"><td colspan="2">Total impayé</td><td>2 643,97 €</td><td>528,79 €</td><td>3 172,76 €</td><td></td></tr>
+            <tr style="background:#eaf4ee;font-weight:700"><td colspan="2">Total réglé le 18/03/2026</td><td>586,50 €</td><td>117,30 €</td><td style="color:var(--green)">703,80 €</td><td><span class="badge bg-g">✅ Réglé</span></td></tr>
+          <tr style="background:var(--surface2);font-weight:700"><td colspan="2">Solde restant dû</td><td>2 081,20 €</td><td>416,77 €</td><td>2 498,96 €</td><td><span class="badge bg-o">Report 2025</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -880,12 +883,12 @@ tbody td { padding: 10px 14px; vertical-align: top; }
       </div>
       <div class="compta-card cc-orange">
         <div class="cc-lbl">Honoraires dus (à régler)</div>
-        <div class="cc-val orange">3 172,76 €</div>
+        <div class="cc-val orange">2 468,96 €</div>
         <div class="cc-detail">
-          Solde comptable E.RECOVE au 19/03/2026<br>
-          Dont non lettrées 2026 : 703,80 €<br>
+          Solde E.RECOVE après virement 703,80€ (18/03/2026)<br>
           Report non apuré 2025 : 2 498,96 €<br>
-          + Me LAHIANI : montant à confirmer
+          Nouvelles factures réglées : ✅ 703,80 €<br>
+          + Me LAHIANI placement : montant à confirmer
         </div>
       </div>
       <div class="compta-card cc-violet">
@@ -988,9 +991,9 @@ tbody td { padding: 10px 14px; vertical-align: top; }
           <tr><td>E.RECOVE</td><td>2025-0137 — lettre D*</td><td style="font-weight:700;color:var(--red)">30,00 €</td><td>Phase amiable (dossier non précisé)</td><td><span class="tag-impaye">D* — EN ATTENTE</span></td></tr>
           <tr><td>E.RECOVE</td><td>2025-0054 — DEVI MARK HAIR</td><td style="font-weight:700;color:var(--red)">2 160,00 €</td><td>DEVI MARK HAIR</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
           <tr><td>E.RECOVE</td><td>2025-0075 — divers</td><td style="font-weight:700;color:var(--red)">308,96 €</td><td>Non identifié</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
-          <tr><td>E.RECOVE</td><td>2026-0019</td><td style="font-weight:700;color:var(--red)">420,00 €</td><td>DR GRÉGOIRE (IP)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
-          <tr><td>E.RECOVE</td><td>2026-0022</td><td style="font-weight:700;color:var(--red)">211,80 €</td><td>OH MY JERK (IP)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
-          <tr><td>E.RECOVE</td><td>2026-0021</td><td style="font-weight:700;color:var(--red)">72,00 €</td><td>SPRINGVOICE (résultat 15%)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
+          <tr style="background:#eaf4ee"><td>E.RECOVE</td><td>2026-0019</td><td style="font-weight:700;color:var(--red)">420,00 €</td><td>DR GRÉGOIRE (IP)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
+          <tr style="background:#eaf4ee"><td>E.RECOVE</td><td>2026-0022</td><td style="font-weight:700;color:var(--red)">211,80 €</td><td>OH MY JERK (IP)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
+          <tr style="background:#eaf4ee"><td>E.RECOVE</td><td>2026-0021</td><td style="font-weight:700;color:var(--red)">72,00 €</td><td>SPRINGVOICE (résultat 15%)</td><td><span class="tag-impaye">NON LETTRÉE</span></td></tr>
           <tr><td>Me LAHIANI</td><td>Note honoraires assignations TC Paris</td><td style="font-weight:700;color:var(--red)">À confirmer</td><td>7 dossiers (email 08/01/2026)</td><td><span class="tag-impaye">À RÉGLER</span></td></tr>
           <tr style="background:#f9f8f6"><td colspan="5" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:8px 12px">📊 Report comptable</td></tr>
           <tr><td colspan="2"><strong>Report au 01/01/2026 (solde non apuré 2025)</strong></td><td style="font-weight:700;color:var(--orange)">2 498,96 €</td><td colspan="2" style="font-size:12px;color:var(--muted)">Reporté du grand-livre 2025</td></tr>
@@ -1143,7 +1146,7 @@ const dossiersA = [
 
 const dossiersB = [
   { id:'B1', nom:'FRENCH DONUTS', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI' },
-  { id:'B2', nom:'IMMOCOM', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'⚠️ BLOQUÉ', bc:'bg-r', action:'🔴 Lettre résiliation manquante — Me LAHIANI ne peut pas placer', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI\n⚠️ Me Lahiani (20/03/2026) : lettre de résiliation du contrat client manquante\nSans ce document, placement au tribunal impossible avant le 16/04/2026\nACTION URGENTE : Retrouver et transmettre lettre résiliation à Me Lahiani' },
+  { id:'B2', nom:'IMMOCOM', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'✅ Résiliation transmise à Me LAHIANI (20/03/2026 15h46)', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI\n✅ Courrier de résiliation transmis le 20/03/2026 à 15h46\nPlacement au tribunal débloqué\nMe Lahiani : confirmation reçue 20/03/2026 15h15 (SNC Charonne + IMMOCOM)' },
   { id:'B3', nom:'SNC CHARONNE', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'✅ Résiliation transmise à Me LAHIANI (20/03/2026)', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI\nCourrier de résiliation transmis le 20/03/2026 ✅\nPlacement au tribunal débloqué' },
   { id:'B4', nom:'SNC MABROUK', audience:'16/04/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 16/04/2026 10h — Me LAHIANI' },
   { id:'B5', nom:'SNC MEAUX', audience:'28/05/2026', heure:'10h00', statut:'audience', bl:'🔵 Audience fixée', bc:'bg-b', action:'Préparer audience', notes:'TC Paris — Audience 28/05/2026 10h — Me LAHIANI' },
@@ -1440,7 +1443,7 @@ const gerantActions = [
     titre:'Lettre résiliation IMMOCOM — URGENT avant 16/04',
     detail:'Me Lahiani (email 20/03/2026) : la lettre de résiliation du contrat client est manquante.\nSans ce document, le placement au Tribunal de Commerce est impossible.\nAudience fixée au 16/04/2026 — délai : quelques jours seulement.',
     dossiers:['IMMOCOM'],
-    deadline:'Avant placement semaine du 24/03/2026', done:false
+    deadline:'✅ Résiliation transmise 20/03/2026', done:true
   },
   {
     id:'g8b', cat:'virement', prio:'rouge', icon:'💶',
@@ -1454,7 +1457,7 @@ const gerantActions = [
     titre:'Contrat OSCAR DÉVELOPPEMENT — version signée à confirmer',
     detail:'Me Lahiani (email 20/03/2026) : contrat OSCAR non signé reçu le 17/03.\nTu as transmis le 20/03 le contrat LA VARENNE SAINT HILAIRE signé électroniquement (page 7).\nÀ confirmer : Me Lahiani a-t-il validé cette version ?',
     dossiers:['OSCAR DÉVELOPPEMENT / LA VARENNE ST HILAIRE'],
-    deadline:'Confirmation Me Lahiani attendue', done:false
+    deadline:'✅ Contrat transmis 20/03 — Me Lahiani : Merci (15h15)', done:true
   },
   {
     id:'g9', cat:'document', prio:'bleu', icon:'📋',
