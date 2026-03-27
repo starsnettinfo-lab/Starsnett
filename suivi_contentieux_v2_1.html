@@ -945,27 +945,58 @@ function switchContentieuxView(view, el) {
 }
 
 // ─── DATA PERSISTENCE ─────────────────────────────────────────────────────────
+function getTodayStr() {
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+
 async function loadData() {
+  // 1. Charger depuis localStorage (priorité)
+  const local = localStorage.getItem('starsnett_v2');
+  if(local) {
+    try {
+      const d = JSON.parse(local);
+      if(d.tasks) data.tasks = d.tasks;
+      if(d.rdv) data.rdv = d.rdv;
+      if(d.dossiers) data.dossiers = d.dossiers;
+    } catch(e) {}
+  }
+  // 2. Remise à zéro automatique des RDV du jour si nouveau jour
+  const today = getTodayStr();
+  const lastDay = localStorage.getItem('starsnett_rdv_date');
+  if(lastDay !== today) {
+    // Nouveau jour : remettre les compteurs "jour" à 0, garder "semaine"
+    // Remise à zéro semaine le lundi
+    const isMonday = new Date().getDay() === 1;
+    data.rdv.mail_pro = 0; data.rdv.mail_part = 0;
+    data.rdv.appel_pro = 0; data.rdv.appel_part = 0;
+    if(isMonday) {
+      data.rdv.mail_pro_s = 0; data.rdv.mail_part_s = 0;
+      data.rdv.appel_pro_s = 0; data.rdv.appel_part_s = 0;
+    }
+    localStorage.setItem('starsnett_rdv_date', today);
+    saveData();
+  }
+  // 3. Essayer JSONBin uniquement pour les tâches et dossiers (pas les RDV)
   try {
     const r = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID2}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY2}});
     const d = await r.json();
     if(d.record?.suiviData) {
       const sd = d.record.suiviData;
       if(sd.tasks) data.tasks = sd.tasks;
-      if(sd.rdv) data.rdv = sd.rdv;
-      if(sd.messages) data.messages = sd.messages;
-      if(sd.agenda) data.agenda = sd.agenda;
       if(sd.dossiers) data.dossiers = sd.dossiers;
+      // Ne PAS écraser les RDV depuis JSONBin — localStorage fait foi
     }
-  } catch(e) {
-    const local = sessionStorage.getItem('starsnett_v2');
-    if(local) { try { const d=JSON.parse(local); if(d.tasks)data.tasks=d.tasks; if(d.rdv)data.rdv=d.rdv; if(d.messages)data.messages=d.messages; if(d.dossiers)data.dossiers=d.dossiers; if(d.agenda)data.agenda=d.agenda; }catch(e){} }
-  }
+  } catch(e) {}
 }
 
 async function saveData() {
-  const payload = { suiviData:{ tasks:data.tasks, rdv:data.rdv, messages:data.messages, agenda:data.agenda, dossiers:data.dossiers } };
-  sessionStorage.setItem('starsnett_v2', JSON.stringify(payload.suiviData));
+  // Sauvegarder dans localStorage en priorité (immédiat et fiable)
+  const toSave = { tasks:data.tasks, rdv:data.rdv, dossiers:data.dossiers };
+  localStorage.setItem('starsnett_v2', JSON.stringify(toSave));
+  localStorage.setItem('starsnett_rdv_date', getTodayStr());
+  // Sauvegarder tâches et dossiers dans JSONBin (pas les RDV)
+  const payload = { suiviData:{ tasks:data.tasks, rdv:data.rdv, dossiers:data.dossiers } };
   try {
     const cur = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID2}/latest`,{headers:{'X-Master-Key':JSONBIN_KEY2}});
     const existing = await cur.json();
