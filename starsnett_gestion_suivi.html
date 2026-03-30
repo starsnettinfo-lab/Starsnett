@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starsnett — Gestion & Suivi</title>
+<link rel="manifest" href="manifest_gestion.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Starsnett">
+<meta name="theme-color" content="#162840">
+<link rel="apple-touch-icon" href="icon_starsnett.png">
+<link rel="icon" type="image/png" href="icon_starsnett.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f1ec;--surface:#fff;--surface2:#f9f7f3;--border:#e0dbd2;
+  --text:#18160f;--muted:#7a7469;
+  --navy:#162840;--navy2:#1e3a5c;--accent:#c8a96e;
+  --green:#1a5c3a;--gbg:#eaf4ee;
+  --red:#b83030;--rbg:#fdf0ee;
+  --orange:#b85a00;--obg:#fef3e8;
+  --blue:#1a52a0;--bbg:#e8f0fb;
+  --yellow:#7a6200;--ybg:#fefae8;
+  --purple:#5a3a8c;--pbg:#f3eefa;
+  --shadow:0 2px 8px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.13);
+  --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.login-card{background:var(--surface);border-radius:18px;padding:44px 48px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);text-align:center;}
+.login-logo{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--navy);margin-bottom:2px;}
+.login-sub{font-size:12.5px;color:var(--muted);margin-bottom:32px;}
+.login-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:12px;display:block;}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px;}
+.profile-btn{border:2px solid var(--border);border-radius:var(--r);padding:16px 8px;cursor:pointer;background:var(--surface2);transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:7px;}
+.profile-btn:hover{border-color:var(--navy2);background:#f0f4fa;}
+.profile-btn.selected{border-color:var(--navy);background:#e8eef5;}
+.profile-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:white;}
+.av-n{background:var(--navy)}.av-f{background:var(--green)}.av-k{background:var(--accent);}
+.pname{font-size:12px;font-weight:600;}.prole{font-size:10.5px;color:var(--muted);}
+.login-enter{width:100%;padding:13px;background:var(--navy);color:white;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;}
+.login-enter:hover{background:#0f1e30;}
+.login-enter:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ── APP ── */
+#app{display:none;}
+
+/* ── TOP NAV ── */
+.topnav{background:var(--navy);color:white;padding:0 24px;display:flex;align-items:stretch;justify-content:space-between;position:sticky;top:0;z-index:90;box-shadow:0 2px 16px rgba(0,0,0,.18);}
+.topnav-left{display:flex;align-items:center;gap:6px;padding:14px 0;}
+.app-logo{font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:-.3px;margin-right:8px;}
+.mod-tab{padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:rgba(255,255,255,.6);border-bottom:3px solid transparent;transition:all .15s;font-family:'DM Sans',sans-serif;margin-bottom:-1px;}
+.mod-tab:hover{color:white;}
+.mod-tab.active{color:white;border-bottom-color:var(--accent);}
+.topnav-right{display:flex;align-items:center;gap:10px;}
+.user-chip{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border-radius:20px;padding:5px 12px 5px 6px;font-size:12.5px;}
+.mini-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;}
+.btn-switch{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;border-radius:8px;padding:6px 12px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.btn-switch:hover{background:rgba(255,255,255,.2);}
+.ro-badge{background:rgba(200,169,110,.25);color:var(--accent);font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:12px;text-transform:uppercase;letter-spacing:.4px;border:1px solid rgba(200,169,110,.4);}
+
+/* ── MODULES ── */
+.module{display:none;}.module.active{display:block;}
+.container{max-width:1240px;margin:0 auto;padding:22px 20px;}
+
+/* ── ALERT BANNER ── */
+.alert-banner{border-radius:var(--r);padding:12px 16px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start;font-size:13px;border:1px solid;}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:20px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);}
+.kpi-val{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--navy);line-height:1.1;}
+.kpi-lbl{font-size:11px;color:var(--muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.kpi-card.kr{border-left:3px solid var(--red);}
+.kpi-card.kg{border-left:3px solid var(--green);}
+.kpi-card.kb{border-left:3px solid var(--blue);}
+.kpi-card.ko{border-left:3px solid var(--orange);}
+
+/* ── SECTION TITLE ── */
+.sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:20px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.sec-cnt{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1px 8px;font-size:10px;}
+
+/* ── TASK TABLE ── */
+.task-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:10px;}
+.task-table{width:100%;border-collapse:collapse;}
+.task-table thead th{background:var(--surface2);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;color:var(--muted);padding:8px 13px;text-align:left;border-bottom:1px solid var(--border);}
+.task-table tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.task-table tbody tr:last-child{border-bottom:none;}
+.task-table tbody tr:hover{background:var(--surface2);}
+.task-table tbody td{padding:9px 13px;vertical-align:middle;}
+.task-name{font-weight:600;font-size:13.5px;}
+.task-sub{font-size:12px;color:var(--muted);margin-top:1px;}
+.task-echo{font-size:12px;color:var(--muted);white-space:nowrap;}
+
+/* ── STATUS BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:12px;font-size:11.5px;font-weight:700;white-space:nowrap;}
+.s-urgent{background:var(--rbg);color:var(--red);}
+.s-traiter{background:var(--ybg);color:var(--yellow);}
+.s-cours{background:var(--bbg);color:var(--blue);}
+.s-fait{background:var(--gbg);color:var(--green);}
+.s-planif{background:#f0ede8;color:var(--muted);}
+
+/* ── COMMENTAIRE ── */
+.comment-bubble{background:var(--bbg);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--blue);max-width:240px;line-height:1.4;}
+
+/* ── ADD TASK FORM ── */
+.add-task-bar{display:flex;gap:8px;padding:10px 13px;background:var(--surface2);border-top:1px solid var(--border);flex-wrap:wrap;}
+.add-task-bar input,.add-task-bar select{padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);flex:1;min-width:120px;}
+.add-task-bar input:focus,.add-task-bar select:focus{outline:none;border-color:var(--navy);}
+
+/* ── SYNTHESE NIMAGA ── */
+.synth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+@media(max-width:600px){.synth-grid{grid-template-columns:1fr;}}
+.synth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;}
+.synth-card-head{padding:11px 16px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:space-between;}
+.synth-item{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-bottom:1px solid var(--border);font-size:13px;gap:8px;}
+.synth-item:last-child{border-bottom:none;}
+.synth-item-name{font-weight:500;flex:1;}
+.synth-item-echo{font-size:11.5px;color:var(--muted);flex-shrink:0;}
+
+/* ── RDV COUNTER ── */
+.rdv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px;}
+.rdv-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);text-align:center;}
+.rdv-canal{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.rdv-counters{display:flex;gap:8px;justify-content:center;align-items:flex-end;}
+.rdv-num{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--navy);}
+.rdv-sublbl{font-size:10px;color:var(--muted);}
+.rdv-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.rdv-btn:hover{background:var(--navy);color:white;border-color:var(--navy);}
+
+/* ── AGENDA ── */
+.agenda-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px;}
+@media(max-width:600px){.agenda-grid{grid-template-columns:repeat(3,1fr);}}
+.agenda-day{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px;min-height:80px;}
+.agenda-day.today{border-color:var(--navy);background:var(--accent);background:linear-gradient(135deg,#f8f4ee,#fff);}
+.agenda-day.today .ag-date{color:var(--navy);font-weight:800;}
+.ag-date{font-size:18px;font-weight:700;color:var(--text);line-height:1;}
+.ag-day{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+.ag-event{background:var(--bbg);color:var(--blue);font-size:10.5px;padding:2px 5px;border-radius:4px;margin-bottom:3px;line-height:1.3;}
+.ag-event.red{background:var(--rbg);color:var(--red);}
+.ag-event.green{background:var(--gbg);color:var(--green);}
+.ag-event.orange{background:var(--obg);color:var(--orange);}
+
+/* ── MESSAGERIE ── */
+.msg-thread{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px;}
+.msg-thread-head{padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.msg-thread-title{font-weight:700;font-size:13.5px;}
+.msg-bubble{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;}
+.msg-bubble:last-child{border-bottom:none;}
+.msg-av{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;}
+.msg-body{flex:1;}
+.msg-author{font-size:12px;font-weight:700;color:var(--text);}
+.msg-time{font-size:11px;color:var(--muted);margin-left:6px;}
+.msg-text{font-size:13px;margin-top:3px;line-height:1.5;}
+.msg-compose{padding:12px 16px;background:var(--surface2);border-top:1px solid var(--border);display:flex;gap:8px;}
+.msg-input{flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;}
+.msg-input:focus{outline:none;border-color:var(--navy);}
+.msg-send{padding:9px 18px;background:var(--navy);color:white;border:none;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+.msg-send:hover{background:var(--navy2);}
+
+/* ── CLIENTS ── */
+.client-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;}
+.client-init{width:38px;height:38px;border-radius:10px;background:var(--navy);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
+.client-body{flex:1;}
+.client-name{font-weight:700;font-size:14px;}
+.client-detail{font-size:12px;color:var(--muted);margin-top:2px;}
+.client-tags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.client-tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;}
+
+/* ── BUTTONS ── */
+.btn{padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .14s;}
+.btn-p{background:var(--navy);color:white;}.btn-p:hover{background:var(--navy2);}
+.btn-sec{background:var(--surface);color:var(--text);border:1px solid var(--border);}.btn-sec:hover{background:var(--surface2);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btn-g{background:var(--gbg);color:var(--green);border:1px solid #b8ddc8;}.btn-g:hover{background:#d8eddf;}
+.btn-r{background:var(--rbg);color:var(--red);border:1px solid #f5b7b1;}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,12,8,.5);z-index:200;padding:20px;overflow-y:auto;}
+.overlay.open{display:flex;align-items:flex-start;justify-content:center;}
+.modal{background:var(--surface);border-radius:16px;width:100%;max-width:600px;margin:auto;box-shadow:var(--shadow-lg);overflow:hidden;animation:su .2s ease;}
+@keyframes su{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.modal-hdr{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.modal-title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);}
+.modal-body{padding:18px 22px;}
+.modal-footer{padding:14px 22px;background:var(--surface2);border-top:1px solid var(--border);display:flex;gap:8px;}
+.fl{margin-bottom:12px;}
+.fl label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:5px;display:block;}
+.fl input,.fl select,.fl textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);background:var(--surface);}
+.fl input:focus,.fl select:focus,.fl textarea:focus{outline:none;border-color:var(--navy);}
+.fl textarea{resize:vertical;min-height:72px;}
+.fl-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:10px;font-weight:700;font-size:13px;z-index:999;box-shadow:var(--shadow-lg);animation:fdin .25s ease;color:white;}
+@keyframes fdin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.toast.ok{background:var(--green)}.toast.err{background:var(--red)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  .hide-m{display:none;}
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  .task-table td{padding:7px 9px;}
+  .login-card{padding:28px 18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">⭐ Starsnett</div>
+    <div class="login-sub">Gestion & Suivi — Espace de travail interne</div>
+    <span class="login-label">Qui êtes-vous ?</span>
+    <div class="profile-grid">
+      <div class="profile-btn" onclick="selectProfile('gerant',this)">
+        <div class="profile-avatar av-n">N</div>
+        <div class="pname">M. Nimaga</div><div class="prole">Gérant</div>
+      </div>
+      <div class="profile-btn" onclick="selectProfile('compta',this)">
+        <div class="profile-avatar av-f">F</div>
+        <div class="pname">Florent</div><div class="prole">Comptable</div>
+      </div>
+      <div class="profile-btn" onclick="selectProfile('admin',this)">
+        <div class="profile-avatar av-k" style="color:var(--navy)">K</div>
+        <div class="pname">Ketty</div><div class="prole">Admin</div>
+      </div>
+    </div>
+    <button class="login-enter" id="enter-btn" disabled onclick="enterApp()">Accéder →</button>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <div class="topnav">
+    <div class="topnav-left">
+      <div class="app-logo">⭐ Starsnett</div>
+      <button class="mod-tab active" onclick="switchModule('suivi',this)">📋 Suivi quotidien</button>
+      <button class="mod-tab" onclick="switchModule('contentieux',this)">⚖️ Contentieux</button>
+    </div>
+    <div class="topnav-right">
+      <div id="ro-badge" class="ro-badge" style="display:none">Lecture seule</div>
+      <div class="user-chip"><div class="mini-av" id="hdr-av"></div><span id="hdr-name"></span></div>
+      <button class="btn-switch" onclick="switchUser()">Changer</button>
+    </div>
+  </div>
+
+  <!-- ══ MODULE SUIVI QUOTIDIEN ══ -->
+  <div class="module active" id="mod-suivi">
+    <div class="container">
+
+      <!-- Profil NIMAGA -->
+      <div id="suivi-nimaga" style="display:none">
+        <div class="alert-banner" style="background:var(--rbg);border-color:#f5b7b1;margin-top:4px">
+          <span style="font-size:16px">🚨</span>
+          <div><strong style="color:var(--red)">Urgent :</strong> RIVOLI EVENT — Virement 450€ NON reçu · Dossier Rivoli — Réunion ELEX avant le 7 avril</div>
+        </div>
+
+        <!-- KPIs synthèse -->
+        <div class="kpi-grid">
+          <div class="kpi-card kr"><div class="kpi-val" id="n-urgent">2</div><div class="kpi-lbl">Urgents</div></div>
+          <div class="kpi-card ko"><div class="kpi-val" id="n-traiter">5</div><div class="kpi-lbl">À traiter</div></div>
+          <div class="kpi-card kb"><div class="kpi-val" id="n-cours">1</div><div class="kpi-lbl">En cours</div></div>
+          <div class="kpi-card kg"><div class="kpi-val" id="n-fait">2</div><div class="kpi-lbl">Faits aujourd'hui</div></div>
+        </div>
+
+        <!-- Synthèse tâches -->
+        <div class="synth-grid">
+          <div class="synth-card">
+            <div class="synth-card-head" style="background:#f0f2fa;color:var(--green)">
+              <span>📅 Tâches Ketty</span>
+              <span class="badge s-cours" id="cnt-ketty-open">4 ouvertes</span>
+            </div>
+            <div id="synth-ketty"></div>
+          </div>
+          <div class="synth-card">
+            <div class="synth-card-head" style="background:#f0faf4;color:var(--green)">
+              <span>📊 Tâches Florent</span>
+              <span class="badge s-cours" id="cnt-florent-open">3 ouvertes</span>
+            </div>
+            <div id="synth-florent"></div>
+          </div>
+        </div>
+
+        <!-- RDV Ketty -->
+        <div class="sec-title">📞 Contacts du jour — Ketty</div>
+        <div class="rdv-grid" id="rdv-display"></div>
+
+        <!-- Agenda semaine -->
+        <div class="sec-title">📅 Agenda de la semaine</div>
+        <div class="agenda-grid" id="agenda-nimaga"></div>
+
+        <!-- Messagerie -->
+        <div class="sec-title">💬 Messagerie interne</div>
+        <div id="msg-threads-nimaga"></div>
+      </div>
+
+      <!-- Profil KETTY -->
+      <div id="suivi-ketty" style="display:none">
+        <div class="alert-banner" style="background:var(--rbg);border-color:#f5b7b1;margin-top:4px">
+          <span style="font-size:16px">🔴</span>
+          <div><strong style="color:var(--red)">Urgent :</strong> RIVOLI EVENT — Virement 450€ NON reçu · Relance immédiate requise</div>
+        </div>
+
+        <!-- KPIs Ketty -->
+        <div class="kpi-grid">
+          <div class="kpi-card kr"><div class="kpi-val" id="k-urgent">1</div><div class="kpi-lbl">Urgents</div></div>
+          <div class="kpi-card ko"><div class="kpi-val" id="k-traiter">2</div><div class="kpi-lbl">À traiter</div></div>
+          <div class="kpi-card kb"><div class="kpi-val" id="k-cours">1</div><div class="kpi-lbl">En cours</div></div>
+          <div class="kpi-card kg"><div class="kpi-val" id="k-fait">0</div><div class="kpi-lbl">Faits</div></div>
+        </div>
+
+        <div class="sec-title">📋 Mes tâches — Contrats & Documents <span class="sec-cnt" id="cnt-k1"></span></div>
+        <div class="task-wrap"><table class="task-table">
+          <thead><tr><th>Tâche / Dossier</th><th>Échéance</th><th>Statut</th><th class="hide-m">Commentaire</th><th></th></tr></thead>
+          <tbody id="kt-contrats"></tbody>
+        </table>
+        <div class="add-task-bar" id="add-bar-k1">
+          <input type="text" id="new-k1-name" placeholder="Nouvelle tâche…">
+          <input type="text" id="new-k1-echo" placeholder="Échéance" style="max-width:120px">
+          <select id="new-k1-stat"><option value="traiter">🟡 À traiter</option><option value="cours">🔵 En cours</option><option value="urgent">🔴 Urgent</option><option value="planif">⬜ À planifier</option></select>
+          <button class="btn btn-p btn-sm" onclick="addTask('ketty','contrats')">+ Ajouter</button>
+        </div></div>
+
+        <div class="sec-title">📧 Courriers & Emails <span class="sec-cnt" id="cnt-k2"></span></div>
+        <div class="task-wrap"><table class="task-table">
+          <thead><tr><th>Tâche / Dossier</th><th>Échéance</th><th>Statut</th><th class="hide-m">Commentaire</th><th></th></tr></thead>
+          <tbody id="kt-emails"></tbody>
+        </table>
+        <div class="add-task-bar">
+          <input type="text" id="new-k2-name" placeholder="Nouvelle tâche…">
+          <input type="text" id="new-k2-echo" placeholder="Échéance" style="max-width:120px">
+          <select id="new-k2-stat"><option value="traiter">🟡 À traiter</option><option value="cours">🔵 En cours</option><option value="urgent">🔴 Urgent</option><option value="planif">⬜ À planifier</option></select>
+          <button class="btn btn-p btn-sm" onclick="addTask('ketty','emails')">+ Ajouter</button>
+        </div></div>
+
+        <div class="sec-title">📁 Suivi dossiers / Administratif <span class="sec-cnt" id="cnt-k3"></span></div>
+        <div class="task-wrap"><table class="task-table">
+          <thead><tr><th>Tâche / Dossier</th><th>Échéance</th><th>Statut</th><th class="hide-m">Commentaire</th><th></th></tr></thead>
+          <tbody id="kt-dossiers"></tbody>
+        </table>
+        <div class="add-task-bar">
+          <input type="text" id="new-k3-name" placeholder="Nouveau dossier…">
+          <input type="text" id="new-k3-echo" placeholder="Échéance" style="max-width:120px">
+          <select id="new-k3-stat"><option value="urgent">🔴 Urgent</option><option value="traiter">🟡 À traiter</option><option value="cours">🔵 En cours</option><option value="planif">⬜ À planifier</option></select>
+          <button class="btn btn-p btn-sm" onclick="addTask('ketty','dossiers')">+ Ajouter</button>
+        </div></div>
+
+        <!-- RDV Ketty -->
+        <div class="sec-title">📞 Suivi contacts du jour</div>
+        <div class="rdv-grid" id="rdv-ketty"></div>
+
+        <!-- Agenda -->
+        <div class="sec-title">📅 Agenda de la semaine</div>
+        <div class="agenda-grid" id="agenda-ketty"></div>
+
+        <!-- Clients -->
+        <div class="sec-title">👥 Suivi clients <span class="sec-cnt">3</span></div>
+        <div id="clients-list"></div>
+
+        <!-- Messagerie -->
+        <div class="sec-title">💬 Messagerie interne</div>
+        <div id="msg-threads-ketty"></div>
+      </div>
+
+      <!-- Profil FLORENT -->
+      <div id="suivi-florent" style="display:none">
+        <div class="alert-banner" style="background:var(--rbg);border-color:#f5b7b1;margin-top:4px">
+          <span style="font-size:16px">🔴</span>
+          <div><strong style="color:var(--red)">Urgent :</strong> RIVOLI EVENT — Virement 450€ NON reçu · Vérifier et relancer immédiatement</div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card kr"><div class="kpi-val" id="f-urgent">1</div><div class="kpi-lbl">Urgents</div></div>
+          <div class="kpi-card ko"><div class="kpi-val" id="f-traiter">2</div><div class="kpi-lbl">À traiter</div></div>
+          <div class="kpi-card kb"><div class="kpi-val" id="f-cours">0</div><div class="kpi-lbl">En cours</div></div>
+          <div class="kpi-card kg"><div class="kpi-val" id="f-fait">0</div><div class="kpi-lbl">Faits</div></div>
+        </div>
+
+        <div class="sec-title">💰 Comptabilité & Règlements <span class="sec-cnt" id="cnt-f1"></span></div>
+        <div class="task-wrap"><table class="task-table">
+          <thead><tr><th>Tâche / Dossier</th><th>Échéance</th><th>Statut</th><th class="hide-m">Commentaire</th><th></th></tr></thead>
+          <tbody id="ft-compta"></tbody>
+        </table>
+        <div class="add-task-bar">
+          <input type="text" id="new-f1-name" placeholder="Nouvelle tâche…">
+          <input type="text" id="new-f1-echo" placeholder="Échéance" style="max-width:120px">
+          <select id="new-f1-stat"><option value="traiter">🟡 À traiter</option><option value="cours">🔵 En cours</option><option value="urgent">🔴 Urgent</option><option value="planif">⬜ À planifier</option></select>
+          <button class="btn btn-p btn-sm" onclick="addTask('florent','compta')">+ Ajouter</button>
+        </div></div>
+
+        <div class="sec-title">📁 Dossiers / Assurance <span class="sec-cnt" id="cnt-f2"></span></div>
+        <div class="task-wrap"><table class="task-table">
+          <thead><tr><th>Tâche / Dossier</th><th>Échéance</th><th>Statut</th><th class="hide-m">Commentaire</th><th></th></tr></thead>
+          <tbody id="ft-dossiers"></tbody>
+        </table>
+        <div class="add-task-bar">
+          <input type="text" id="new-f2-name" placeholder="Nouveau dossier…">
+          <input type="text" id="new-f2-echo" placeholder="Échéance" style="max-width:120px">
+          <select id="new-f2-stat"><option value="urgent">🔴 Urgent</option><option value="traiter">🟡 À traiter</option><option value="cours">🔵 En cours</option><option value="planif">⬜ À planifier</option></select>
+          <button class="btn btn-p btn-sm" onclick="addTask('florent','dossiers')">+ Ajouter</button>
+        </div></div>
+
+        <div class="sec-title">📄 Rapports & Documents compta <span class="sec-cnt" id="cnt-f3"></span></div>
+        <div class="task-wrap"><table class="task-table">
+          <thead><tr><th>Tâche / Dossier</th><th>Échéance</th><th>Statut</th><th class="hide-m">Commentaire</th><th></th></tr></thead>
+          <tbody id="ft-rapports"></tbody>
+        </table>
+        <div class="add-task-bar">
+          <input type="text" id="new-f3-name" placeholder="Nouveau document…">
+          <input type="text" id="new-f3-echo" placeholder="Échéance" style="max-width:120px">
+          <select id="new-f3-stat"><option value="planif">⬜ À planifier</option><option value="traiter">🟡 À traiter</option><option value="cours">🔵 En cours</option></select>
+          <button class="btn btn-p btn-sm" onclick="addTask('florent','rapports')">+ Ajouter</button>
+        </div></div>
+
+        <!-- Messagerie -->
+        <div class="sec-title">💬 Messagerie interne</div>
+        <div id="msg-threads-florent"></div>
+      </div>
+
+    </div>
+  </div><!-- /module suivi -->
+
+  <!-- ══ MODULE CONTENTIEUX (iframe vers l'autre app) ══ -->
+  <div class="module" id="mod-contentieux">
+    <div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;padding-top:40px">
+      <div style="font-size:36px;margin-bottom:12px">⚖️</div>
+      <div style="font-weight:700;font-size:16px;color:var(--text);margin-bottom:8px">Module Contentieux</div>
+      <div style="margin-bottom:20px">Le module contentieux complet est disponible sur la page dédiée.</div>
+      <a href="https://starsnettinfo-lab.github.io/Starsnett/suivi_contentieux_v2_1.html" target="_blank" class="btn btn-p" style="text-decoration:none;display:inline-block">Ouvrir le suivi contentieux →</a>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ══ MODAL TÂCHE ══ -->
+<div class="overlay" id="task-overlay" onclick="if(event.target===this)closeTaskModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="task-modal-title">Modifier la tâche</div>
+      <button class="modal-close" onclick="closeTaskModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fl"><label>Tâche / Dossier</label><input type="text" id="tm-name"></div>
+      <div class="fl-row">
+        <div class="fl"><label>Échéance</label><input type="text" id="tm-echo"></div>
+        <div class="fl"><label>Statut</label>
+          <select id="tm-stat">
+            <option value="urgent">🔴 Urgent</option>
+            <option value="traiter">🟡 À traiter</option>
+            <option value="cours">🔵 En cours</option>
+            <option value="fait">🟢 Fait</option>
+            <option value="planif">⬜ À planifier</option>
+          </select>
+        </div>
+      </div>
+      <div class="fl"><label>Commentaire</label><textarea id="tm-comment" placeholder="Précisions, contexte…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-p" onclick="saveTaskModal()">💾 Enregistrer</button>
+      <button class="btn btn-r btn-sm" onclick="deleteTask()">🗑 Supprimer</button>
+      <button class="btn btn-sec" onclick="closeTaskModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── JSONBIN ──────────────────────────────────────────────────────────────────
+const JSONBIN_ID2  = '69bc22f5aa77b81da9fcb87e';
+const JSONBIN_KEY2 = '$2a$10$TzSoaR1c16RpxXzZg7zbB.XXI3ikID.U2sqe5JFkXfFKQUxM/0MVW';
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentUser = null;
+let currentModule = 'suivi';
+let editingTask = null;
+
+const PROFILES = {
+  gerant:{ nom:'M. Nimaga', role:'Gérant', av:'N', avClass:'av-n', readonly:true },
+  compta:{ nom:'Florent',   role:'Comptable', av:'F', avClass:'av-f', readonly:false },
+  admin: { nom:'Ketty',     role:'Admin', av:'K', avClass:'av-k', readonly:false },
+};
+
+// ── DONNÉES ───────────────────────────────────────────────────────────────────
+let data = {
+  tasks: {
+    ketty: {
+      contrats: [
+        { id:'k1', name:'MR ILLOUZ — 3 contrats (×2 études + ×1)', echo:'Cette semaine', stat:'cours', comment:'' },
+        { id:'k2', name:'Mail Mme Meunier — accès Florent', echo:'Ce jour', stat:'traiter', comment:'' },
+        { id:'k3', name:'DUBROC — Vitres 3 niveaux 297€HT + 1×/2 mois 275€HT', echo:'Cette semaine', stat:'traiter', comment:'' },
+        { id:'k4', name:'MP BOUCHER — Contrat à faire sur Pégase', echo:'À définir', stat:'planif', comment:'' },
+      ],
+      emails: [
+        { id:'k5', name:'Email à compléter', echo:'À définir', stat:'planif', comment:'' },
+      ],
+      dossiers: [
+        { id:'k6', name:'RIVOLI EVENT — Virement 450€ NON reçu', echo:'Ce jour', stat:'urgent', comment:'Virement 450€ vérifié sur compte — NON effectué. Relance urgente.' },
+      ],
+    },
+    florent: {
+      compta: [
+        { id:'f1', name:'Règlement cartes stationnement', echo:'Ce jour', stat:'traiter', comment:'' },
+        { id:'f2', name:'Facturation client — à compléter', echo:'À définir', stat:'traiter', comment:'' },
+      ],
+      dossiers: [
+        { id:'f3', name:'RIVOLI EVENT — Suivi virement 450€ NON reçu', echo:'Ce jour', stat:'urgent', comment:'Virement 450€ vérifié — NON reçu. Relance immédiate requise.' },
+      ],
+      rapports: [
+        { id:'f4', name:'Document à compléter', echo:'À définir', stat:'planif', comment:'' },
+      ],
+    }
+  },
+  rdv: { mail_pro:0, mail_part:0, appel_pro:0, appel_part:0, mail_pro_s:0, mail_part_s:0, appel_pro_s:0, appel_part_s:0 },
+  messages: [
+    { id:'m1', thread:'Général', author:'admin', text:'Bonjour à tous — rappel : RIVOLI EVENT, virement 450€ toujours non reçu. Florent, peux-tu relancer aujourd\'hui ?', time:'09:15', date:'Aujourd\'hui' },
+    { id:'m2', thread:'Général', author:'compta', text:'Virement vérifié ce matin — effectivement non reçu. Je relance RIVOLI EVENT maintenant.', time:'09:32', date:'Aujourd\'hui' },
+  ],
+  agenda: [
+    { date:'23', day:'Lun', events:[] },
+    { date:'24', day:'Mar', events:[{label:'Réunion interne',color:'blue'}] },
+    { date:'25', day:'Mer', events:[] },
+    { date:'26', day:'Jeu', events:[{label:'ILLOUZ — Contrats',color:'orange'}] },
+    { date:'27', day:'Ven', events:[{label:'Aujourd\'hui',color:'green'}] },
+    { date:'28', day:'Sam', events:[] },
+    { date:'29', day:'Dim', events:[] },
+  ],
+  clients: [
+    { init:'RI', name:'RIVOLI EVENT', detail:'Suivi virement 450€ — NON reçu', tags:[{label:'🔴 Urgent',bg:'rbg',color:'red'},{label:'Relance',bg:'ybg',color:'yellow'}] },
+    { init:'IL', name:'MR ILLOUZ', detail:'3 contrats à préparer (×2 études + ×1) — Cette semaine', tags:[{label:'🔵 En cours',bg:'bbg',color:'blue'}] },
+    { init:'DU', name:'DUBROC', detail:'Vitres 3 niveaux — 297€HT + 1×/2 mois 275€HT', tags:[{label:'🟡 À traiter',bg:'ybg',color:'yellow'},{label:'Devis',bg:'bbg',color:'blue'}] },
+    { init:'MP', name:'MP BOUCHER', detail:'Contrat à créer sur Pégase', tags:[{label:'⬜ À planifier',bg:'',color:'muted'}] },
+  ],
+  newMsg: ''
+};
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+function selectProfile(key, el) {
+  document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  currentUser = key;
+  document.getElementById('enter-btn').disabled = false;
+}
+
+function enterApp() {
+  const p = PROFILES[currentUser];
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  const av = document.getElementById('hdr-av');
+  av.textContent = p.av; av.className = 'mini-av ' + p.avClass;
+  document.getElementById('hdr-name').textContent = p.nom + ' — ' + p.role;
+  document.getElementById('ro-badge').style.display = p.readonly ? 'inline-block' : 'none';
+  loadData();
+  renderSuivi();
+}
+
+function switchUser() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('enter-btn').disabled = true;
+  currentUser = null;
+}
+
+// ── MODULE SWITCH ─────────────────────────────────────────────────────────────
+function switchModule(mod, el) {
+  currentModule = mod;
+  document.querySelectorAll('.mod-tab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+  document.getElementById('mod-' + mod).classList.add('active');
+}
+
+// ── DATA PERSISTENCE ──────────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID2}/latest`, { headers:{'X-Master-Key':JSONBIN_KEY2} });
+    const d = await r.json();
+    if (d.record?.suiviData) {
+      const sd = d.record.suiviData;
+      if (sd.tasks) data.tasks = sd.tasks;
+      if (sd.rdv) data.rdv = sd.rdv;
+      if (sd.messages) data.messages = sd.messages;
+      if (sd.agenda) data.agenda = sd.agenda;
+    }
+  } catch(e) {
+    const local = sessionStorage.getItem('starsnett_suivi');
+    if (local) { try { const d = JSON.parse(local); if (d.tasks) data.tasks=d.tasks; if (d.rdv) data.rdv=d.rdv; if (d.messages) data.messages=d.messages; } catch(e){} }
+  }
+}
+
+async function saveData() {
+  const payload = { suiviData: { tasks: data.tasks, rdv: data.rdv, messages: data.messages, agenda: data.agenda } };
+  sessionStorage.setItem('starsnett_suivi', JSON.stringify(payload.suiviData));
+  try {
+    const cur = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID2}/latest`, { headers:{'X-Master-Key':JSONBIN_KEY2} });
+    const existing = await cur.json();
+    const merged = { ...existing.record, ...payload };
+    await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID2}`, { method:'PUT', headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY2}, body:JSON.stringify(merged) });
+  } catch(e) {}
+}
+
+// ── STATUS HELPER ─────────────────────────────────────────────────────────────
+const STAT_MAP = {
+  urgent:['s-urgent','🔴 Urgent'],
+  traiter:['s-traiter','🟡 À traiter'],
+  cours:['s-cours','🔵 En cours'],
+  fait:['s-fait','🟢 Fait'],
+  planif:['s-planif','⬜ À planifier'],
+};
+const statBadge = (s) => `<span class="badge ${STAT_MAP[s]?.[0]||'s-planif'}">${STAT_MAP[s]?.[1]||s}</span>`;
+const isEditable = () => !PROFILES[currentUser]?.readonly;
+
+// ── RENDER SUIVI ──────────────────────────────────────────────────────────────
+function renderSuivi() {
+  ['suivi-nimaga','suivi-ketty','suivi-florent'].forEach(id => document.getElementById(id).style.display = 'none');
+  if (currentUser === 'gerant') {
+    document.getElementById('suivi-nimaga').style.display = 'block';
+    renderNimaga();
+  } else if (currentUser === 'admin') {
+    document.getElementById('suivi-ketty').style.display = 'block';
+    renderKetty();
+  } else {
+    document.getElementById('suivi-florent').style.display = 'block';
+    renderFlorent();
+  }
+}
+
+// ── RENDER NIMAGA ─────────────────────────────────────────────────────────────
+function renderNimaga() {
+  // Synthèse Ketty
+  const allK = [...data.tasks.ketty.contrats, ...data.tasks.ketty.emails, ...data.tasks.ketty.dossiers];
+  const openK = allK.filter(t => t.stat !== 'fait' && t.stat !== 'planif');
+  document.getElementById('cnt-ketty-open').textContent = openK.length + ' ouvertes';
+  document.getElementById('synth-ketty').innerHTML = allK.filter(t => t.stat !== 'planif').map(t => `
+    <div class="synth-item">
+      <div class="synth-item-name">${t.name}</div>
+      <div class="synth-item-echo">${t.echo}</div>
+      ${statBadge(t.stat)}
+    </div>`).join('') || '<div style="padding:12px 16px;color:var(--muted);font-size:13px">Aucune tâche active</div>';
+
+  // Synthèse Florent
+  const allF = [...data.tasks.florent.compta, ...data.tasks.florent.dossiers, ...data.tasks.florent.rapports];
+  const openF = allF.filter(t => t.stat !== 'fait' && t.stat !== 'planif');
+  document.getElementById('cnt-florent-open').textContent = openF.length + ' ouvertes';
+  document.getElementById('synth-florent').innerHTML = allF.filter(t => t.stat !== 'planif').map(t => `
+    <div class="synth-item">
+      <div class="synth-item-name">${t.name}</div>
+      <div class="synth-item-echo">${t.echo}</div>
+      ${statBadge(t.stat)}
+    </div>`).join('') || '<div style="padding:12px 16px;color:var(--muted);font-size:13px">Aucune tâche active</div>';
+
+  // KPIs globaux
+  const all = [...allK, ...allF];
+  document.getElementById('n-urgent').textContent = all.filter(t=>t.stat==='urgent').length;
+  document.getElementById('n-traiter').textContent = all.filter(t=>t.stat==='traiter').length;
+  document.getElementById('n-cours').textContent = all.filter(t=>t.stat==='cours').length;
+  document.getElementById('n-fait').textContent = all.filter(t=>t.stat==='fait').length;
+
+  // RDV
+  renderRdvDisplay('rdv-display', false);
+  // Agenda
+  renderAgenda('agenda-nimaga');
+  // Messagerie
+  renderMessages('msg-threads-nimaga');
+}
+
+// ── RENDER KETTY ─────────────────────────────────────────────────────────────
+function renderKetty() {
+  renderTaskSection('kt-contrats', data.tasks.ketty.contrats, 'ketty', 'contrats', 'cnt-k1');
+  renderTaskSection('kt-emails', data.tasks.ketty.emails, 'ketty', 'emails', 'cnt-k2');
+  renderTaskSection('kt-dossiers', data.tasks.ketty.dossiers, 'ketty', 'dossiers', 'cnt-k3');
+  updateKpis('k', [...data.tasks.ketty.contrats, ...data.tasks.ketty.emails, ...data.tasks.ketty.dossiers]);
+  renderRdvDisplay('rdv-ketty', true);
+  renderAgenda('agenda-ketty');
+  renderClients();
+  renderMessages('msg-threads-ketty');
+}
+
+// ── RENDER FLORENT ────────────────────────────────────────────────────────────
+function renderFlorent() {
+  renderTaskSection('ft-compta', data.tasks.florent.compta, 'florent', 'compta', 'cnt-f1');
+  renderTaskSection('ft-dossiers', data.tasks.florent.dossiers, 'florent', 'dossiers', 'cnt-f2');
+  renderTaskSection('ft-rapports', data.tasks.florent.rapports, 'florent', 'rapports', 'cnt-f3');
+  updateKpis('f', [...data.tasks.florent.compta, ...data.tasks.florent.dossiers, ...data.tasks.florent.rapports]);
+  renderMessages('msg-threads-florent');
+}
+
+function updateKpis(prefix, tasks) {
+  document.getElementById(prefix+'-urgent').textContent = tasks.filter(t=>t.stat==='urgent').length;
+  document.getElementById(prefix+'-traiter').textContent = tasks.filter(t=>t.stat==='traiter').length;
+  document.getElementById(prefix+'-cours').textContent = tasks.filter(t=>t.stat==='cours').length;
+  document.getElementById(prefix+'-fait').textContent = tasks.filter(t=>t.stat==='fait').length;
+}
+
+// ── TASK SECTION ──────────────────────────────────────────────────────────────
+function renderTaskSection(tbodyId, tasks, who, section, cntId) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  document.getElementById(cntId).textContent = tasks.length;
+  tbody.innerHTML = tasks.map((t,i) => `
+    <tr onclick="${isEditable() ? `openTaskModal('${who}','${section}',${i})` : ''}">
+      <td>
+        <div class="task-name">${t.name}</div>
+        ${t.comment ? `<div class="task-sub">${t.comment.substring(0,60)}${t.comment.length>60?'…':''}</div>` : ''}
+      </td>
+      <td><span class="task-echo">${t.echo}</span></td>
+      <td>${statBadge(t.stat)}</td>
+      <td class="hide-m">${t.comment ? `<div class="comment-bubble">${t.comment}</div>` : ''}</td>
+      <td>${isEditable() ? `<button class="btn btn-sm" style="background:${t.stat==='fait'?'var(--gbg)':'var(--surface2)'};color:${t.stat==='fait'?'var(--green)':'var(--muted)'};border:1px solid var(--border);padding:4px 10px;font-size:11px" onclick="event.stopPropagation();toggleFait('${who}','${section}',${i})">${t.stat==='fait'?'↩ Réouvrir':'✓ Fait'}</button>` : ''}</td>
+    </tr>`).join('') || `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--muted)">Aucune tâche</td></tr>`;
+}
+
+// ── TASK ACTIONS ──────────────────────────────────────────────────────────────
+function toggleFait(who, section, i) {
+  const t = data.tasks[who][section][i];
+  t.stat = t.stat === 'fait' ? 'traiter' : 'fait';
+  saveData(); renderSuivi();
+  toast(t.stat === 'fait' ? '✅ Marqué comme fait' : '↩ Tâche réouverte', 'ok');
+}
+
+function addTask(who, section) {
+  const nameEl = document.getElementById(`new-${who[0]}${section==='contrats'?1:section==='emails'?2:section==='dossiers'?3:section==='compta'?1:section==='rapports'?3:2}-name`);
+  const echoEl = document.getElementById(`new-${who[0]}${section==='contrats'?1:section==='emails'?2:section==='dossiers'?3:section==='compta'?1:section==='rapports'?3:2}-echo`);
+  const statEl = document.getElementById(`new-${who[0]}${section==='contrats'?1:section==='emails'?2:section==='dossiers'?3:section==='compta'?1:section==='rapports'?3:2}-stat`);
+  const name = nameEl?.value?.trim();
+  if (!name) { toast('Saisissez un nom de tâche.','err'); return; }
+  const id = 'task_' + Date.now();
+  data.tasks[who][section].push({ id, name, echo: echoEl?.value||'À définir', stat: statEl?.value||'traiter', comment:'' });
+  if (nameEl) nameEl.value='';
+  if (echoEl) echoEl.value='';
+  saveData(); renderSuivi();
+  toast('✅ Tâche ajoutée','ok');
+}
+
+// ── TASK MODAL ────────────────────────────────────────────────────────────────
+function openTaskModal(who, section, i) {
+  const t = data.tasks[who][section][i];
+  editingTask = { who, section, i };
+  document.getElementById('task-modal-title').textContent = 'Modifier — ' + t.name.substring(0,40);
+  document.getElementById('tm-name').value = t.name;
+  document.getElementById('tm-echo').value = t.echo;
+  document.getElementById('tm-stat').value = t.stat;
+  document.getElementById('tm-comment').value = t.comment || '';
+  document.getElementById('task-overlay').classList.add('open');
+}
+
+function closeTaskModal() {
+  document.getElementById('task-overlay').classList.remove('open');
+  editingTask = null;
+}
+
+function saveTaskModal() {
+  if (!editingTask) return;
+  const { who, section, i } = editingTask;
+  const t = data.tasks[who][section][i];
+  t.name = document.getElementById('tm-name').value.trim() || t.name;
+  t.echo = document.getElementById('tm-echo').value;
+  t.stat = document.getElementById('tm-stat').value;
+  t.comment = document.getElementById('tm-comment').value.trim();
+  closeTaskModal(); saveData(); renderSuivi();
+  toast('✅ Tâche mise à jour','ok');
+}
+
+function deleteTask() {
+  if (!editingTask) return;
+  const { who, section, i } = editingTask;
+  data.tasks[who][section].splice(i, 1);
+  closeTaskModal(); saveData(); renderSuivi();
+  toast('🗑 Tâche supprimée','ok');
+}
+
+// ── RDV COUNTERS ──────────────────────────────────────────────────────────────
+const RDV_CANALS = [
+  { key:'mail_pro', label:'📧 Mail pro', sublbl:'contact@starsnett.fr' },
+  { key:'mail_part', label:'📩 Mail perso', sublbl:'starsnettinfo@gmail.com' },
+  { key:'appel_pro', label:'📞 Appel pro', sublbl:'01 43 77 58 69' },
+  { key:'appel_part', label:'📱 Appel perso', sublbl:'Ligne personnelle' },
+];
+
+function renderRdvDisplay(containerId, editable) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = RDV_CANALS.map(c => `
+    <div class="rdv-card">
+      <div class="rdv-canal">${c.label}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">${c.sublbl}</div>
+      <div class="rdv-counters">
+        <div>
+          <div class="rdv-sublbl">Aujourd'hui</div>
+          <div style="display:flex;align-items:center;gap:4px">
+            ${editable ? `<button class="rdv-btn" onclick="changeRdv('${c.key}',1,-1)">−</button>` : ''}
+            <div class="rdv-num" id="rdv-${c.key}">${data.rdv[c.key]||0}</div>
+            ${editable ? `<button class="rdv-btn" onclick="changeRdv('${c.key}',1,1)">+</button>` : ''}
+          </div>
+        </div>
+        <div>
+          <div class="rdv-sublbl">Semaine</div>
+          <div class="rdv-num" style="font-size:18px;color:var(--muted)">${data.rdv[c.key+'_s']||0}</div>
+        </div>
+      </div>
+    </div>`).join('') +
+    `<div class="rdv-card" style="background:var(--navy);border-color:var(--navy)">
+      <div class="rdv-canal" style="color:rgba(255,255,255,.6)">TOTAL</div>
+      <div class="rdv-num" style="color:white;font-size:32px" id="rdv-total">${Object.values(data.rdv).filter((_,i)=>i<4).reduce((a,b)=>a+b,0)}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5)">contacts aujourd'hui</div>
+    </div>`;
+}
+
+function changeRdv(key, day, delta) {
+  data.rdv[key] = Math.max(0, (data.rdv[key]||0) + delta);
+  data.rdv[key+'_s'] = Math.max(0, (data.rdv[key+'_s']||0) + delta);
+  saveData(); renderSuivi();
+}
+
+// ── AGENDA ────────────────────────────────────────────────────────────────────
+function renderAgenda(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  // Ajouter l'audience Me Lahiani
+  const agendaWithFixed = data.agenda.map(d => ({ ...d }));
+  // Injecter événements fixes connus
+  const agendaExtra = {
+    '27': [{ label:"Audience TC Paris", color:'red' }],
+  };
+  el.innerHTML = data.agenda.map((d, i) => {
+    const isToday = d.day === 'Ven' && d.date === '27';
+    const extras = agendaExtra[d.date] || [];
+    const allEvents = [...d.events, ...extras];
+    return `<div class="agenda-day${isToday?' today':''}">
+      <div class="ag-day">${d.day}</div>
+      <div class="ag-date">${d.date}</div>
+      ${allEvents.map(e => `<div class="ag-event ${e.color}">${e.label}</div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+// ── CLIENTS ───────────────────────────────────────────────────────────────────
+function renderClients() {
+  const el = document.getElementById('clients-list');
+  if (!el) return;
+  el.innerHTML = data.clients.map(c => `
+    <div class="client-card">
+      <div class="client-init" style="background:${c.init==='RI'?'var(--red)':c.init==='IL'?'var(--blue)':c.init==='DU'?'var(--green)':'var(--muted)'}">${c.init}</div>
+      <div class="client-body">
+        <div class="client-name">${c.name}</div>
+        <div class="client-detail">${c.detail}</div>
+        <div class="client-tags">
+          ${c.tags.map(t => `<span class="client-tag" style="background:${t.bg==='rbg'?'var(--rbg)':t.bg==='ybg'?'var(--ybg)':t.bg==='bbg'?'var(--bbg)':t.bg==='gbg'?'var(--gbg)':'#f0ede8'};color:${t.color==='red'?'var(--red)':t.color==='yellow'?'var(--yellow)':t.color==='blue'?'var(--blue)':t.color==='green'?'var(--green)':'var(--muted)'}">${t.label}</span>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ── MESSAGERIE ────────────────────────────────────────────────────────────────
+function renderMessages(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const AV_COLORS = { admin:'var(--accent)', compta:'var(--green)', gerant:'var(--navy)' };
+  const AV_INIT   = { admin:'K', compta:'F', gerant:'N' };
+  const AV_NAMES  = { admin:'Ketty', compta:'Florent', gerant:'M. Nimaga' };
+  el.innerHTML = `
+    <div class="msg-thread">
+      <div class="msg-thread-head">
+        <div class="msg-thread-title">💬 Discussion générale</div>
+        <span class="badge s-cours">${data.messages.length} messages</span>
+      </div>
+      ${data.messages.map(m => `
+        <div class="msg-bubble">
+          <div class="msg-av" style="background:${AV_COLORS[m.author]||'var(--muted)'}; color:${m.author==='admin'?'var(--navy)':'white'}">${AV_INIT[m.author]||'?'}</div>
+          <div class="msg-body">
+            <span class="msg-author">${AV_NAMES[m.author]||m.author}</span>
+            <span class="msg-time">${m.time} · ${m.date}</span>
+            <div class="msg-text">${m.text}</div>
+          </div>
+        </div>`).join('')}
+      ${isEditable() ? `
+        <div class="msg-compose">
+          <input class="msg-input" id="msg-input-${containerId}" placeholder="Écrire un message…" onkeydown="if(event.key==='Enter')sendMessage('${containerId}')">
+          <button class="msg-send" onclick="sendMessage('${containerId}')">Envoyer</button>
+        </div>` : '<div style="padding:10px 16px;font-size:12px;color:var(--muted)">Mode lecture seule</div>'}
+    </div>`;
+}
+
+function sendMessage(containerId) {
+  const input = document.getElementById('msg-input-' + containerId);
+  const text = input?.value?.trim();
+  if (!text) return;
+  const now = new Date();
+  data.messages.push({
+    id: 'm' + Date.now(),
+    thread: 'Général',
+    author: currentUser,
+    text,
+    time: now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0'),
+    date: 'Aujourd\'hui'
+  });
+  input.value = '';
+  saveData(); renderSuivi();
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function toast(msg, type='ok') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2600);
+}
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw_starsnett.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

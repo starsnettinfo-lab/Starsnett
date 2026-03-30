@@ -1,0 +1,15 @@
+{
+  "name": "Starsnett — Gestion & Suivi",
+  "short_name": "Starsnett",
+  "description": "Espace de travail interne Starsnett Services",
+  "start_url": "/Starsnett/starsnett_gestion_suivi.html",
+  "scope": "/Starsnett/",
+  "display": "standalone",
+  "background_color": "#162840",
+  "theme_color": "#162840",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon_starsnett.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon_starsnett.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
