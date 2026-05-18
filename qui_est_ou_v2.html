@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starsnett — Qui est où ?</title>
+<meta name="theme-color" content="#162840">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Qui est où">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f1ec; --surface:#fff; --surface2:#f9f7f3; --border:#e0dbd2;
+  --text:#18160f; --muted:#7a7469;
+  --navy:#162840; --navy2:#1e3a5c; --accent:#c8a96e; --accent-soft:#f1e8d3;
+  --green:#1a5c3a; --gbg:#eaf4ee;
+  --red:#b83030; --rbg:#fdf0ee;
+  --orange:#b85a00; --obg:#fef3e8;
+  --blue:#1a52a0; --bbg:#e8f0fb;
+  --yellow:#7a6200; --ybg:#fefae8;
+  --purple:#5a3a8c; --pbg:#f3eefa;
+  --shadow:0 2px 8px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.13);
+  --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+
+/* ── TOP NAV ── */
+.topnav{background:var(--navy);color:white;padding:0 22px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:60;box-shadow:0 2px 16px rgba(0,0,0,.2);}
+.topnav-left{display:flex;align-items:center;gap:14px;padding:14px 0;}
+.app-logo{font-family:'Fraunces',serif;font-size:19px;font-weight:600;letter-spacing:-.3px;display:flex;align-items:center;gap:8px;}
+.app-logo .star{color:var(--accent);}
+.app-title{font-family:'Fraunces',serif;font-size:15px;font-weight:500;color:rgba(255,255,255,.85);border-left:1px solid rgba(255,255,255,.2);padding-left:14px;}
+.app-title em{color:var(--accent);font-style:normal;font-weight:600;}
+.topnav-right{display:flex;align-items:center;gap:8px;}
+.tn-date{font-size:12px;color:rgba(255,255,255,.55);margin-right:6px;}
+.tn-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:white;border-radius:8px;padding:7px 13px;font-size:12.5px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;}
+.tn-btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.32);}
+.tn-btn.primary{background:var(--accent);color:var(--navy);border-color:var(--accent);font-weight:700;}
+.tn-btn.primary:hover{background:#d4b87a;}
+.sync-pill{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:10px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);letter-spacing:.3px;text-transform:uppercase;}
+.sync-pill.ok{background:rgba(26,92,58,.4);color:#a8e0c0;}
+.sync-pill.err{background:rgba(184,48,48,.4);color:#f5b7b1;}
+
+/* ── CONTAINER ── */
+.container{max-width:1480px;margin:0 auto;padding:18px 18px 60px;}
+
+/* ── WEEK NAV ── */
+.weeknav{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;box-shadow:var(--shadow);flex-wrap:wrap;}
+.weeknav-left{display:flex;align-items:center;gap:12px;}
+.week-arrow{background:var(--surface2);border:1px solid var(--border);color:var(--navy);border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-weight:700;}
+.week-arrow:hover{background:var(--navy);color:white;border-color:var(--navy);}
+.week-label{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--navy);line-height:1.15;}
+.week-sub{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:1px;}
+.weeknav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.btn-today{background:var(--accent-soft);color:var(--navy);border:1px solid var(--accent);border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;}
+.btn-today:hover{background:var(--accent);}
+.view-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;gap:0;}
+.view-toggle button{background:none;border:none;padding:6px 13px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:6px;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.view-toggle button.active{background:var(--navy);color:white;}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 16px;box-shadow:var(--shadow);}
+.kpi-val{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--navy);line-height:1.1;}
+.kpi-lbl{font-size:10.5px;color:var(--muted);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.kpi-card.acc{border-left:3px solid var(--accent);}
+.kpi-card.grn{border-left:3px solid var(--green);}
+.kpi-card.blu{border-left:3px solid var(--blue);}
+.kpi-card.org{border-left:3px solid var(--orange);}
+
+/* ── PLANNING GRID ── */
+.planning-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;}
+.planning-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.planning-grid{width:100%;min-width:1100px;border-collapse:separate;border-spacing:0;}
+.planning-grid thead th{position:sticky;top:0;background:var(--surface2);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);padding:11px 12px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;}
+.planning-grid thead th.day-h{text-align:center;border-left:1px solid var(--border);}
+.planning-grid thead th.day-h.today{background:var(--accent-soft);color:var(--navy);}
+.day-h-num{font-family:'Fraunces',serif;font-size:17px;color:var(--navy);font-weight:600;display:block;margin-top:2px;letter-spacing:-.5px;}
+.planning-grid thead th.day-h.today .day-h-num{color:var(--navy);}
+.planning-grid thead th.first-col{width:170px;min-width:170px;background:var(--surface);border-right:1px solid var(--border);}
+.planning-grid tbody tr{border-bottom:1px solid var(--border);}
+.planning-grid tbody td{vertical-align:top;padding:0;border-bottom:1px solid var(--border);border-left:1px solid var(--border);min-height:80px;height:80px;}
+.planning-grid tbody td.row-h{background:var(--surface);border-left:none;border-right:1px solid var(--border);padding:12px 14px;width:170px;min-width:170px;position:sticky;left:0;z-index:5;}
+.row-name{font-family:'Fraunces',serif;font-size:15.5px;font-weight:600;color:var(--navy);letter-spacing:-.2px;display:flex;align-items:center;gap:9px;}
+.row-init{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;font-family:'DM Sans',sans-serif;flex-shrink:0;}
+.row-meta{font-size:11px;color:var(--muted);margin-top:3px;padding-left:39px;}
+.row-actions{margin-top:6px;padding-left:39px;}
+.row-actions button{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;padding:2px 0;font-family:'DM Sans',sans-serif;transition:color .15s;}
+.row-actions button:hover{color:var(--red);}
+
+/* ── DAY CELL ── */
+.day-cell{padding:6px;display:flex;flex-direction:column;gap:4px;min-height:80px;cursor:pointer;transition:background .15s;position:relative;}
+.day-cell:hover{background:var(--surface2);}
+.day-cell.today-cell{background:#fdfaf4;}
+.day-cell.today-cell:hover{background:#f9f3e6;}
+.day-cell-empty{display:flex;align-items:center;justify-content:center;color:var(--border);font-size:18px;flex:1;font-weight:300;opacity:0;transition:opacity .15s;}
+.day-cell:hover .day-cell-empty{opacity:1;}
+
+/* ── ASSIGNMENT CHIP ── */
+.assign{border-radius:7px;padding:6px 9px;font-size:11.5px;line-height:1.35;color:white;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08);transition:transform .12s,box-shadow .15s;position:relative;}
+.assign:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,.15);}
+.assign-site{font-weight:700;font-size:12px;letter-spacing:-.1px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.assign-time{font-size:10.5px;opacity:.92;font-weight:500;margin-top:1px;display:flex;align-items:center;gap:4px;}
+.assign-time::before{content:'⏱';font-size:9px;}
+.assign-note{font-size:10px;opacity:.78;margin-top:2px;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ── EMPTY STATES ── */
+.empty-state{padding:48px 24px;text-align:center;color:var(--muted);}
+.empty-state .ico{font-size:42px;margin-bottom:10px;opacity:.5;}
+.empty-state h3{font-family:'Fraunces',serif;font-size:18px;color:var(--text);font-weight:600;margin-bottom:6px;}
+.empty-state p{font-size:13.5px;margin-bottom:16px;max-width:380px;margin-left:auto;margin-right:auto;}
+.empty-state .actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+
+/* ── BUTTONS ── */
+.btn{padding:9px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .14s;display:inline-flex;align-items:center;gap:6px;}
+.btn-p{background:var(--navy);color:white;}.btn-p:hover{background:var(--navy2);}
+.btn-acc{background:var(--accent);color:var(--navy);font-weight:700;}.btn-acc:hover{background:#d4b87a;}
+.btn-sec{background:var(--surface);color:var(--text);border:1px solid var(--border);}.btn-sec:hover{background:var(--surface2);}
+.btn-danger{background:var(--rbg);color:var(--red);border:1px solid #f5b7b1;}.btn-danger:hover{background:#f5d6cf;}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-link{background:none;border:none;color:var(--blue);text-decoration:underline;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12.5px;}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,12,8,.55);z-index:200;padding:20px;overflow-y:auto;backdrop-filter:blur(2px);}
+.overlay.open{display:flex;align-items:flex-start;justify-content:center;}
+.modal{background:var(--surface);border-radius:16px;width:100%;max-width:540px;margin:auto;box-shadow:var(--shadow-lg);overflow:hidden;animation:su .22s ease;}
+.modal.wide{max-width:680px;}
+@keyframes su{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.modal-hdr{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.modal-title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--navy);}
+.modal-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1;padding:4px 8px;border-radius:6px;}
+.modal-close:hover{background:var(--surface2);color:var(--text);}
+.modal-body{padding:20px 22px;max-height:70vh;overflow-y:auto;}
+.modal-footer{padding:14px 22px;background:var(--surface2);border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;}
+.modal-footer .spacer{flex:1;}
+
+/* ── FORM ── */
+.fl{margin-bottom:14px;}
+.fl label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px;display:block;}
+.fl input,.fl select,.fl textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);background:var(--surface);transition:border-color .15s,box-shadow .15s;}
+.fl input:focus,.fl select:focus,.fl textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(22,40,64,.08);}
+.fl textarea{resize:vertical;min-height:60px;}
+.fl-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fl-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* ── SEG ── */
+.seg{display:inline-flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;gap:0;}
+.seg button{background:none;border:none;padding:7px 14px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:6px;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.seg button.active{background:var(--navy);color:white;}
+
+/* ── COLOR PICKER ── */
+.color-row{display:flex;gap:6px;flex-wrap:wrap;}
+.color-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .12s;}
+.color-dot:hover{transform:scale(1.12);}
+.color-dot.selected{border-color:var(--navy);box-shadow:0 0 0 2px white inset;}
+
+/* ── LIST ── */
+.list-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);margin-bottom:6px;}
+.list-item .swatch{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
+.list-item .swatch.sq{border-radius:5px;}
+.list-item .li-body{flex:1;}
+.list-item .li-name{font-weight:600;font-size:13px;}
+.list-item .li-meta{font-size:11.5px;color:var(--muted);margin-top:1px;}
+.list-item .li-del{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:6px;}
+.list-item .li-del:hover{background:var(--rbg);color:var(--red);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);padding:11px 22px;border-radius:50px;font-weight:600;font-size:13px;z-index:999;box-shadow:var(--shadow-lg);color:white;opacity:0;transition:all .25s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{background:var(--green);}
+.toast.err{background:var(--red);}
+.toast.info{background:var(--navy);}
+
+/* ── HINT ── */
+.legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);padding:10px 0 0;}
+.legend-item{display:inline-flex;align-items:center;gap:5px;}
+.legend-swatch{width:11px;height:11px;border-radius:3px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:760px){
+  .topnav{padding:0 14px;flex-wrap:wrap;}
+  .topnav-left{padding:11px 0;gap:10px;}
+  .app-title{display:none;}
+  .tn-date{display:none;}
+  .container{padding:12px 10px 50px;}
+  .weeknav{padding:11px 14px;gap:8px;}
+  .week-label{font-size:15px;}
+  .planning-grid{min-width:840px;}
+  .row-name{font-size:14px;}
+  .modal{margin:0;border-radius:12px;}
+  .fl-row,.fl-row-3{grid-template-columns:1fr;}
+  .kpi-card{padding:10px 13px;}
+  .kpi-val{font-size:20px;}
+}
+
+/* ── PRINT ── */
+@media print{
+  body{background:white;font-size:11px;}
+  .topnav,.weeknav-right,.row-actions,.btn,.tn-btn,.sync-pill,.day-cell:hover .day-cell-empty,.day-cell-empty{display:none !important;}
+  .container{max-width:none;padding:0;}
+  .weeknav{border:none;box-shadow:none;background:transparent;padding:0 0 14px;border-bottom:2px solid var(--navy);margin-bottom:14px;}
+  .week-label{font-size:20px;}
+  .week-sub{font-size:12px;}
+  .week-arrow{display:none;}
+  .planning-wrap{border:none;box-shadow:none;border-radius:0;}
+  .planning-scroll{overflow:visible;}
+  .planning-grid{min-width:auto;}
+  .planning-grid thead th{background:var(--navy) !important;color:white !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .day-h-num{color:white !important;}
+  .planning-grid thead th.day-h.today{background:var(--accent) !important;color:var(--navy) !important;}
+  .planning-grid thead th.day-h.today .day-h-num{color:var(--navy) !important;}
+  .assign{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .planning-grid tbody td{height:auto;min-height:60px;}
+  .row-h{position:static !important;}
+  .kpi-strip{display:none;}
+  .legend{margin-top:14px;page-break-inside:avoid;}
+  @page{size:A4 landscape;margin:12mm 10mm;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP NAV ══ -->
+<div class="topnav">
+  <div class="topnav-left">
+    <div class="app-logo"><span class="star">⭐</span> Starsnett</div>
+    <div class="app-title">Qui est <em>où</em> ?</div>
+  </div>
+  <div class="topnav-right">
+    <span class="tn-date" id="tn-date"></span>
+    <span class="sync-pill" id="sync-pill">— —</span>
+    <button class="tn-btn" onclick="openAgents()">👥 Agents</button>
+    <button class="tn-btn" onclick="openSites()">🏢 Sites</button>
+    <button class="tn-btn" onclick="window.print()">🖨 Imprimer</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- WEEK NAV -->
+  <div class="weeknav">
+    <div class="weeknav-left">
+      <button class="week-arrow" onclick="navWeek(-1)" title="Semaine précédente">‹</button>
+      <div>
+        <div class="week-label" id="week-label">—</div>
+        <div class="week-sub" id="week-sub">—</div>
+      </div>
+      <button class="week-arrow" onclick="navWeek(1)" title="Semaine suivante">›</button>
+    </div>
+    <div class="weeknav-right">
+      <button class="btn-today" onclick="goToday()">📍 Aujourd'hui</button>
+      <div class="view-toggle">
+        <button id="view-agent-btn" class="active" onclick="setView('agent')">Par agent</button>
+        <button id="view-site-btn" onclick="setView('site')">Par site</button>
+      </div>
+      <button class="btn btn-acc btn-sm" onclick="openAssign(null,null,null)">+ Nouvelle affectation</button>
+    </div>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi-strip">
+    <div class="kpi-card acc"><div class="kpi-val" id="kpi-assigns">0</div><div class="kpi-lbl">Affectations</div></div>
+    <div class="kpi-card blu"><div class="kpi-val" id="kpi-agents">0</div><div class="kpi-lbl">Agents actifs</div></div>
+    <div class="kpi-card grn"><div class="kpi-val" id="kpi-sites">0</div><div class="kpi-lbl">Sites visités</div></div>
+    <div class="kpi-card org"><div class="kpi-val" id="kpi-hours">0h</div><div class="kpi-lbl">Heures planifiées</div></div>
+  </div>
+
+  <!-- PLANNING -->
+  <div class="planning-wrap" id="planning-wrap">
+    <!-- généré dynamiquement -->
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend" id="legend"></div>
+</div>
+
+<!-- ══ MODAL AFFECTATION ══ -->
+<div class="overlay" id="ov-assign" onclick="if(event.target===this)closeAssign()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title" id="assign-title">Nouvelle affectation</div>
+        <div class="modal-sub" id="assign-sub"></div>
+      </div>
+      <button class="modal-close" onclick="closeAssign()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fl-row">
+        <div class="fl">
+          <label>Agent</label>
+          <select id="as-agent"></select>
+        </div>
+        <div class="fl">
+          <label>Jour</label>
+          <select id="as-day"></select>
+        </div>
+      </div>
+      <div class="fl">
+        <label>Site / Client</label>
+        <select id="as-site"></select>
+      </div>
+      <div class="fl">
+        <label>Mode d'horaire</label>
+        <div class="seg" id="seg-mode">
+          <button type="button" class="active" onclick="setMode('libre')">Créneau libre</button>
+          <button type="button" onclick="setMode('precis')">Horaires précis</button>
+        </div>
+      </div>
+      <div class="fl" id="mode-libre-wrap">
+        <label>Créneau</label>
+        <select id="as-slot">
+          <option value="Matin">Matin</option>
+          <option value="Midi">Midi</option>
+          <option value="Après-midi">Après-midi</option>
+          <option value="Soir">Soir</option>
+          <option value="Journée">Journée</option>
+          <option value="__autre__">Autre — saisir un texte libre</option>
+        </select>
+        <input type="text" id="as-slot-text" placeholder="Texte libre (ex : 11h-14h, intervention exceptionnelle…)" style="margin-top:8px;display:none">
+      </div>
+      <div class="fl-row" id="mode-precis-wrap" style="display:none">
+        <div class="fl" style="margin-bottom:0">
+          <label>Heure début</label>
+          <input type="time" id="as-start" value="08:00">
+        </div>
+        <div class="fl" style="margin-bottom:0">
+          <label>Heure fin</label>
+          <input type="time" id="as-end" value="10:30">
+        </div>
+      </div>
+      <div class="fl" style="margin-top:14px">
+        <label>Note (facultatif)</label>
+        <textarea id="as-note" placeholder="Consignes, code d'accès, contact sur place…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-p" onclick="saveAssign()">💾 Enregistrer</button>
+      <button class="btn btn-danger btn-sm" id="as-del-btn" onclick="deleteAssign()" style="display:none">🗑 Supprimer</button>
+      <div class="spacer"></div>
+      <button class="btn btn-sec" onclick="closeAssign()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL AGENTS ══ -->
+<div class="overlay" id="ov-agents" onclick="if(event.target===this)closeAgents()">
+  <div class="modal wide">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title">Gérer les agents</div>
+        <div class="modal-sub">Ajoutez, modifiez ou supprimez vos agents Starsnett</div>
+      </div>
+      <button class="modal-close" onclick="closeAgents()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="agents-list" style="margin-bottom:16px"></div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">➕ Ajouter un agent</div>
+        <div class="fl-row">
+          <div class="fl" style="margin-bottom:8px">
+            <label>Prénom / Nom</label>
+            <input type="text" id="new-agent-name" placeholder="ex : Aïssatou D.">
+          </div>
+          <div class="fl" style="margin-bottom:8px">
+            <label>Initiales (2 lettres)</label>
+            <input type="text" id="new-agent-init" maxlength="2" placeholder="AD" style="text-transform:uppercase">
+          </div>
+        </div>
+        <div class="fl" style="margin-bottom:8px">
+          <label>Couleur</label>
+          <div class="color-row" id="new-agent-colors"></div>
+        </div>
+        <button class="btn btn-p btn-sm" onclick="addAgent()">+ Ajouter l'agent</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="spacer"></div>
+      <button class="btn btn-sec" onclick="closeAgents()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL SITES ══ -->
+<div class="overlay" id="ov-sites" onclick="if(event.target===this)closeSites()">
+  <div class="modal wide">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title">Gérer les sites / clients</div>
+        <div class="modal-sub">Les sites apparaîtront dans le sélecteur d'affectation</div>
+      </div>
+      <button class="modal-close" onclick="closeSites()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="sites-list" style="margin-bottom:16px"></div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px">
+        <div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">➕ Ajouter un site</div>
+        <div class="fl" style="margin-bottom:8px">
+          <label>Nom du client / site</label>
+          <input type="text" id="new-site-name" placeholder="ex : Cabinet Médical Nguyen">
+        </div>
+        <div class="fl" style="margin-bottom:8px">
+          <label>Adresse / repère (facultatif)</label>
+          <input type="text" id="new-site-addr" placeholder="ex : 12 rue X, 75012 Paris">
+        </div>
+        <div class="fl" style="margin-bottom:8px">
+          <label>Couleur</label>
+          <div class="color-row" id="new-site-colors"></div>
+        </div>
+        <button class="btn btn-p btn-sm" onclick="addSite()">+ Ajouter le site</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="spacer"></div>
+      <button class="btn btn-sec" onclick="closeSites()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════════════════
+// ║  STARSNETT — QUI EST OÙ ? — Planning hebdo des agents
+// ║  Persistance JSONBin (clé "planningData") + fallback localStorage
+// ╚══════════════════════════════════════════════════════════════════════════
+
+// ── CONFIG JSONBIN (même bin que starsnett_gestion_suivi.html, clé séparée) ──
+const JSONBIN_ID  = '69bc22f5aa77b81da9fcb87e';
+const JSONBIN_KEY = '$2a$10$TzSoaR1c16RpxXzZg7zbB.XXI3ikID.U2sqe5JFkXfFKQUxM/0MVW';
+const STORE_KEY   = 'planningData';
+const LS_KEY      = 'starsnett_planning_v2';
+
+// ── PALETTE ───────────────────────────────────────────────────────────────
+const COLORS = [
+  '#162840','#1e3a5c','#c8a96e','#b85a00','#1a52a0',
+  '#1a5c3a','#5a3a8c','#b83030','#7a6200','#0d6e6e',
+  '#a04545','#5c5230','#3a6e87','#7a4a2a','#2c7a5c'
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let data = {
+  agents: [],    // [{ id, name, init, color }]
+  sites:  [],    // [{ id, name, addr, color }]
+  assignments: {} // weekKey -> dayIdx (0..6) -> agentId -> [{ id, siteId, mode, slot, start, end, note }]
+};
+let viewMode = 'agent';    // 'agent' ou 'site'
+let currentWeekStart = null;  // Date (lundi)
+let editingAssign = null; // { weekKey, day, agentId, idx } ou null si nouvelle
+let assignFormState = { mode:'libre' };
+let pickedAgentColor = COLORS[0];
+let pickedSiteColor = COLORS[2];
+
+const DAY_NAMES = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+const DAY_SHORT = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+
+// ── DATE HELPERS ──────────────────────────────────────────────────────────
+function startOfWeek(d){
+  const x = new Date(d);
+  x.setHours(0,0,0,0);
+  const day = (x.getDay() + 6) % 7; // 0 = Lundi
+  x.setDate(x.getDate() - day);
+  return x;
+}
+function addDays(d, n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function isoWeekKey(d){
+  // YYYY-Www (ISO)
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = (t.getUTCDay() + 6) % 7;
+  t.setUTCDate(t.getUTCDate() - dayNum + 3);
+  const firstThursday = t.getTime();
+  t.setUTCMonth(0, 1);
+  if (t.getUTCDay() !== 4) t.setUTCMonth(0, 1 + ((4 - t.getUTCDay()) + 7) % 7);
+  const wk = 1 + Math.ceil((firstThursday - t) / 604800000);
+  return new Date(d).getFullYear() + '-W' + String(wk).padStart(2,'0');
+}
+function fmtDayShort(d){
+  return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+}
+function isSameDay(a,b){ return a.toDateString()===b.toDateString(); }
+function fmtRange(start){
+  const end = addDays(start,6);
+  const sm = start.toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
+  const em = end.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  return 'Du ' + sm + ' au ' + em;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+async function init(){
+  const now = new Date();
+  document.getElementById('tn-date').textContent =
+    now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  currentWeekStart = startOfWeek(now);
+  buildColorPickers();
+  await loadData();
+  render();
+}
+
+// ── DATA PERSISTENCE ──────────────────────────────────────────────────────
+function setSync(state, msg){
+  const el = document.getElementById('sync-pill');
+  el.className = 'sync-pill ' + (state||'');
+  el.textContent = msg || '';
+}
+async function loadData(){
+  // 1) tente JSONBin
+  try{
+    setSync('', 'Chargement…');
+    const r = await fetch('https://api.jsonbin.io/v3/b/'+JSONBIN_ID+'/latest', {
+      headers:{'X-Master-Key':JSONBIN_KEY}
+    });
+    if(!r.ok) throw new Error('http '+r.status);
+    const d = await r.json();
+    if(d.record && d.record[STORE_KEY]){
+      const pd = d.record[STORE_KEY];
+      if(pd.agents) data.agents = pd.agents;
+      if(pd.sites) data.sites = pd.sites;
+      if(pd.assignments) data.assignments = pd.assignments;
+      setSync('ok','Synchronisé');
+      return;
+    }
+    setSync('ok','Prêt');
+  }catch(e){
+    // 2) fallback localStorage
+    try{
+      const ls = localStorage.getItem(LS_KEY);
+      if(ls){
+        const pd = JSON.parse(ls);
+        if(pd.agents) data.agents = pd.agents;
+        if(pd.sites) data.sites = pd.sites;
+        if(pd.assignments) data.assignments = pd.assignments;
+        setSync('err','Hors-ligne (local)');
+        return;
+      }
+    }catch(_){}
+    setSync('err','Hors-ligne');
+  }
+}
+async function saveData(){
+  // toujours localStorage
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(data)); }catch(_){}
+  // puis JSONBin (merge avec autres clés)
+  try{
+    setSync('', 'Sauvegarde…');
+    const cur = await fetch('https://api.jsonbin.io/v3/b/'+JSONBIN_ID+'/latest', {
+      headers:{'X-Master-Key':JSONBIN_KEY}
+    });
+    const existing = cur.ok ? (await cur.json()).record : {};
+    const payload = { ...existing, [STORE_KEY]: data };
+    const r = await fetch('https://api.jsonbin.io/v3/b/'+JSONBIN_ID, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      body: JSON.stringify(payload)
+    });
+    if(!r.ok) throw new Error('http '+r.status);
+    setSync('ok','Synchronisé');
+  }catch(e){
+    setSync('err','Local uniquement');
+  }
+}
+
+// ── COLOR PICKERS ─────────────────────────────────────────────────────────
+function buildColorPickers(){
+  const elA = document.getElementById('new-agent-colors');
+  const elS = document.getElementById('new-site-colors');
+  elA.innerHTML = COLORS.map((c,i)=>'<span class="color-dot'+(c===pickedAgentColor?' selected':'')+'" style="background:'+c+'" onclick="pickAgentColor(\''+c+'\',this)"></span>').join('');
+  elS.innerHTML = COLORS.map((c,i)=>'<span class="color-dot'+(c===pickedSiteColor?' selected':'')+'" style="background:'+c+'" onclick="pickSiteColor(\''+c+'\',this)"></span>').join('');
+}
+function pickAgentColor(c, el){
+  pickedAgentColor = c;
+  document.querySelectorAll('#new-agent-colors .color-dot').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function pickSiteColor(c, el){
+  pickedSiteColor = c;
+  document.querySelectorAll('#new-site-colors .color-dot').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── AGENTS ────────────────────────────────────────────────────────────────
+function openAgents(){
+  renderAgentsList();
+  document.getElementById('ov-agents').classList.add('open');
+}
+function closeAgents(){ document.getElementById('ov-agents').classList.remove('open'); }
+function renderAgentsList(){
+  const el = document.getElementById('agents-list');
+  if(!data.agents.length){
+    el.innerHTML = '<div style="padding:18px;text-align:center;color:var(--muted);font-size:13px;background:var(--surface2);border:1px dashed var(--border);border-radius:10px">Aucun agent pour le moment. Ajoutez votre premier agent ci-dessous.</div>';
+    return;
+  }
+  el.innerHTML = data.agents.map(a=>`
+    <div class="list-item">
+      <div class="swatch" style="background:${a.color};display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:10px;width:26px;height:26px">${a.init}</div>
+      <div class="li-body">
+        <div class="li-name">${escapeHtml(a.name)}</div>
+        <div class="li-meta">${countAssignsForAgent(a.id)} affectation(s) cette semaine</div>
+      </div>
+      <button class="li-del" onclick="deleteAgent('${a.id}')" title="Supprimer">✕</button>
+    </div>`).join('');
+}
+function addAgent(){
+  const name = document.getElementById('new-agent-name').value.trim();
+  let init = document.getElementById('new-agent-init').value.trim().toUpperCase();
+  if(!name){ toast('Indiquez un nom d\'agent','err'); return; }
+  if(!init){ init = name.split(' ').map(s=>s[0]||'').join('').slice(0,2).toUpperCase() || '??'; }
+  data.agents.push({
+    id: 'a_'+Date.now()+'_'+Math.floor(Math.random()*1000),
+    name, init: init.slice(0,2), color: pickedAgentColor
+  });
+  document.getElementById('new-agent-name').value='';
+  document.getElementById('new-agent-init').value='';
+  saveData(); renderAgentsList(); render();
+  toast('Agent ajouté','ok');
+}
+function deleteAgent(id){
+  if(!confirm('Supprimer cet agent ? Ses affectations seront également effacées.')) return;
+  data.agents = data.agents.filter(a=>a.id!==id);
+  // purger affectations
+  Object.keys(data.assignments).forEach(wk=>{
+    Object.keys(data.assignments[wk]).forEach(d=>{
+      if(data.assignments[wk][d][id]) delete data.assignments[wk][d][id];
+    });
+  });
+  saveData(); renderAgentsList(); render();
+  toast('Agent supprimé','ok');
+}
+
+// ── SITES ─────────────────────────────────────────────────────────────────
+function openSites(){
+  renderSitesList();
+  document.getElementById('ov-sites').classList.add('open');
+}
+function closeSites(){ document.getElementById('ov-sites').classList.remove('open'); }
+function renderSitesList(){
+  const el = document.getElementById('sites-list');
+  if(!data.sites.length){
+    el.innerHTML = '<div style="padding:18px;text-align:center;color:var(--muted);font-size:13px;background:var(--surface2);border:1px dashed var(--border);border-radius:10px">Aucun site enregistré. Ajoutez vos clients ci-dessous.</div>';
+    return;
+  }
+  el.innerHTML = data.sites.map(s=>`
+    <div class="list-item">
+      <div class="swatch sq" style="background:${s.color}"></div>
+      <div class="li-body">
+        <div class="li-name">${escapeHtml(s.name)}</div>
+        <div class="li-meta">${escapeHtml(s.addr||'—')}</div>
+      </div>
+      <button class="li-del" onclick="deleteSite('${s.id}')" title="Supprimer">✕</button>
+    </div>`).join('');
+}
+function addSite(){
+  const name = document.getElementById('new-site-name').value.trim();
+  const addr = document.getElementById('new-site-addr').value.trim();
+  if(!name){ toast('Indiquez un nom de site','err'); return; }
+  data.sites.push({
+    id: 's_'+Date.now()+'_'+Math.floor(Math.random()*1000),
+    name, addr, color: pickedSiteColor
+  });
+  document.getElementById('new-site-name').value='';
+  document.getElementById('new-site-addr').value='';
+  saveData(); renderSitesList(); render();
+  toast('Site ajouté','ok');
+}
+function deleteSite(id){
+  if(!confirm('Supprimer ce site ? Les affectations associées seront également effacées.')) return;
+  data.sites = data.sites.filter(s=>s.id!==id);
+  Object.keys(data.assignments).forEach(wk=>{
+    Object.keys(data.assignments[wk]).forEach(d=>{
+      Object.keys(data.assignments[wk][d]).forEach(aid=>{
+        data.assignments[wk][d][aid] = data.assignments[wk][d][aid].filter(a=>a.siteId!==id);
+      });
+    });
+  });
+  saveData(); renderSitesList(); render();
+  toast('Site supprimé','ok');
+}
+
+// ── ASSIGN MODAL ──────────────────────────────────────────────────────────
+function openAssign(agentId, dayIdx, idx){
+  // Si pas d'agents ou de sites, on bloque proprement
+  if(!data.agents.length){
+    toast('Ajoutez d\'abord un agent','err');
+    openAgents();
+    return;
+  }
+  if(!data.sites.length){
+    toast('Ajoutez d\'abord un site / client','err');
+    openSites();
+    return;
+  }
+  // Selects
+  const agentSel = document.getElementById('as-agent');
+  agentSel.innerHTML = data.agents.map(a=>'<option value="'+a.id+'">'+escapeHtml(a.name)+'</option>').join('');
+  const daySel = document.getElementById('as-day');
+  daySel.innerHTML = DAY_NAMES.map((n,i)=>{
+    const d = addDays(currentWeekStart, i);
+    return '<option value="'+i+'">'+n+' '+fmtDayShort(d)+'</option>';
+  }).join('');
+  const siteSel = document.getElementById('as-site');
+  siteSel.innerHTML = data.sites.map(s=>'<option value="'+s.id+'">'+escapeHtml(s.name)+'</option>').join('');
+
+  // Pré-remplissage
+  if(agentId) agentSel.value = agentId;
+  if(dayIdx!==null && dayIdx!==undefined) daySel.value = dayIdx;
+
+  const wk = isoWeekKey(currentWeekStart);
+  editingAssign = null;
+  document.getElementById('as-del-btn').style.display = 'none';
+  document.getElementById('assign-title').textContent = 'Nouvelle affectation';
+  document.getElementById('assign-sub').textContent = 'Semaine ' + wk;
+
+  // Édition d'une affectation existante ?
+  if(agentId && dayIdx!==null && idx!==null && idx!==undefined){
+    const arr = ((data.assignments[wk]||{})[dayIdx]||{})[agentId]||[];
+    const a = arr[idx];
+    if(a){
+      editingAssign = { weekKey: wk, day: dayIdx, agentId, idx };
+      document.getElementById('assign-title').textContent = 'Modifier l\'affectation';
+      document.getElementById('as-del-btn').style.display = 'inline-flex';
+      siteSel.value = a.siteId;
+      document.getElementById('as-note').value = a.note||'';
+      if(a.mode==='precis'){
+        setMode('precis');
+        document.getElementById('as-start').value = a.start||'08:00';
+        document.getElementById('as-end').value = a.end||'10:30';
+      }else{
+        setMode('libre');
+        const slot = a.slot||'Matin';
+        const presetSlots = ['Matin','Midi','Après-midi','Soir','Journée'];
+        if(presetSlots.includes(slot)){
+          document.getElementById('as-slot').value = slot;
+          document.getElementById('as-slot-text').style.display = 'none';
+          document.getElementById('as-slot-text').value = '';
+        }else{
+          document.getElementById('as-slot').value = '__autre__';
+          document.getElementById('as-slot-text').style.display = 'block';
+          document.getElementById('as-slot-text').value = slot;
+        }
+      }
+    }
+  } else {
+    // Nouvelle : reset valeurs
+    setMode('libre');
+    document.getElementById('as-slot').value = 'Matin';
+    document.getElementById('as-slot-text').style.display = 'none';
+    document.getElementById('as-slot-text').value = '';
+    document.getElementById('as-note').value = '';
+    document.getElementById('as-start').value = '08:00';
+    document.getElementById('as-end').value = '10:30';
+  }
+
+  // Affichage texte libre si __autre__
+  document.getElementById('as-slot').onchange = function(){
+    document.getElementById('as-slot-text').style.display = this.value==='__autre__' ? 'block' : 'none';
+  };
+
+  document.getElementById('ov-assign').classList.add('open');
+}
+function closeAssign(){
+  document.getElementById('ov-assign').classList.remove('open');
+  editingAssign = null;
+}
+function setMode(m){
+  assignFormState.mode = m;
+  document.querySelectorAll('#seg-mode button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#seg-mode button')[m==='libre'?0:1].classList.add('active');
+  document.getElementById('mode-libre-wrap').style.display = m==='libre' ? 'block' : 'none';
+  document.getElementById('mode-precis-wrap').style.display = m==='precis' ? 'grid' : 'none';
+}
+function saveAssign(){
+  const agentId = document.getElementById('as-agent').value;
+  const dayIdx = parseInt(document.getElementById('as-day').value, 10);
+  const siteId = document.getElementById('as-site').value;
+  const mode = assignFormState.mode;
+  const note = document.getElementById('as-note').value.trim();
+  const wk = isoWeekKey(currentWeekStart);
+
+  let payload = { id: 'as_'+Date.now()+'_'+Math.floor(Math.random()*1000), siteId, mode, note };
+  if(mode==='precis'){
+    payload.start = document.getElementById('as-start').value || '08:00';
+    payload.end   = document.getElementById('as-end').value   || '10:30';
+    if(payload.end <= payload.start){
+      toast('L\'heure de fin doit être après le début','err');
+      return;
+    }
+  } else {
+    const sel = document.getElementById('as-slot').value;
+    payload.slot = (sel === '__autre__')
+      ? (document.getElementById('as-slot-text').value.trim() || 'Libre')
+      : sel;
+  }
+
+  if(!data.assignments[wk]) data.assignments[wk] = {};
+  if(!data.assignments[wk][dayIdx]) data.assignments[wk][dayIdx] = {};
+  if(!data.assignments[wk][dayIdx][agentId]) data.assignments[wk][dayIdx][agentId] = [];
+
+  if(editingAssign){
+    const arr = data.assignments[editingAssign.weekKey][editingAssign.day][editingAssign.agentId];
+    // si on a changé d'agent / jour / semaine, supprimer de l'ancien emplacement et créer au nouveau
+    if(editingAssign.weekKey!==wk || editingAssign.day!==dayIdx || editingAssign.agentId!==agentId){
+      arr.splice(editingAssign.idx, 1);
+      data.assignments[wk][dayIdx][agentId].push(payload);
+    } else {
+      payload.id = arr[editingAssign.idx].id;
+      arr[editingAssign.idx] = payload;
+    }
+  } else {
+    data.assignments[wk][dayIdx][agentId].push(payload);
+  }
+
+  closeAssign();
+  saveData(); render();
+  toast('Affectation enregistrée','ok');
+}
+function deleteAssign(){
+  if(!editingAssign) return;
+  if(!confirm('Supprimer cette affectation ?')) return;
+  const { weekKey, day, agentId, idx } = editingAssign;
+  data.assignments[weekKey][day][agentId].splice(idx, 1);
+  closeAssign();
+  saveData(); render();
+  toast('Affectation supprimée','ok');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function render(){
+  // labels
+  const ws = currentWeekStart;
+  const we = addDays(ws, 6);
+  const wk = isoWeekKey(ws);
+  document.getElementById('week-label').textContent = 'Semaine ' + wk.split('-W')[1] + ' · ' +
+    ws.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) + ' → ' +
+    we.toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('week-sub').textContent = fmtRange(ws);
+
+  renderKpis();
+  renderPlanning();
+  renderLegend();
+}
+function renderKpis(){
+  const wk = isoWeekKey(currentWeekStart);
+  const wkData = data.assignments[wk] || {};
+  let total = 0, agentsUsed = new Set(), sitesUsed = new Set(), minutes = 0;
+  Object.keys(wkData).forEach(d=>{
+    Object.keys(wkData[d]).forEach(aid=>{
+      const arr = wkData[d][aid];
+      arr.forEach(a=>{
+        total++;
+        agentsUsed.add(aid);
+        sitesUsed.add(a.siteId);
+        if(a.mode==='precis' && a.start && a.end){
+          const [h1,m1] = a.start.split(':').map(Number);
+          const [h2,m2] = a.end.split(':').map(Number);
+          minutes += (h2*60+m2) - (h1*60+m1);
+        }
+      });
+    });
+  });
+  document.getElementById('kpi-assigns').textContent = total;
+  document.getElementById('kpi-agents').textContent = agentsUsed.size;
+  document.getElementById('kpi-sites').textContent = sitesUsed.size;
+  const hours = Math.floor(minutes/60);
+  const mins = minutes%60;
+  document.getElementById('kpi-hours').textContent = minutes>0 ? (hours + (mins?'h'+String(mins).padStart(2,'0'):'h')) : '0h';
+}
+function renderPlanning(){
+  const wrap = document.getElementById('planning-wrap');
+  // Empty state global
+  if(!data.agents.length || !data.sites.length){
+    wrap.innerHTML = `
+      <div class="empty-state">
+        <div class="ico">🗓️</div>
+        <h3>Bienvenue dans « Qui est où ? »</h3>
+        <p>Pour démarrer, ajoutez au moins un agent et un site / client. Vous pourrez ensuite cliquer sur n'importe quelle case du planning pour assigner une intervention.</p>
+        <div class="actions">
+          <button class="btn btn-p" onclick="openAgents()">👥 Ajouter un agent</button>
+          <button class="btn btn-acc" onclick="openSites()">🏢 Ajouter un site</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if(viewMode==='agent') renderByAgent(wrap);
+  else renderBySite(wrap);
+}
+
+function dayHeaderHtml(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  let html = '<th class="first-col">' + (viewMode==='agent' ? 'Agent' : 'Site / Client') + '</th>';
+  for(let i=0;i<7;i++){
+    const d = addDays(currentWeekStart, i);
+    const isToday = isSameDay(d, today);
+    html += '<th class="day-h'+(isToday?' today':'')+'">'+
+      DAY_SHORT[i] +
+      '<span class="day-h-num">' + d.getDate() + '</span>' +
+      '</th>';
+  }
+  return html;
+}
+
+function renderByAgent(wrap){
+  const wk = isoWeekKey(currentWeekStart);
+  const today = new Date(); today.setHours(0,0,0,0);
+  let html = '<div class="planning-scroll"><table class="planning-grid"><thead><tr>'+dayHeaderHtml()+'</tr></thead><tbody>';
+  data.agents.forEach(agent=>{
+    html += '<tr><td class="row-h">';
+    html +=   '<div class="row-name"><span class="row-init" style="background:'+agent.color+'">'+agent.init+'</span>'+escapeHtml(agent.name)+'</div>';
+    html +=   '<div class="row-meta">'+countAssignsForAgent(agent.id)+' affectation(s) cette semaine</div>';
+    html += '</td>';
+    for(let i=0;i<7;i++){
+      const d = addDays(currentWeekStart, i);
+      const isToday = isSameDay(d, today);
+      const arr = (((data.assignments[wk]||{})[i]||{})[agent.id])||[];
+      html += '<td><div class="day-cell'+(isToday?' today-cell':'')+'" onclick="cellClick(\''+agent.id+'\','+i+', event)">';
+      arr.forEach((a, idx)=>{
+        const site = data.sites.find(s=>s.id===a.siteId);
+        const siteName = site ? site.name : '(site supprimé)';
+        const color = site ? site.color : '#7a7469';
+        const timeStr = a.mode==='precis' ? (a.start+' – '+a.end) : (a.slot||'');
+        html += '<div class="assign" style="background:'+color+'" onclick="event.stopPropagation();openAssign(\''+agent.id+'\','+i+','+idx+')" title="'+escapeHtml(siteName + ' • ' + timeStr + (a.note?' • '+a.note:''))+'">';
+        html +=   '<span class="assign-site">'+escapeHtml(siteName)+'</span>';
+        if(timeStr) html += '<div class="assign-time">'+escapeHtml(timeStr)+'</div>';
+        if(a.note)  html += '<div class="assign-note">'+escapeHtml(a.note)+'</div>';
+        html += '</div>';
+      });
+      html += '<div class="day-cell-empty">+</div>';
+      html += '</div></td>';
+    }
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  wrap.innerHTML = html;
+}
+
+function renderBySite(wrap){
+  const wk = isoWeekKey(currentWeekStart);
+  const today = new Date(); today.setHours(0,0,0,0);
+  // construit un index : site -> day -> [{agent, assign}]
+  const byS = {};
+  data.sites.forEach(s=>{ byS[s.id] = [[],[],[],[],[],[],[]]; });
+  const wkData = data.assignments[wk] || {};
+  Object.keys(wkData).forEach(dStr=>{
+    const d = parseInt(dStr,10);
+    Object.keys(wkData[d]).forEach(aid=>{
+      wkData[d][aid].forEach(a=>{
+        if(byS[a.siteId]) byS[a.siteId][d].push({ agentId: aid, a });
+      });
+    });
+  });
+
+  let html = '<div class="planning-scroll"><table class="planning-grid"><thead><tr>'+dayHeaderHtml()+'</tr></thead><tbody>';
+  data.sites.forEach(site=>{
+    html += '<tr><td class="row-h">';
+    html +=   '<div class="row-name"><span class="row-init sq" style="background:'+site.color+';border-radius:5px">🏢</span>'+escapeHtml(site.name)+'</div>';
+    if(site.addr) html += '<div class="row-meta">'+escapeHtml(site.addr)+'</div>';
+    html += '</td>';
+    for(let i=0;i<7;i++){
+      const d = addDays(currentWeekStart, i);
+      const isToday = isSameDay(d, today);
+      const entries = byS[site.id][i] || [];
+      html += '<td><div class="day-cell'+(isToday?' today-cell':'')+'">';
+      entries.forEach(({agentId, a})=>{
+        const agent = data.agents.find(x=>x.id===agentId);
+        const aName = agent ? agent.name : '(agent supprimé)';
+        const color = agent ? agent.color : '#7a7469';
+        const timeStr = a.mode==='precis' ? (a.start+' – '+a.end) : (a.slot||'');
+        const arr = (((data.assignments[wk]||{})[i]||{})[agentId])||[];
+        const idx = arr.findIndex(x=>x.id===a.id);
+        html += '<div class="assign" style="background:'+color+'" onclick="openAssign(\''+agentId+'\','+i+','+idx+')" title="'+escapeHtml(aName + ' • ' + timeStr + (a.note?' • '+a.note:''))+'">';
+        html +=   '<span class="assign-site">'+escapeHtml(aName)+'</span>';
+        if(timeStr) html += '<div class="assign-time">'+escapeHtml(timeStr)+'</div>';
+        if(a.note)  html += '<div class="assign-note">'+escapeHtml(a.note)+'</div>';
+        html += '</div>';
+      });
+      if(!entries.length) html += '<div class="day-cell-empty">·</div>';
+      html += '</div></td>';
+    }
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  wrap.innerHTML = html;
+}
+
+function renderLegend(){
+  const el = document.getElementById('legend');
+  if(viewMode==='agent'){
+    if(!data.sites.length){ el.innerHTML=''; return; }
+    el.innerHTML = '<span style="font-weight:700;color:var(--text)">Sites :</span>' +
+      data.sites.map(s=>'<span class="legend-item"><span class="legend-swatch" style="background:'+s.color+'"></span>'+escapeHtml(s.name)+'</span>').join('');
+  } else {
+    if(!data.agents.length){ el.innerHTML=''; return; }
+    el.innerHTML = '<span style="font-weight:700;color:var(--text)">Agents :</span>' +
+      data.agents.map(a=>'<span class="legend-item"><span class="legend-swatch" style="background:'+a.color+'"></span>'+escapeHtml(a.name)+'</span>').join('');
+  }
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function countAssignsForAgent(aid){
+  const wk = isoWeekKey(currentWeekStart);
+  const wkData = data.assignments[wk] || {};
+  let c = 0;
+  Object.keys(wkData).forEach(d=>{ if(wkData[d][aid]) c += wkData[d][aid].length; });
+  return c;
+}
+function cellClick(agentId, dayIdx, ev){
+  // un clic sur la cellule (en dehors d'une chip) crée une nouvelle affectation
+  if(ev && ev.target && ev.target.closest('.assign')) return;
+  openAssign(agentId, dayIdx, null);
+}
+function setView(v){
+  viewMode = v;
+  document.getElementById('view-agent-btn').classList.toggle('active', v==='agent');
+  document.getElementById('view-site-btn').classList.toggle('active',  v==='site');
+  render();
+}
+function navWeek(delta){
+  currentWeekStart = addDays(currentWeekStart, delta*7);
+  render();
+}
+function goToday(){
+  currentWeekStart = startOfWeek(new Date());
+  render();
+}
+function escapeHtml(s){
+  if(s===null || s===undefined) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function toast(msg, type){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type||'info');
+  setTimeout(()=>{ t.className = 'toast ' + (type||'info'); }, 2400);
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
