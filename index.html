@@ -199,7 +199,7 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
 .abs-add-row select:focus, .abs-add-row input:focus { border-color:#E63946; }
 .abs-save-btn { padding:6px 12px; background:#E63946; border:none; color:#fff; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; }
 .abs-save-btn:hover { background:#c42d38; }
-.vitrerie-card{background:#13151F;border-radius:10px;padding:12px;margin-bottom:8px;border-left:4px solid #4CC9F0;}.vitrerie-card.overdue{border-left-color:#E63946;}.vitrerie-card.soon{border-left-color:#E9C46A;}.vitrerie-card.ok{border-left-color:#2A9D8F;opacity:0.75;}.vitrerie-nom{font-size:14px;font-weight:800;color:#fff;margin-bottom:3px;}.vitrerie-type{font-size:11px;color:#4CC9F0;font-weight:700;margin-bottom:2px;}.vitrerie-adr{font-size:11px;color:#8892A4;margin-bottom:3px;}.vitrerie-freq{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;margin-bottom:4px;}.freq-bimensuel{background:#8338EC22;color:#8338EC;}.freq-mensuel{background:#3A86FF22;color:#3A86FF;}.freq-trimestriel{background:#E9C46A22;color:#E9C46A;}.freq-semestriel{background:#FB560722;color:#FB5607;}.freq-annuel{background:#E6394622;color:#E63946;}.vitrerie-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}.vitrerie-stat{background:#13151F;border-radius:10px;padding:10px 14px;flex:1;min-width:70px;text-align:center;border:1px solid #2A2D3E;}.vitrerie-stat-num{font-size:22px;font-weight:800;}.vitrerie-stat-lbl{font-size:10px;color:#8892A4;margin-top:2px;}.vitrerie-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}.vitrerie-filter{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #2A2D3E;background:#13151F;color:#8892A4;}.vitrerie-filter.on{background:#4CC9F0;border-color:#4CC9F0;color:#0F1117;}.badge-vitrerie-overdue{display:inline-block;background:#E6394622;border:1px solid #E63946;color:#E63946;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}.badge-vitrerie-soon{display:inline-block;background:#E9C46A22;border:1px solid #E9C46A;color:#E9C46A;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}.badge-vitrerie-todo{display:inline-block;background:#4CC9F022;border:1px solid #4CC9F0;color:#4CC9F0;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}
+.vitrerie-card{background:#13151F;border-radius:10px;padding:12px;margin-bottom:8px;border-left:4px solid #4CC9F0;}.vitrerie-card.overdue{border-left-color:#E63946;}.vitrerie-card.soon{border-left-color:#E9C46A;}.vitrerie-card.ok{border-left-color:#2A9D8F;opacity:0.75;}.vitrerie-nom{font-size:14px;font-weight:800;color:#fff;margin-bottom:3px;}.vitrerie-type{font-size:11px;color:#4CC9F0;font-weight:700;margin-bottom:2px;}.vitrerie-adr{font-size:11px;color:#8892A4;margin-bottom:3px;}.vitrerie-freq{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;margin-bottom:4px;}.freq-hebdo{background:#06D6A022;color:#06D6A0;}.freq-bimensuel{background:#8338EC22;color:#8338EC;}.freq-mensuel{background:#3A86FF22;color:#3A86FF;}.freq-trimestriel{background:#E9C46A22;color:#E9C46A;}.freq-semestriel{background:#FB560722;color:#FB5607;}.freq-annuel{background:#E6394622;color:#E63946;}.vitrerie-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}.vitrerie-stat{background:#13151F;border-radius:10px;padding:10px 14px;flex:1;min-width:70px;text-align:center;border:1px solid #2A2D3E;}.vitrerie-stat-num{font-size:22px;font-weight:800;}.vitrerie-stat-lbl{font-size:10px;color:#8892A4;margin-top:2px;}.vitrerie-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}.vitrerie-filter{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #2A2D3E;background:#13151F;color:#8892A4;}.vitrerie-filter.on{background:#4CC9F0;border-color:#4CC9F0;color:#0F1117;}.badge-vitrerie-overdue{display:inline-block;background:#E6394622;border:1px solid #E63946;color:#E63946;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}.badge-vitrerie-soon{display:inline-block;background:#E9C46A22;border:1px solid #E9C46A;color:#E9C46A;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}.badge-vitrerie-todo{display:inline-block;background:#4CC9F022;border:1px solid #4CC9F0;color:#4CC9F0;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}
 </style>
 </head>
 <body>
@@ -1499,6 +1499,8 @@ function openDetail(idx) {
   if (s.duree) body += row('⏱️ Durée / passage', s.duree + ' h');
   if (s.finContrat) body += row('🏁 Fin de contrat', '<span style="color:#FB5607;font-weight:700">'+escHtml(s.finContrat)+'</span>');
   if (s.chantier && s.chantier !== s.n) body += row('🔗 Chantier Pégase', '<span style="font-size:12px;color:#8892A4">'+escHtml(s.chantier)+'</span>');
+  var fbd = factBadge(s, false);
+  if (fbd) body += row('💰 Règlements', fbd + ' <span style="font-size:10px;color:#666">(source : Suivi des factures)</span>');
   if (s.notes) body += row('💬 Consignes', '<span style="white-space:pre-wrap;font-size:12px;color:#ccc">'+escHtml(s.notes)+'</span>');
   if (s.photo) {
     body += '<div style="margin:12px 0;border-radius:10px;overflow:hidden;border:1px solid #2A2D3E;cursor:pointer" onclick="closeDetail();showPhotoIdx('+idx+')">'
@@ -2269,6 +2271,7 @@ function mkCard(s, idx) {
     + (s.duree ? '<div style="font-size:11px;color:#2A9D8F">⏱️ ' + s.duree + 'h / passage</div>' : '')
     + (s.finContrat ? '<div style="font-size:10px;color:#FB5607;font-weight:700;margin-top:2px">🏁 Fin de contrat : ' + s.finContrat + '</div>' : '')
     + (function(){ var badge = ancienneteBadge(s.n, s.dateContrat); return badge ? '<div style="margin-top:3px">'+badge+'</div>' : ''; })()
+    + (function(){ var fb = factBadge(s, true); return fb ? '<div style="margin-top:3px">'+fb+'</div>' : ''; })()
     + (s.notes ? '<div class="notes-section"><div class="notes-label">💬 Consignes</div><div class="notes-text">' + s.notes.substring(0,120) + (s.notes.length>120?'...':'') + '</div></div>' : '')
     + (s.photo ? '<div style="margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid #2A2D3E;cursor:pointer" onclick="event.stopPropagation();showPhotoIdx(' + DATA.indexOf(s) + ')"><img src="' + s.photo + '" style="width:100%;max-height:120px;object-fit:cover;display:block"></div>' : '');
   var absDiv = document.createElement('div');
@@ -2580,11 +2583,125 @@ function startVoiceSearch(){
   r.start();
 }
 
-var VITRERIE_DEFAULT=[{"id":1,"site":"Galerie TEMPLON","adresse":"28 Rue du grenier Saint Lazare 75003 Paris","type":"Int + Ext (2x/mois)","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":2,"site":"JASMIN CAPITAL","adresse":"32 RUE DE CAUMARTIN 75009 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":3,"site":"Avocat à la cour","adresse":"137 Boulevard Magenta 75010 Paris","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":4,"site":"AD HOMINEM","adresse":"5 Rue Beffroy 92200 NEUILLY SUR SEINE","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":5,"site":"ARCHITRIO","adresse":"51, Rue Barrault 75013 PARIS","type":"Int + Ext","frequence":"trimestriel","agent":"","notes":"","dernierFait":null},{"id":6,"site":"ASTER FAB","adresse":"26, avenue de l'Opéra 75002 PARIS","type":"Int + Ext","frequence":"trimestriel","agent":"","notes":"","dernierFait":null},{"id":7,"site":"ATELIER COQLICO","adresse":"101 RUE LEGENDRE 75017 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":8,"site":"CHIMI SAS","adresse":"127 RUE VIEILLE TEMPLE 75003 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":9,"site":"CNDO BOULOGNE","adresse":"28 RUE GEORGES SOREL 92100 BOULOGNE BILLANCOURT","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":10,"site":"CNDO NATION Paris 6ème","adresse":"32 RUE DU FOUR 75006 PARIS","type":"Int + Ext (2x/mois)","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":11,"site":"CNDO NATION PO7","adresse":"78 RUE ST DOMINIQUE 75007 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":12,"site":"CNDO PARIS 16EME","adresse":"19 AVENUE DE LA GRANDE ARMÉE 75016 PARIS","type":"Int + Ext (2x/mois)","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":13,"site":"ELSA GARY","adresse":"154 RUE DE CHARENTON 75012 PARIS","type":"Int + Ext (2x/mois)","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":14,"site":"ENVELCOM LUXIUM","adresse":"15 RUE JEAN PIERRE TIMBAUD 78500 SARTROUVILLE","type":"Int + Ext (semestriel)","frequence":"semestriel","agent":"","notes":"","dernierFait":null},{"id":15,"site":"EUROPAIN GESTION","adresse":"64, Rue Caumartin 75009 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":16,"site":"FRANCE PRO HYGIENE","adresse":"189 RUE D'AUBERVILLIERS 75018 PARIS","type":"Int + Ext","frequence":"bimensuel","agent":"","notes":"","dernierFait":null},{"id":17,"site":"GOLDER & PARTNERS","adresse":"5 rue saint sauveur 75002 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":18,"site":"MAG MAX PRODUCTIONS","adresse":"175 AV ACHILLE PERETTI 92200 NEUILLY SUR SEINE","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":19,"site":"Manufacture PRELLE","adresse":"5 Place des Victoires, 75001 Paris","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":20,"site":"NOUS EPICERIES ANTI GASPI","adresse":"221 Boulevard Davout 75020 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":21,"site":"PLANTUREUX ET ASSOCIES","adresse":"36 RUE DE PICPUS 75012 PARIS","type":"Int + Ext","frequence":"trimestriel","agent":"","notes":"","dernierFait":null},{"id":22,"site":"POLETTE","adresse":"91 RUE DE RIVOLI 75001 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":23,"site":"SEIZE CONSULTING","adresse":"20 RUE CHAROLAIS 75012 PARIS","type":"Int + Ext (2x/mois)","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":24,"site":"VALOMBREUSE","adresse":"66 RUE DU FAUBOURG SAINT HONORE 75008 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":25,"site":"VENDIS CAPITAL MANAGEMENT SA","adresse":"36 BOULEVARD HAUSSMANN 75009 PARIS","type":"Int + Ext","frequence":"trimestriel","agent":"","notes":"","dernierFait":null},{"id":26,"site":"YOUNG HAPPY","adresse":"80 RUE MOUFFETARD 75005 PARIS","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":27,"site":"CDM LAVOISIER","adresse":"18 RUE DE LA PEPINIERE 75008 PARIS","type":"Int + Ext (trimestriel)","frequence":"trimestriel","agent":"","notes":"","dernierFait":null},{"id":28,"site":"Association Sportive et Gymnique de Bagnolet","adresse":"172 Rue Sadi Carnot 93170 Bagnolet","type":"Int + Ext","frequence":"semestriel","agent":"","notes":"","dernierFait":null},{"id":29,"site":"KRYS OPTIQUE  LEWIN","adresse":"78, avenue de la République 92120 MONTROUGE","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":30,"site":"LES ABBESSES IMMOBILIER","adresse":"52 RUE D'ORSEL 75018 PARIS","type":"Int + Ext","frequence":"trimestriel","agent":"","notes":"","dernierFait":null},{"id":31,"site":"ORID AVOCATS","adresse":"77, Avenue des Champs-Elysées 75008 Paris","type":"Int + Ext","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":32,"site":"ZEEEGGS","adresse":"96 RUE BLANCHE 75009 PARIS","type":"Int + Ext (trimestriel)","frequence":"trimestriel","agent":"","notes":"","dernierFait":null},{"id":33,"site":"BERCY COPIE","adresse":"55 RUE DE MONTREUIL 75011 PARIS","type":"Nettoyage vitres","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":34,"site":"SCPFAURE VIDECOQ & ERAUD","adresse":"60 BOULEVARD HUSSON 91170 VITRY CHATILLON","type":"Nettoyage vitres","frequence":"mensuel","agent":"","notes":"","dernierFait":null},{"id":35,"site":"RIMADESIO","adresse":"25 AVENUE RAPP 75007 PARIS","type":"Nettoyage vitres","frequence":"mensuel","agent":"","notes":"","dernierFait":null}];
+var VITRERIE_DEFAULT=[{"id":1,"site":"16 PARIS","adresse":"5 RUE ABEL - 75012 - PARIS","type":"1 FOIS/MOIS *","frequence":"mensuel","agent":"MAMADY DIARRA","notes":"","dernierFait":null},
+{"id":2,"site":"1G SOLUTIONS","adresse":"77 RUE REAUMUR 75002 PARIS","type":"1 FOIS TOUS LES 2 MOIS","frequence":"mensuel","agent":"TOURÉ, MAMADOU","notes":"","dernierFait":null},
+{"id":3,"site":"421 PRODUCTIONS","adresse":"172 RUE DE CHARONNE 75011 PARIS","type":"1 FOIS/MOIS*","frequence":"mensuel","agent":"SAMBOU FISSOUROU","notes":"","dernierFait":null},
+{"id":4,"site":"A LA MAISONDU CADEAU MAISON B","adresse":"17 RUE DE L'ANNONCIATION 75016 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":5,"site":"ACT&NOTAIRES ASOCIES","adresse":"14 RUE OLIVIER DE SERRES 75015 PARIS","type":"EXTERIEURE 1 FS/TS LES 15 JOURS INTERIEUR 1 FOIS/MOIS VERRIERE 1 FOIS/AN*","frequence":"bimensuel","agent":"FODIE 1 PT FRERE ADAMA","notes":"","dernierFait":null},
+{"id":6,"site":"AD-HOMIMES","adresse":"135 RUE DE BILLANCOURT 92100 BOULOGNE BILLANCOURT","type":"TRIMESTRIELLE* OK","frequence":"trimestriel","agent":"FODIE 2 MAMADOU TOURE","notes":"","dernierFait":null},
+{"id":7,"site":"ADESOFT","adresse":"71 RUE DU FAUBOURG ST ANTOINE 75011 PARIS","type":"TRIMESTRIELLE OK","frequence":"trimestriel","agent":"GANDEGA","notes":"","dernierFait":null},
+{"id":8,"site":"ALAIN BENSOUSSAN","adresse":"58, BOULEVARD GOUVION SAINT CYR 75017 PARIS","type":"TRIMESTRIELLE OK","frequence":"trimestriel","agent":"DIANIFABA","notes":"","dernierFait":null},
+{"id":9,"site":"ALPHAJET FAIR INVESTOR","adresse":"18 RUE DE LA PEPINIERE 75008 PARIS","type":"TRIMESTRIELLE OK","frequence":"trimestriel","agent":"DEMBA CISSE","notes":"","dernierFait":null},
+{"id":10,"site":"ALTIDEM","adresse":"201 RUE SAINT MARTIN 75003 PARIS","type":"OFFERT","frequence":"mensuel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":11,"site":"ANGELA BOWER","adresse":"66 RUE DE PARIS 93100 MONTREUIL","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"","notes":"","dernierFait":null},
+{"id":12,"site":"ARCHITRIO","adresse":"51, RUE BARRAULT 75013 PARIS","type":"TRIMESTRIELLE OK","frequence":"trimestriel","agent":"DRAMANE","notes":"","dernierFait":null},
+{"id":13,"site":"ASIANA AIRLINES","adresse":"29 RUE COLISEE 75008 PARIS","type":"1 FOIS/MOIS*","frequence":"mensuel","agent":"ZACARIA CISSÉ","notes":"","dernierFait":null},
+{"id":14,"site":"ASSOCIATION POUR LA JEUNESSE MARINE","adresse":"9 RUE DE LA VEGA 75012 PARIS","type":"2 FOIS/ANS *","frequence":"semestriel","agent":"MAMADOU TOURE","notes":"","dernierFait":null},
+{"id":15,"site":"ASSOCIATION SPORTIVE GYMNIQUE DE BAGNOLET (ASGB)","adresse":"172 RUE SADI CARNOT 93170 BAGNOLET","type":"1 FOIS/SEMESTRE*","frequence":"semestriel","agent":"HADI 2","notes":"","dernierFait":null},
+{"id":16,"site":"ASTER FAB","adresse":"26, AVENUE DE L'OPERA 75001 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"JDEIDI SAKO","notes":"","dernierFait":null},
+{"id":17,"site":"AZKAN GROUP","adresse":"1 QUAI DE LA GARONNE 75019 PARIS","type":"1 FOIS /ANS","frequence":"annuel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":18,"site":"BABYCHOU NEUILLY","adresse":"177 AVENUE ACHILLE PERETTI 92100 NEUILLY SUR SEINE","type":"1 FOIS/MOIS","frequence":"mensuel","agent":"STRA","notes":"","dernierFait":null},
+{"id":19,"site":"BABYCHOU VINCENNES","adresse":"8 RUE DE STRASBOURG 94300 VINCENNES","type":"TRIMESTRIELLE OK","frequence":"trimestriel","agent":"DRAME CISSE","notes":"","dernierFait":null},
+{"id":20,"site":"BERCY COPIE","adresse":"55 RUE DE MONTREUIL 75011 PARIS","type":"1 FOIS /MOIS","frequence":"mensuel","agent":"AMARA FISSOUROU NOUVEAU NUMERO","notes":"","dernierFait":null},
+{"id":21,"site":"BIBLIOTHECA SAS (IDENT)","adresse":"5 BOULEVARD DES BOUVETS 92000 NANTERRE","type":"1 FOIS /MOIS","frequence":"mensuel","agent":"MOUSSA CISSÉ","notes":"","dernierFait":null},
+{"id":22,"site":"BIZAROIDE","adresse":"5 PASSAGE DU CHANTIER 75012 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"KEITA","notes":"","dernierFait":null},
+{"id":23,"site":"BON PARFUMEUR","adresse":"68 RUE DU FAUBOURG POISSONNIERE 75010","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"TOURE MAMADOU","notes":"","dernierFait":null},
+{"id":24,"site":"BON PARFUMEUR","adresse":"17 RUE SAINT CROIX DE LA BRETONNERIE 75004 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"FODIE 1","notes":"","dernierFait":null},
+{"id":25,"site":"BUTTERFLY TRAINING","adresse":"99, RUE DE LA VERRERIE 75004 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":26,"site":"C2L OPHTASANTE","adresse":"91 AVENUE DE CLICHY 75017 PARIS","type":"Lavage des surfaces vitrées intérieures et extérieures à la demande / Tarif : 70€ HT par intervention","frequence":"mensuel","agent":"","notes":"","dernierFait":null},
+{"id":27,"site":"CABINET DENTAIRE PITAGORA","adresse":"177 RUE ST HONORE 75001 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"FODIE 1","notes":"","dernierFait":null},
+{"id":28,"site":"CABINET DENTAIRE TIMSIT JEAN","adresse":"10 RUE LUCIEN BOUGET 91220 BRETIGNY SUR ORGE","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"ADAMA","notes":"","dernierFait":null},
+{"id":29,"site":"CABINET MEDICAL TROTET","adresse":"5 PLACE SALVADOR ALLENDE 94140 ALFORTVILLE","type":"1 FOIS TOUS LES 2 MOIS","frequence":"mensuel","agent":"MAMADOU TOURE","notes":"","dernierFait":null},
+{"id":30,"site":"CABINET SALSET-SAUVAT","adresse":"9 RUE ETEX 75018 PARIS","type":"2 FOIS / MOIS","frequence":"bimensuel","agent":"FODIE CISSE","notes":"","dernierFait":null},
+{"id":31,"site":"CABINET SCM MEDICAL","adresse":"213 AVENUE DE CHOISY 75013 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"MAMADY DIARRA SIDI CAMARA","notes":"","dernierFait":null},
+{"id":32,"site":"CD 92 BASKET","adresse":"56 RUE DES HAUTES PATURES 92000 NANTERRE","type":"SEMESTRIELLE","frequence":"semestriel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":33,"site":"CDM LAVOISIER","adresse":"18 RUE DE LA PEPINIERE 75008 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":34,"site":"CEC PARIS SARL(MILANO)","adresse":"4 RUE DE FURSTEMBERG 75006 PARIS","type":"1 FOIS /TS LES 15 JOURS","frequence":"bimensuel","agent":"SAMBOU FISSOUROU","notes":"","dernierFait":null},
+{"id":35,"site":"CENTRE MEDICAL ET DENTAIRE CHARLES DE GAULLE (A.M.A.S.C)","adresse":"1-9 RUE PIERRE EXPERT ZAC LA MARINE 92700 COLOMBES","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"MAMADOU CISSE ET BAKARY WAIGA","notes":"","dernierFait":null},
+{"id":36,"site":"CERCLE ATHETIQUE DE MONTROUGE","adresse":"60 AVENUE MARX DORMOY 92120 MONTROUGE","type":"TOUT LES JOURS","frequence":"mensuel","agent":"","notes":"","dernierFait":null},
+{"id":37,"site":"CNDO BOULOGNE","adresse":"28 RUE GEORGES SOREL 92100 BOULOGNE BILLANCOURT","type":"2 FOIS/MOIS","frequence":"bimensuel","agent":"MAMADY DIARRA","notes":"","dernierFait":null},
+{"id":38,"site":"CNDO PARIS 12EME","adresse":"24 BIS PLACE DE LA NATION 75012 PARIS","type":"2 FOIS/MOIS","frequence":"bimensuel","agent":"","notes":"","dernierFait":null},
+{"id":39,"site":"CNDO PARIS 16EME","adresse":"19 AVENUE DE LA GRANDE ARMÉE 75016 PARIS","type":"2 FOIS/MOIS","frequence":"bimensuel","agent":"","notes":"","dernierFait":null},
+{"id":40,"site":"CNDO PARIS 6EME","adresse":"32 RUE DU FOUR 75006 PARIS","type":"2 FOIS/MOIS","frequence":"bimensuel","agent":"SAMBOU FISSOUROU","notes":"","dernierFait":null},
+{"id":41,"site":"CNDO PO7","adresse":"78 RUE ST DOMINIQUE 75007 PARIS","type":"2 FOIS/MOIS","frequence":"bimensuel","agent":"HADI CISSE","notes":"","dernierFait":null},
+{"id":42,"site":"COMELIT IMMOTEC","adresse":"18 RUE SEJOURNE 94000 CRETEIL","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"DIARRA MAMADY","notes":"","dernierFait":null},
+{"id":43,"site":"COOLING SYSTEM","adresse":"26 RUE PAUL BELMONDO 75012 PARIS","type":"1 FOIS /MOIS","frequence":"mensuel","agent":"ADAMA CISSE","notes":"","dernierFait":null},
+{"id":44,"site":"DIGISECUR","adresse":"113 BOULEVARD SOULT 75012 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"DEMBA CISSE","notes":"","dernierFait":null},
+{"id":45,"site":"DR COHEN ELISE LAURENCE","adresse":"2 RUE PIERRE JOSEPH REDOUTE 92360 MEUDON-LA-FORET","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"DRAMANE CISSE","notes":"","dernierFait":null},
+{"id":46,"site":"DYNAMIC LED","adresse":"33 RUE DE TOUL 75012 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":47,"site":"ECOFUR SARL/ECCO EUROPE","adresse":"56 RUE FAUBOURG POISSONNIERES 75010 PARIS","type":"2 FOIS / MOIS","frequence":"bimensuel","agent":"BRAHIM MARICO","notes":"","dernierFait":null},
+{"id":48,"site":"ECRIN SECRET (GRIPOIX)","adresse":"71 RUE D'ABOUKIR 75002 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":49,"site":"EDITIONS BRUNO DOUCEY","adresse":"67 RUE DE REUILLY 75012 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"TOURE MAMADOU","notes":"","dernierFait":null},
+{"id":50,"site":"ELSA GARY","adresse":"145 / 154 RUE DE CHARENTON 75012 PARIS","type":"2 FOIS / MOIS","frequence":"bimensuel","agent":"DRAMANE CISSE","notes":"","dernierFait":null},
+{"id":51,"site":"ENTMV","adresse":"25 RUE SAINT AUGUSTIN 75002 PARIS","type":"1FOIS/TOUS LES 15 JOURS","frequence":"bimensuel","agent":"ZACARIA","notes":"","dernierFait":null},
+{"id":52,"site":"ESPACE ORTHO SCOLIOSE","adresse":"1 RUE JACQUES CŒUR 75004 PARIS","type":"CLOISONS 1 FOIS/TRIMESTRE DEVANTURE 1 FOIS/ SEMAINE ADAMA","frequence":"hebdo","agent":"GANDEGA / FODIE 1","notes":"","dernierFait":null},
+{"id":53,"site":"EUKLID","adresse":"3 PASSAGE RAUCH 75011 PARIS 43 RUE SAINT AUGUSTIN 75002 PARIS","type":"1 FOIS/ MOIS","frequence":"mensuel","agent":"TOURE MAHAMADOU","notes":"","dernierFait":null},
+{"id":54,"site":"EUROPAIN GESTION","adresse":"64 RUE CAUMARTIN 75009 PARIS","type":"1 FOIS /MOIS","frequence":"mensuel","agent":"SAMBOU , FISSOUROU","notes":"","dernierFait":null},
+{"id":55,"site":"EVOLUCIM FRANCE LOGIS","adresse":"50 RUE DE LA JONQUIERE 75017 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"ADY CISSE 2","notes":"","dernierFait":null},
+{"id":56,"site":"EVTB","adresse":"124, RUE DE PICPUS 75012 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"FODIE CISSE 1","notes":"","dernierFait":null},
+{"id":57,"site":"EXPLORE STUDIO","adresse":"18 BIS RUE DU TEMPLE 94 ST MAUR","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"DIARRA","notes":"","dernierFait":null},
+{"id":58,"site":"FAIR PLAY","adresse":"ZONE INDUSTRIELLE DES FOSSETTES 95650 GENICOURT","type":"1 FOIS /MOIS","frequence":"mensuel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":59,"site":"FIRMA DIFFUSION","adresse":"12 CHEMINDU MOULIN BASSET 93200 SAINT-SAINT DENIS","type":"1 FOIS SEMAINE","frequence":"hebdo","agent":"DIARRA","notes":"","dernierFait":null},
+{"id":60,"site":"FLEXAM INVEST","adresse":"38 RUE COLISEE 75008 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"ADDI CISSE","notes":"","dernierFait":null},
+{"id":61,"site":"FOREST","adresse":"32 AVENUE GUYNEMER ZA JEAN MERMOZ BATIMENT B 94450 CHEVILLY LARUE","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"BOUBOU FOFANA","notes":"","dernierFait":null},
+{"id":62,"site":"FRANCE PRO HYGIENE","adresse":"189 RUE D'AUBERVILLIERS 75018 PARIS","type":"1 FOIS TOUS LES 2 MOIS","frequence":"mensuel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":63,"site":"GALERIE TEMPLON","adresse":"28 RUE DU GRENIER SAINT LAZARE 75003 PARIS","type":"2 FOIS / MOIS","frequence":"bimensuel","agent":"DEMBA CISSE","notes":"","dernierFait":null},
+{"id":64,"site":"GAUTIER-CONQUET PUMA","adresse":"5 RUE CHARONNE 75011 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"DIALLO","notes":"","dernierFait":null},
+{"id":65,"site":"GIEPS","adresse":"10-12 RUE LECLUSE 75017 PARIS","type":"1 FOIS/ MOIS","frequence":"mensuel","agent":"DIADIE SAKO","notes":"","dernierFait":null},
+{"id":66,"site":"GOLDER & PARTNERS","adresse":"5 RUE SAINT SAINT SAUVEUR 75002 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"DRAMANE","notes":"","dernierFait":null},
+{"id":67,"site":"GTF SIGNALETIQUE","adresse":"132 BOULEVARD SERURIER 75019 PARIS","type":"1 FOIS /MOIS","frequence":"mensuel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":68,"site":"IDY PRODUCTION","adresse":"1 RUE DE L'EGALITE 92220 BAGNEUX","type":"1FOIS/SEMESTRE","frequence":"semestriel","agent":"","notes":"","dernierFait":null},
+{"id":69,"site":"JASMIN CAPITAL","adresse":"18 AVENUE MESSINE 75008 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"FOFANA BOUBOU","notes":"","dernierFait":null},
+{"id":70,"site":"JEUNANG AURELIE","adresse":"4 RUE ESPLANAE JACQUE CHIRAC 92150 SURRENES","type":"1FOIS/MOIS","frequence":"mensuel","agent":"","notes":"","dernierFait":null},
+{"id":71,"site":"KRYS OPTIQUE LEWIN","adresse":"78 AVENUE DE LA REPUBLIQUE 92120 MONTROUGE","type":"2 FOIS / MOIS","frequence":"bimensuel","agent":"FODIE PTT FRERE ADAMA","notes":"","dernierFait":null},
+{"id":72,"site":"L'ATELIER VIKEN","adresse":"68 RUE DE LA CHAUSSÉE D'ANTIN 75009 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"MAYA TIMARE","notes":"","dernierFait":null},
+{"id":73,"site":"LA MODELERIE PARISIENNE","adresse":"172 RUE DE CHARONNE 75011 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"MODIBO FISSOUROU","notes":"","dernierFait":null},
+{"id":74,"site":"LACOSTE ET ASSOCIES","adresse":"10 RUE LABIE 75017 PARIS","type":"2 FOIS PAR AN","frequence":"semestriel","agent":"DIARRA","notes":"","dernierFait":null},
+{"id":75,"site":"LUXIUM","adresse":"15 RUE JEAN PIERRE TIMBAULD 78500 SARTROUVILLE","type":"1 FOIS PAR SEMESTRE","frequence":"semestriel","agent":"FOFAMA BOUBOU","notes":"","dernierFait":null},
+{"id":76,"site":"MAG MAX PRODUCTIONS","adresse":"175 ACHILLE PERETTI 92200 NEUILLY SUR SEINE","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"GANDEGA","notes":"","dernierFait":null},
+{"id":77,"site":"MANUFACTURE PRELLE","adresse":"5 PLACE DES VICTOIRES 75001 PARIS","type":"1 FOIS /trimestre a partir du 1er mars 2024","frequence":"trimestriel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":78,"site":"MATEIA","adresse":"18 RUE DE MOGADOR 75009 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":79,"site":"MCD PROMOTION","adresse":"5 IMPASSE POPINCOUR 75011 PARIS","type":"1 FOIS TOUS LES 2 MOIS","frequence":"mensuel","agent":"DRAME SIKOU","notes":"","dernierFait":null},
+{"id":80,"site":"MEDICAL PLUS","adresse":"40 RUE DE LA REUNION 75020 PARIS","type":"1 FOIS/MOIS INT 2 FOIS/MOIS EXT","frequence":"bimensuel","agent":"FODIE PETIT FRÈRE ADAMA","notes":"","dernierFait":null},
+{"id":81,"site":"MUSIC BUSINESS","adresse":"76 RUE DU CAPITAINE GUYENEMER 92400 COURBEVOIE","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"ASTAN TRAORE","notes":"","dernierFait":null},
+{"id":82,"site":"NDS VERRES","adresse":"9 MAIL JOLIOT CURIE 95310 ST OUEN L' AUMONE","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"BOUBOU FOFANA","notes":"","dernierFait":null},
+{"id":83,"site":"NOUS EPICERIES ANTI GASPI","adresse":"221 BOULEVARD DAVOUT 75020 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"GAYE SOUKOUNA","notes":"","dernierFait":null},
+{"id":84,"site":"NRGY","adresse":"20 RUE DU CHAROLAIS 75012 PARIS","type":"1 FOIS/ SEMAINE","frequence":"hebdo","agent":"ADDI CISSE","notes":"","dernierFait":null},
+{"id":85,"site":"OLIVIER LILIE WANG","adresse":"11 PLACE DE LA NATION 75012 PARIS","type":"1 FOIS/MOIS EXTERIEUR TOUS LES 15 JOURS INTERIEUR","frequence":"bimensuel","agent":"MAMADY DIARRA","notes":"","dernierFait":null},
+{"id":86,"site":"OPTIC 2000","adresse":"87 AVENUE GAMBETTA 75020 PARIS","type":"2 FOIS PAR MOIS","frequence":"bimensuel","agent":"FODIE CISSE 1 PAR WHATSAPP","notes":"","dernierFait":null},
+{"id":87,"site":"OPTIC ALEXIA","adresse":"229 RUE DES PYRENNEES 75020 PARIS","type":"2 FOIS PAR MOIS","frequence":"bimensuel","agent":"FODIE CISSE 1","notes":"","dernierFait":null},
+{"id":88,"site":"ORID AVOCATS","adresse":"77 AVENUE DES CHAMPS ELYSEES 75008 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"MAMADOU TOURE","notes":"","dernierFait":null},
+{"id":89,"site":"PLANTUREUX &ASSOCIES","adresse":"36 RUE DE PICPUS 75012 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"OUSSMANE SAKO","notes":"","dernierFait":null},
+{"id":90,"site":"PROTOTEXTILE","adresse":"28 RUE SABIN 75011 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":91,"site":"RAYPROMAILING","adresse":"34 BIS,RUE DE PICPUS","type":"1 FOIS/ TOUS LES 3 MOIS","frequence":"trimestriel","agent":"","notes":"","dernierFait":null},
+{"id":92,"site":"RIVECOUR","adresse":"112 RUE RÉAUMUR 75002 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":93,"site":"SCI 2123 JMR ARCHITECTE","adresse":"21-23 RUE DES FILLES DU CALVAIRE 75003 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"DRAMANE HAROUNA CAMARA","notes":"","dernierFait":null},
+{"id":94,"site":"SCI IMMOLAK L&K","adresse":"45 RUE EMILE MENIER 75116 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"ADAMA KEITA","notes":"","dernierFait":null},
+{"id":95,"site":"SCI JABALLAH-MAISON MEDICALECLOS FONTAINE","adresse":"1 RUE CHARLE GUSTAVE STOSKOPF 94000 CRETEIL","type":"A LA DEMANDE DU CLIENT","frequence":"mensuel","agent":"FOFANA BOUBOU","notes":"","dernierFait":null},
+{"id":96,"site":"SCM AVOCAT - PLACE DE LA BASTILLE","adresse":"3 PLACE DE LA BASTILLE 75004 PARIS","type":"A LA DEMANDE","frequence":"mensuel","agent":"FODIE CISSE","notes":"","dernierFait":null},
+{"id":97,"site":"SCM CABINET JEAN PIERRE TIMBAUD","adresse":"10 RUE MORAND 75011 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"FODIE 1","notes":"","dernierFait":null},
+{"id":98,"site":"SCM MAGENTA","adresse":"137 BD MAGENTA 75010 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"HADY CISSE","notes":"","dernierFait":null},
+{"id":99,"site":"SCM NATION SANTE DORIAN","adresse":"6 RUE DORIAN 75012 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"DRAMANE","notes":"","dernierFait":null},
+{"id":100,"site":"SCP FAURE VIDECOQ","adresse":"60 BOULEVARD HUSSON 91170 VIRY CHATILLON","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"SEYDOU NOUVEAU CODE 9104","notes":"","dernierFait":null},
+{"id":101,"site":"SEIZE CONSULTING","adresse":"20 RUE CHAROLAIS 75012PARIS","type":"1FOIS TOUT LES 2 MOIS","frequence":"mensuel","agent":"","notes":"","dernierFait":null},
+{"id":102,"site":"SPOON CONSEIL ET INGENIERE","adresse":"5 PASSAGE DRIANCOURT 75012 PARIS","type":"1 FOIS /SEMAINE","frequence":"hebdo","agent":"ADAMA CISSE","notes":"","dernierFait":null},
+{"id":103,"site":"STRADA MARKETING","adresse":"37 BOULEVARD DE VAUX 75001 PARIS","type":"3 FOIS SEMAINE","frequence":"hebdo","agent":"ZAKARIA CISSE","notes":"","dernierFait":null},
+{"id":104,"site":"STUDIO HARMONIC","adresse":"5 PASSAGE DES TALLANDIERS 75011 PARIS","type":"1 FOIS / MOIS AVEC PERCHE ECHAFAUDAGE","frequence":"mensuel","agent":"FODIE 2/GANDEGA","notes":"","dernierFait":null},
+{"id":105,"site":"TEAMSQUARE","adresse":"63 RUE DE RIVOLI 75001 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"FODIE 1","notes":"","dernierFait":null},
+{"id":106,"site":"TIC &TOC","adresse":"13 RUE DE TOCQUEVILLE 75017 PARIS","type":"1 FOIS / MOIS","frequence":"mensuel","agent":"SIDI CAMARA 1","notes":"","dernierFait":null},
+{"id":107,"site":"TISCO INGENIERIE","adresse":"25 RUE DE MAUBEUGE 75009 PARIS","type":"2 FOIS PAR AN","frequence":"semestriel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":108,"site":"VALEA","adresse":"BAT 3B ZONE D'ACTIVITE DES 4 CHEMINS 95540 MERY SUR OISE","type":"1 FOIS TOUS LES 2 MOIS","frequence":"mensuel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":109,"site":"VALOMBREUSE","adresse":"66 RUE DU FAUBOURG SAINT HONORE 75008 PARIS","type":"2 FOIS PAR MOIS","frequence":"bimensuel","agent":"SIDI CAMARA","notes":"","dernierFait":null},
+{"id":110,"site":"VALUE CONSEIL","adresse":"97 RUE PELLEPORT 75020 PARIS","type":"1 FOIS/MOIS EXTERIEUR 1 FOIS /TRIMESTRE INTERIEUR","frequence":"trimestriel","agent":"FOFANA BOUBOU","notes":"","dernierFait":null},
+{"id":111,"site":"VENDIS CAPITAL MENAGEMENT","adresse":"36 BOULEVARD HAUSSMANN 75009 PARIS","type":"TRIMESTRIELLE OK","frequence":"trimestriel","agent":"FODIE 2","notes":"","dernierFait":null},
+{"id":112,"site":"YOUNG HAPPY","adresse":"80 RUE MOUFFETARD 75005 PARIS","type":"1 FOIS /MOIS","frequence":"mensuel","agent":"","notes":"","dernierFait":null},
+{"id":113,"site":"ZANUSO","adresse":"26 RUE SAINT SULPICE 75006 PARIS","type":"2 FOIS PAR MOIS","frequence":"bimensuel","agent":"GANDEGA LUNDI MATIN JEUDI MATIN","notes":"","dernierFait":null},
+{"id":114,"site":"ZEEEGGS","adresse":"96 RUE BLANCHE 75009 PARIS","type":"TRIMESTRIELLE","frequence":"trimestriel","agent":"DRAMANE","notes":"","dernierFait":null},
+{"id":115,"site":"ZERAH","adresse":"7 ET 3 RUE ANTOINE HAJJE 75015 PARIS","type":"1 FOIS / TOUS LES 2 MOIS","frequence":"mensuel","agent":"DEMBA DIA VITRES ADAMA","notes":"","dernierFait":null}];
 var VITRERIE=(function(){try{var s=localStorage.getItem('starsnett_vitrerie');return s?JSON.parse(s):JSON.parse(JSON.stringify(VITRERIE_DEFAULT));}catch(e){return JSON.parse(JSON.stringify(VITRERIE_DEFAULT));}})();
 function saveVitrerie(){try{localStorage.setItem('starsnett_vitrerie',JSON.stringify(VITRERIE));}catch(e){}triggerAutoSync();}
 var vitrerieFilterMode='all',vitrerieFilterFreq='all';
-function vFreqDays(f){return f==='bimensuel'?15:f==='mensuel'?30:f==='trimestriel'?90:f==='semestriel'?180:365;}
+function vFreqDays(f){return f==='hebdo'?7:f==='bimensuel'?15:f==='mensuel'?30:f==='trimestriel'?90:f==='semestriel'?180:365;}
 function vNextDate(t){if(!t.dernierFait)return null;var d=new Date(t.dernierFait);d.setDate(d.getDate()+vFreqDays(t.frequence));return d.toISOString().substring(0,10);}
 function vStatus(t){if(!t.dernierFait)return'todo';var nd=vNextDate(t);if(!nd)return'ok';var today=new Date();today.setHours(0,0,0,0);var diff=Math.round((new Date(nd)-today)/(1000*60*60*24));if(diff<0)return'overdue';if(diff<=7)return'soon';return'ok';}
 function getVitrerieBadge(siteName){if(!siteName)return'';var sn=siteName.trim().toUpperCase();var m=VITRERIE.filter(function(t){if(!t.site)return false;var ts=t.site.toUpperCase();return ts===sn||ts.indexOf(sn)>=0||sn.indexOf(ts)>=0;});if(!m.length)return'';var st=m.map(function(t){return vStatus(t);});var w=st.indexOf('overdue')>=0?'overdue':st.indexOf('soon')>=0?'soon':st.indexOf('todo')>=0?'todo':'ok';if(w==='ok')return'';var lb={overdue:'Vitrerie en retard',soon:'Vitrerie cette semaine',todo:'Vitrerie a planifier'};var cl={overdue:'badge-vitrerie-overdue',soon:'badge-vitrerie-soon',todo:'badge-vitrerie-todo'};return'<span class="'+cl[w]+'">'+lb[w]+'</span>';}
@@ -2594,16 +2711,16 @@ function renderVitrerie(m){
   html+='<div class="vitrerie-filters">';
   [{f:'all',l:'Tous'},{f:'overdue',l:'Retard'},{f:'soon',l:'Urgent'},{f:'todo',l:'Jamais'},{f:'ok',l:'A jour'}].forEach(function(o){html+='<button class="vitrerie-filter'+(vitrerieFilterMode===o.f?' on':'')+" onclick=\"vitrerieFilterMode='"+o.f+"';render()\""+'>'+o.l+'</button>';});
   html+='</div><div class="vitrerie-filters">';
-  [{f:'all',l:'Toutes'},{f:'mensuel',l:'Mensuel'},{f:'bimensuel',l:'2x/mois'},{f:'trimestriel',l:'Trimestriel'},{f:'semestriel',l:'Semestriel'},{f:'annuel',l:'Annuel'}].forEach(function(o){html+='<button class="vitrerie-filter'+(vitrerieFilterFreq===o.f?' on':'')+" onclick=\"vitrerieFilterFreq='"+o.f+"';render()\""+'>'+o.l+'</button>';});
+  [{f:'all',l:'Toutes'},{f:'hebdo',l:'Hebdo'},{f:'bimensuel',l:'2x/mois'},{f:'mensuel',l:'Mensuel'},{f:'trimestriel',l:'Trimestriel'},{f:'semestriel',l:'Semestriel'},{f:'annuel',l:'Annuel'}].forEach(function(o){html+='<button class="vitrerie-filter'+(vitrerieFilterFreq===o.f?' on':'')+" onclick=\"vitrerieFilterFreq='"+o.f+"';render()\""+'>'+o.l+'</button>';});
   html+='</div>';
-  if(isAdminMode())html+='<button onclick="openVitrerieForm(-1)" style="margin-top:8px;width:100%;background:#4CC9F022;border:1px dashed #4CC9F0;color:#4CC9F0;border-radius:8px;padding:8px;font-size:13px;font-weight:700;cursor:pointer;">+ Ajouter</button>';
+  if(isAdminMode())html+='<div style="display:flex;gap:6px;margin-top:8px"><button onclick="openVitrerieForm(-1)" style="flex:1;background:#4CC9F022;border:1px dashed #4CC9F0;color:#4CC9F0;border-radius:8px;padding:8px;font-size:13px;font-weight:700;cursor:pointer;">+ Ajouter</button><button onclick="syncVitrerieFromTableau()" style="flex:1;background:#2A9D8F22;border:1px solid #2A9D8F;color:#2A9D8F;border-radius:8px;padding:8px;font-size:13px;font-weight:700;cursor:pointer;">🔄 Régénérer depuis les sites</button></div>';
   html+='</div>';m.innerHTML=html;
   var sOrd={overdue:0,soon:1,todo:2,ok:3};
   VITRERIE.slice().sort(function(a,b){return sOrd[vStatus(a)]-sOrd[vStatus(b)];}).filter(function(t){return(vitrerieFilterMode==='all'||vStatus(t)===vitrerieFilterMode)&&(vitrerieFilterFreq==='all'||t.frequence===vitrerieFilterFreq);}).forEach(function(task){
     var ri=VITRERIE.indexOf(task),st=vStatus(task),nd=vNextDate(task),diffStr='',diffColor='#8892A4';
     if(task.dernierFait&&nd){var today=new Date();today.setHours(0,0,0,0);var diff=Math.round((new Date(nd)-today)/(1000*60*60*24));diffColor=diff<0?'#E63946':diff<=7?'#E9C46A':'#2A9D8F';diffStr=diff<0?Math.abs(diff)+'j retard':diff===0?'Auj!':'Dans '+diff+'j';}
     var card=document.createElement('div');card.className='vitrerie-card'+(st==='overdue'?' overdue':st==='soon'?' soon':st==='ok'?' ok':'');
-    var fL={bimensuel:'2x/mois',mensuel:'Mensuel',trimestriel:'Trimestriel',semestriel:'Semestriel',annuel:'Annuel'}[task.frequence]||task.frequence;
+    var fL={hebdo:'Hebdo',bimensuel:'2x/mois',mensuel:'Mensuel',trimestriel:'Trimestriel',semestriel:'Semestriel',annuel:'Annuel'}[task.frequence]||task.frequence;
     card.innerHTML='<div class="vitrerie-nom">'+task.site+'</div><span class="vitrerie-freq freq-'+task.frequence+'">'+fL+'</span><div class="vitrerie-type">'+task.type+'</div>'+(task.adresse?'<div class="vitrerie-adr">'+task.adresse+'</div>':'')+(task.agent?'<div style="font-size:11px;color:#3A86FF;">'+task.agent+'</div>':'')+(task.dernierFait?'<div style="font-size:11px;color:#2A9D8F;margin-top:4px;">Fait le '+fmtDateShort(task.dernierFait)+'</div>'+(nd?'<div style="font-size:12px;font-weight:700;color:'+diffColor+';margin-top:3px;">Prochain: '+fmtDateShort(nd)+' | '+diffStr+'</div>':''):'<div style="font-size:11px;color:#E63946;margin-top:4px;">Jamais realise</div>');
     var bz=document.createElement('div');bz.style.cssText='margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;';
     var db=document.createElement('button');db.style.cssText='background:#2A9D8F22;border:1px solid #2A9D8F;color:#2A9D8F;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;';db.textContent='Fait auj.';
@@ -2617,10 +2734,143 @@ function renderVitrerie(m){
   });
   if(!m.querySelectorAll('.vitrerie-card').length){var e=document.createElement('div');e.className='empty';e.textContent='Aucun site pour ce filtre.';m.appendChild(e);}
 }
+
+// ════════════════════════════════════════════════════════════════
+// SYNC VITRERIE ← Tableau des sites (champ "Fréquence vitrerie")
+// Conserve les dates "dernierFait" des sites déjà suivis
+// ════════════════════════════════════════════════════════════════
+function vMapFreq(v) {
+  var t = (v||'').toUpperCase();
+  if (!t.trim()) return null;
+  if (/PAS DE VITRE|AUCUN|NEANT|NÉANT|^RAS$|^\/$|^-$|^NON$/.test(t.trim())) return null;
+  if (/SEMAINE|CHAQUE PASSAGE|HEBDO/.test(t)) return 'hebdo';
+  if (/15 JOURS|QUINZAINE|2\s*(FOIS|FS|X)\s*(PAR|\/)?\s*MOIS|BIMENSUEL/.test(t)) return 'bimensuel';
+  if (/TRIMESTR|3 MOIS/.test(t)) return 'trimestriel';
+  if (/SEMESTR|6 MOIS|2\s*(FOIS|FS|X)\s*(PAR|\/)?\s*AN/.test(t)) return 'semestriel';
+  if (/ANNUEL|1\s*(FOIS|FS|X)\s*(PAR|\/)?\s*AN|PAR AN/.test(t)) return 'annuel';
+  if (/MOIS|MENSUEL/.test(t)) return 'mensuel';
+  return 'mensuel';
+}
+function syncVitrerieFromTableau() {
+  if (!isAdminMode()) { showToast('🔒 Action admin uniquement'); return; }
+  if (!confirm('Régénérer le planning vitrerie à partir des ' + DATA.length + ' sites du planning ?\n\nLes dates "fait le" des sites existants sont conservées.')) return;
+  // Index des dernierFait existants par nom de site
+  var lastDone = {};
+  VITRERIE.forEach(function(t) {
+    if (t.dernierFait) lastDone[(t.site||'').trim().toUpperCase()] = t.dernierFait;
+  });
+  var out = [], vid = 1, skipped = 0;
+  DATA.forEach(function(s) {
+    var freq = vMapFreq(s.v);
+    if (!freq) { if (s.v) skipped++; return; }
+    out.push({
+      id: vid++,
+      site: s.n,
+      adresse: s.adr || '',
+      type: s.v,
+      frequence: freq,
+      agent: (s.a && s.a !== 'NON ASSIGNÉ' && s.a !== 'A ASSIGNER') ? s.a : '',
+      notes: '',
+      dernierFait: lastDone[(s.n||'').trim().toUpperCase()] || null
+    });
+  });
+  VITRERIE = out;
+  saveVitrerie();
+  render();
+  showToast('🪟 Planning vitrerie régénéré : ' + out.length + ' sites');
+}
+
+// ════════════════════════════════════════════════════════════════
+// CROISEMENT FACTURES ↔ SITES
+// Lit les données du module Suivi des factures (même domaine :
+// localStorage 'starsnett_factures_v1', sinon JSONBin partagé)
+// ════════════════════════════════════════════════════════════════
+var FACT_BIN_ID = '69bc22f5aa77b81da9fcb87e';
+var FACT_BIN_KEY = '$2a$10$TzSoaR1c16RpxXzZg7zbB.XXI3ikID.U2sqe5JFkXfFKQUxM/0MVW';
+var FACT_INDEX = null; // clé nom normalisé → {due, late, paid, totalDue, nb}
+
+function factNorm(s) {
+  return (s||'').toUpperCase().replace(/\s+/g,' ').trim();
+}
+function factStatus(f) {
+  if (f.status === 'avoir' || (f.code||'').indexOf('ANH') === 0 || f.ht < 0) return 'avoir';
+  if (f.status === 'paid') return 'paid';
+  if (f.status === 'part' || f.status === 'disp' || f.status === 'cont') return f.status;
+  // due → retard si date + 30 j dépassée
+  var m = (f.date||'').match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m) {
+    var d = new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
+    d.setDate(d.getDate() + 30);
+    var today = new Date(); today.setHours(0,0,0,0);
+    if (today > d) return 'late';
+  }
+  return 'due';
+}
+function buildFactIndex(factures) {
+  var idx = {};
+  factures.forEach(function(f) {
+    var st = factStatus(f);
+    if (st === 'avoir') return;
+    var keys = [];
+    if (f.client) keys.push(factNorm(f.client));
+    if (f.chantier && factNorm(f.chantier) !== factNorm(f.client)) keys.push(factNorm(f.chantier));
+    var due = 0, isUnpaid = false, isLate = false;
+    if (st === 'paid') {}
+    else if (st === 'part') { due = (f.ttc||0) - (f.paidAmount||0); isUnpaid = due > 0.01; }
+    else { due = f.ttc||0; isUnpaid = true; if (st === 'late') isLate = true; }
+    keys.forEach(function(k) {
+      if (!k) return;
+      if (!idx[k]) idx[k] = { nb: 0, unpaid: 0, late: 0, totalDue: 0 };
+      idx[k].nb++;
+      if (isUnpaid) { idx[k].unpaid++; idx[k].totalDue += due; }
+      if (isLate) idx[k].late++;
+    });
+  });
+  return idx;
+}
+function loadFactures() {
+  // 1) localStorage (même domaine que suivi_factures.html)
+  try {
+    var ls = localStorage.getItem('starsnett_factures_v1');
+    if (ls) {
+      var d = JSON.parse(ls);
+      if (d && d.factures && d.factures.length) {
+        FACT_INDEX = buildFactIndex(d.factures);
+        render();
+        return;
+      }
+    }
+  } catch(e) {}
+  // 2) JSONBin partagé du module factures
+  fetch('https://api.jsonbin.io/v3/b/' + FACT_BIN_ID + '/latest', { headers: {'X-Master-Key': FACT_BIN_KEY} })
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(d){
+      if (d.record && d.record.facturesData && d.record.facturesData.factures) {
+        FACT_INDEX = buildFactIndex(d.record.facturesData.factures);
+        render();
+      }
+    })
+    .catch(function(){ /* pas de données factures disponibles — badges masqués */ });
+}
+function factBadge(s, compact) {
+  if (!FACT_INDEX) return '';
+  var info = FACT_INDEX[factNorm(s.chantier)] || FACT_INDEX[factNorm(s.n)];
+  if (!info || !info.nb) return '';
+  if (info.unpaid === 0) {
+    return '<span style="display:inline-block;background:#2A9D8F22;color:#2A9D8F;border:1px solid #2A9D8F44;border-radius:10px;font-size:10px;padding:1px 7px;margin-top:3px;font-weight:700;">💰 Client à jour</span>';
+  }
+  var color = info.late > 0 ? '#E63946' : '#FB5607';
+  var amount = info.totalDue.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  var label = compact
+    ? '🚨 ' + info.unpaid + ' fact. impayée' + (info.unpaid>1?'s':'') + ' · ' + amount + ' €'
+    : '🚨 ' + info.unpaid + ' facture' + (info.unpaid>1?'s':'') + ' impayée' + (info.unpaid>1?'s':'') + (info.late>0 ? ' (dont ' + info.late + ' en retard)' : '') + ' · ' + amount + ' € TTC';
+  return '<span style="display:inline-block;background:' + color + '22;color:' + color + ';border:1px solid ' + color + '44;border-radius:10px;font-size:10px;padding:1px 7px;margin-top:3px;font-weight:700;">' + label + '</span>';
+}
+
 function openVitrerieForm(idx){
   var t=idx===-1?{site:'',adresse:'',type:'Int + Ext',frequence:'mensuel',agent:'',notes:'',dernierFait:null}:VITRERIE[idx];
   var ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;background:#000000CC;z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;';
-  var fOpts=['mensuel','bimensuel','trimestriel','semestriel','annuel'].map(function(f){return'<option value="'+f+'"'+(t.frequence===f?' selected':'')+'>'+{mensuel:'Mensuel',bimensuel:'2x/mois',trimestriel:'Trimestriel',semestriel:'Semestriel',annuel:'Annuel'}[f]+'</option>';}).join('');
+  var fOpts=['hebdo','mensuel','bimensuel','trimestriel','semestriel','annuel'].map(function(f){return'<option value="'+f+'"'+(t.frequence===f?' selected':'')+'>'+{hebdo:'Hebdo',mensuel:'Mensuel',bimensuel:'2x/mois',trimestriel:'Trimestriel',semestriel:'Semestriel',annuel:'Annuel'}[f]+'</option>';}).join('');
   var box=document.createElement('div');box.style.cssText='background:#1A1D2E;border-radius:16px;padding:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;';
   box.innerHTML='<div style="font-size:16px;font-weight:800;color:#4CC9F0;margin-bottom:16px">'+(idx===-1?'+ Nouveau':'Modifier')+'</div>'
     +'<label style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px">Site</label><input id="vtNom" value="'+escHtml(t.site)+'" style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#fff;font-size:13px;padding:8px;margin-bottom:10px">'
@@ -2652,6 +2902,7 @@ render();
 if (JBKEY && JBBIN) {
   cloudLoad(true);
 }
+loadFactures();
 
 </script>
 </body>
