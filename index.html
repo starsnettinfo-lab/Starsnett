@@ -200,6 +200,26 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
 .abs-save-btn { padding:6px 12px; background:#E63946; border:none; color:#fff; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; }
 .abs-save-btn:hover { background:#c42d38; }
 .vitrerie-card{background:#13151F;border-radius:10px;padding:12px;margin-bottom:8px;border-left:4px solid #4CC9F0;}.vitrerie-card.overdue{border-left-color:#E63946;}.vitrerie-card.soon{border-left-color:#E9C46A;}.vitrerie-card.ok{border-left-color:#2A9D8F;opacity:0.75;}.vitrerie-nom{font-size:14px;font-weight:800;color:#fff;margin-bottom:3px;}.vitrerie-type{font-size:11px;color:#4CC9F0;font-weight:700;margin-bottom:2px;}.vitrerie-adr{font-size:11px;color:#8892A4;margin-bottom:3px;}.vitrerie-freq{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;margin-bottom:4px;}.freq-hebdo{background:#06D6A022;color:#06D6A0;}.freq-bimensuel{background:#8338EC22;color:#8338EC;}.freq-mensuel{background:#3A86FF22;color:#3A86FF;}.freq-trimestriel{background:#E9C46A22;color:#E9C46A;}.freq-semestriel{background:#FB560722;color:#FB5607;}.freq-annuel{background:#E6394622;color:#E63946;}.vitrerie-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}.vitrerie-stat{background:#13151F;border-radius:10px;padding:10px 14px;flex:1;min-width:70px;text-align:center;border:1px solid #2A2D3E;}.vitrerie-stat-num{font-size:22px;font-weight:800;}.vitrerie-stat-lbl{font-size:10px;color:#8892A4;margin-top:2px;}.vitrerie-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}.vitrerie-filter{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #2A2D3E;background:#13151F;color:#8892A4;}.vitrerie-filter.on{background:#4CC9F0;border-color:#4CC9F0;color:#0F1117;}.badge-vitrerie-overdue{display:inline-block;background:#E6394622;border:1px solid #E63946;color:#E63946;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}.badge-vitrerie-soon{display:inline-block;background:#E9C46A22;border:1px solid #E9C46A;color:#E9C46A;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}.badge-vitrerie-todo{display:inline-block;background:#4CC9F022;border:1px solid #4CC9F0;color:#4CC9F0;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}
+.reclam-card{background:#13151F;border-radius:10px;padding:12px;margin-bottom:8px;border-left:4px solid #E63946;}
+.reclam-card.statut-ouverte{border-left-color:#E63946;}
+.reclam-card.statut-en_cours{border-left-color:#E9C46A;}
+.reclam-card.statut-resolue{border-left-color:#4CC9F0;}
+.reclam-card.statut-verifiee{border-left-color:#2A9D8F;opacity:0.85;}
+.reclam-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
+.reclam-site{font-size:14px;font-weight:800;color:#fff;}
+.reclam-date{font-size:11px;color:#8892A4;margin-top:2px;}
+.reclam-type{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:#2A2D3E;color:#ccc;margin-right:4px;}
+.reclam-statut-badge{padding:3px 10px;border-radius:12px;font-size:10px;font-weight:800;white-space:nowrap;}
+.statut-ouverte .reclam-statut-badge{background:#E6394622;color:#E63946;}
+.statut-en_cours .reclam-statut-badge{background:#E9C46A22;color:#E9C46A;}
+.statut-resolue .reclam-statut-badge{background:#4CC9F022;color:#4CC9F0;}
+.statut-verifiee .reclam-statut-badge{background:#2A9D8F22;color:#2A9D8F;}
+.reclam-desc{font-size:12px;color:#ccc;margin:6px 0;line-height:1.5;}
+.reclam-meta{font-size:11px;color:#8892A4;margin-top:4px;}
+.reclam-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.reclam-filter{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #2A2D3E;background:#13151F;color:#8892A4;}
+.reclam-filter.on{background:#E63946;border-color:#E63946;color:#fff;}
+.badge-reclam-open{display:inline-block;background:#E6394622;border:1px solid #E63946;color:#E63946;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}
 </style>
 </head>
 <body>
@@ -261,6 +281,7 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
     <button class="tab" onclick="setView('calendar')" style="background:#2A9D8F22;color:#2A9D8F;" id="tabCalendar">📆 Calendrier</button>
     <button class="tab" onclick="setView('archives')" style="background:#FB560722;color:#FB5607;" id="tabArchives">🗄️ Archives</button>
     <button class="tab" onclick="setView('vitrerie')" style="background:#4CC9F022;color:#4CC9F0;">&#129695; Vitres</button>
+    <button class="tab" onclick="setView('reclamations')" style="background:#E6394622;color:#E63946;" id="tabReclam">📢 Réclam.</button>
   </div>
 </div>
 <div id="main"></div>
@@ -1398,9 +1419,10 @@ function setView(v) {
     if (i === 4) t.style.cssText = 'background:#2A9D8F22;color:#2A9D8F;';
     if (i === 5) t.style.cssText = 'background:#FB560722;color:#FB5607;';
     if (i === 6) t.style.cssText = 'background:#4CC9F022;color:#4CC9F0;';
+    if (i === 7) t.style.cssText = 'background:#E6394622;color:#E63946;';
   });
   if (v === 'compta' && !isAdminMode()) { showToast('🔒 Comptabilité réservée aux admins — connectez-vous avec votre PIN'); openPinOverlay(function(){ setView('compta'); }); return; }
-  var viewList = ['today','agents','sites','compta','calendar','archives','vitrerie'];
+  var viewList = ['today','agents','sites','compta','calendar','archives','vitrerie','reclamations'];
   var idx = viewList.indexOf(v);
   var tabs = document.querySelectorAll('.tab');
   if (idx >= 0 && tabs[idx]) {
@@ -1409,6 +1431,7 @@ function setView(v) {
     if (idx === 4) tabs[idx].style.cssText = 'background:#2A9D8F;color:#fff;';
     if (idx === 5) tabs[idx].style.cssText = 'background:#FB5607;color:#fff;';
     if (idx === 6) tabs[idx].style.cssText = 'background:#4CC9F0;color:#0F1117;';
+    if (idx === 7) tabs[idx].style.cssText = 'background:#E63946;color:#fff;';
   }
   render();
 }
@@ -1506,6 +1529,8 @@ function openDetail(idx) {
   if (s.chantier && s.chantier !== s.n) body += row('🔗 Chantier Pégase', '<span style="font-size:12px;color:#8892A4">'+escHtml(s.chantier)+'</span>');
   var fbd = factBadge(s, false);
   if (fbd) body += row('💰 Règlements', fbd + ' <span style="font-size:10px;color:#666">(source : Suivi des factures)</span>');
+  var openReclam = getOpenReclamCount(s.n);
+  if (openReclam > 0) body += row('📢 Réclamations', '<span style="color:#E63946;font-weight:700">'+openReclam+' réclamation'+(openReclam>1?'s':'')+' en cours de traitement</span>');
   if (s.notes) body += row('💬 Consignes', '<span style="white-space:pre-wrap;font-size:12px;color:#ccc">'+escHtml(s.notes)+'</span>');
   if (s.photo) {
     body += '<div style="margin:12px 0;border-radius:10px;overflow:hidden;border:1px solid #2A2D3E;cursor:pointer" onclick="closeDetail();showPhotoIdx('+idx+')">'
@@ -2022,7 +2047,7 @@ async function setupSync() {
       setSyncStatus('✅ Connecté ! Chargement des données...', '#2A9D8F');
       await cloudLoad(true);
     } else {
-      var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString(), app: 'starsnett' };
+      var payload = { data: DATA, absences: ABSENCES, reclamations: RECLAMATIONS, savedAt: new Date().toISOString(), app: 'starsnett' };
       var r = await fetch('https://api.jsonbin.io/v3/b', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'Starsnett', 'X-Bin-Private': 'true' },
@@ -2048,7 +2073,7 @@ async function cloudSync() {
   var btn = document.getElementById('syncBtn');
   if (btn) btn.textContent = '⏳ Sync...';
   try {
-    var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString(), app: 'starsnett' };
+    var payload = { data: DATA, absences: ABSENCES, reclamations: RECLAMATIONS, savedAt: new Date().toISOString(), app: 'starsnett' };
     var r = await fetch('https://api.jsonbin.io/v3/b/' + JBBIN, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'X-Master-Key': JBKEY },
@@ -2076,7 +2101,8 @@ async function cloudLoad(silent) {
     if (payload && payload.data && Array.isArray(payload.data) && payload.data.length > 0) {
       DATA = payload.data;
       if (payload.absences) ABSENCES = payload.absences;
-      saveData(); saveAbsences(); buildColorMap();
+      if (payload.reclamations) RECLAMATIONS = payload.reclamations;
+      saveData(); saveAbsences(); saveReclamations(); buildColorMap();
       var savedAt = payload.savedAt ? new Date(payload.savedAt) : null;
       var when = savedAt ? savedAt.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}) : '';
       setSyncInfo('☁️ Synchronisé' + (when ? ' à ' + when : ''));
@@ -2106,7 +2132,7 @@ function triggerAutoSync() {
 }
 
 function saveJSON() {
-  var payload = { data: DATA, absences: ABSENCES, savedAt: new Date().toISOString() };
+  var payload = { data: DATA, absences: ABSENCES, reclamations: RECLAMATIONS, savedAt: new Date().toISOString() };
   var json = JSON.stringify(payload, null, 2);
   var blob = new Blob([json], { type: 'application/json' });
   var url = URL.createObjectURL(blob);
@@ -2127,8 +2153,8 @@ function loadJSON(event) {
     try {
       var payload = JSON.parse(e.target.result);
       if (Array.isArray(payload)) { DATA = payload; }
-      else { if (payload.data) DATA = payload.data; if (payload.absences) ABSENCES = payload.absences; }
-      saveData(); saveAbsences(); buildColorMap(); render();
+      else { if (payload.data) DATA = payload.data; if (payload.absences) ABSENCES = payload.absences; if (payload.reclamations) RECLAMATIONS = payload.reclamations; }
+      saveData(); saveAbsences(); saveReclamations(); buildColorMap(); render();
       showToast('✅ Données importées (' + DATA.length + ' sites) !');
     } catch(err) { showToast('❌ Fichier invalide'); }
   };
@@ -2253,6 +2279,7 @@ function render() {
   if (view === 'calendar') { renderCalendar(m); return; }
   if (view === 'archives') { renderArchives(m); return; }
   if (view === 'vitrerie') { renderVitrerie(m); return; }
+  if (view === 'reclamations') { renderReclamations(m); return; }
   m.innerHTML = '<div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:14px">Tous les sites (' + DATA.length + ')</div>';
   if (isAdminMode()) { var ab3 = document.createElement('button'); ab3.className = 'add-btn'; ab3.innerHTML = '➕ Nouveau site'; ab3.onclick = function() { openEdit(-1); }; m.appendChild(ab3); }
   DATA.forEach(function(s, i) { m.appendChild(mkCard(s, i)); });
@@ -2277,6 +2304,7 @@ function mkCard(s, idx) {
     + (s.finContrat ? '<div style="font-size:10px;color:#FB5607;font-weight:700;margin-top:2px">🏁 Fin de contrat : ' + s.finContrat + '</div>' : '')
     + (function(){ var badge = ancienneteBadge(s.n, s.dateContrat); return badge ? '<div style="margin-top:3px">'+badge+'</div>' : ''; })()
     + (function(){ var fb = factBadge(s, true); return fb ? '<div style="margin-top:3px">'+fb+'</div>' : ''; })()
+    + (function(){ var rb = reclamBadge(s.n); return rb ? '<div style="margin-top:3px">'+rb+'</div>' : ''; })()
     + (s.notes ? '<div class="notes-section"><div class="notes-label">💬 Consignes</div><div class="notes-text">' + s.notes.substring(0,120) + (s.notes.length>120?'...':'') + '</div></div>' : '')
     + (s.photo ? '<div style="margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid #2A2D3E;cursor:pointer" onclick="event.stopPropagation();showPhotoIdx(' + DATA.indexOf(s) + ')"><img src="' + s.photo + '" style="width:100%;max-height:120px;object-fit:cover;display:block"></div>' : '');
   var absDiv = document.createElement('div');
@@ -2892,6 +2920,237 @@ function openVitrerieForm(idx){
   ov.onclick=function(e){if(e.target===ov)document.body.removeChild(ov);};
   document.getElementById('vtSave').onclick=function(){var nom=document.getElementById('vtNom').value.trim();if(!nom){alert('Nom requis');return;}var entry={id:idx===-1?Date.now():t.id,site:nom,adresse:document.getElementById('vtAdr').value.trim(),type:document.getElementById('vtType').value.trim(),frequence:document.getElementById('vtFreq').value,agent:document.getElementById('vtAgent').value.trim(),notes:'',dernierFait:document.getElementById('vtDate').value||null};if(idx===-1){VITRERIE.push(entry);}else{VITRERIE[idx]=entry;}saveVitrerie();document.body.removeChild(ov);render();showToast('OK !');};
   if(idx>=0)document.getElementById('vtDel').onclick=function(){if(!confirm('Supprimer ?'))return;VITRERIE.splice(idx,1);saveVitrerie();document.body.removeChild(ov);render();};
+}
+
+// ════════════════════════════════════════════════════════════════
+// MODULE RÉCLAMATIONS CLIENT
+// Cycle : Ouverte → En cours → Résolue → Vérifiée
+// ════════════════════════════════════════════════════════════════
+var RECLAM_TYPES = {
+  qualite: { label: 'Qualité nettoyage', color: '#E63946' },
+  vitrerie: { label: 'Vitrerie', color: '#4CC9F0' },
+  poubelles: { label: 'Poubelles / déchets', color: '#FB5607' },
+  absence: { label: 'Absence agent', color: '#E9C46A' },
+  comportement: { label: 'Comportement agent', color: '#8338EC' },
+  materiel: { label: 'Matériel / consommables', color: '#6A4C93' },
+  delai: { label: 'Délai / horaire', color: '#457B9D' },
+  autre: { label: 'Autre', color: '#8892A4' }
+};
+var RECLAM_STATUTS = {
+  ouverte: { label: 'Ouverte', color: '#E63946' },
+  en_cours: { label: 'En cours', color: '#E9C46A' },
+  resolue: { label: 'Résolue', color: '#4CC9F0' },
+  verifiee: { label: 'Vérifiée', color: '#2A9D8F' }
+};
+
+var RECLAMATIONS = (function(){
+  try{ var s = localStorage.getItem('starsnett_reclamations'); return s ? JSON.parse(s) : []; }
+  catch(e){ return []; }
+})();
+function saveReclamations(){
+  try{ localStorage.setItem('starsnett_reclamations', JSON.stringify(RECLAMATIONS)); }catch(e){}
+  triggerAutoSync();
+}
+
+var reclamFilterStatut = 'all';
+var reclamFilterSite = '';
+
+function getOpenReclamCount(siteName){
+  if (!siteName) return 0;
+  var sn = siteName.trim().toUpperCase();
+  return RECLAMATIONS.filter(function(r){
+    return (r.site||'').trim().toUpperCase() === sn && (r.statut==='ouverte' || r.statut==='en_cours');
+  }).length;
+}
+function reclamBadge(siteName){
+  var n = getOpenReclamCount(siteName);
+  if (!n) return '';
+  return '<span class="badge-reclam-open">📢 '+n+' réclamation'+(n>1?'s':'')+' ouverte'+(n>1?'s':'')+'</span>';
+}
+
+function daysBetweenDates(d1, d2){
+  return Math.round((d2 - d1) / (1000*60*60*24));
+}
+
+function renderReclamations(m){
+  var all = RECLAMATIONS.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+
+  var nOuvertes = all.filter(function(r){return r.statut==='ouverte';}).length;
+  var nEnCours = all.filter(function(r){return r.statut==='en_cours';}).length;
+  var nResolues = all.filter(function(r){return r.statut==='resolue' || r.statut==='verifiee';}).length;
+  var resolues48h = all.filter(function(r){
+    if (!(r.statut==='resolue'||r.statut==='verifiee') || !r.date || !r.dateAction) return false;
+    var d1 = new Date(r.date), d2 = new Date(r.dateAction);
+    return daysBetweenDates(d1,d2) <= 2 && daysBetweenDates(d1,d2) >= 0;
+  }).length;
+  var tauxRapide = nResolues > 0 ? Math.round(resolues48h / nResolues * 100) : 0;
+
+  // Sites récurrents (>=2 réclamations toutes périodes confondues)
+  var bySite = {};
+  all.forEach(function(r){ var s=(r.site||'').trim(); if(!s) return; bySite[s]=(bySite[s]||0)+1; });
+  var recurrents = Object.keys(bySite).filter(function(s){ return bySite[s] >= 2; })
+    .sort(function(a,b){ return bySite[b]-bySite[a]; });
+
+  var html = '<div style="background:#1A1D2E;border:1px solid #2A2D3E;border-radius:12px;padding:14px;margin-bottom:12px;">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px"><div style="font-size:16px;font-weight:800;color:#E63946;">📢 Suivi des réclamations client</div>';
+  if (isAdminMode()) html += '<button onclick="openReclamForm(-1)" style="background:#E63946;border:none;color:#fff;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer">+ Nouvelle réclamation</button>';
+  html += '</div><div style="font-size:12px;color:#8892A4;margin-bottom:10px;">'+all.length+' réclamation(s) au total</div>';
+
+  html += '<div class="vitrerie-stats">';
+  html += '<div class="vitrerie-stat"><div class="vitrerie-stat-num" style="color:#E63946">'+nOuvertes+'</div><div class="vitrerie-stat-lbl">Ouvertes</div></div>';
+  html += '<div class="vitrerie-stat"><div class="vitrerie-stat-num" style="color:#E9C46A">'+nEnCours+'</div><div class="vitrerie-stat-lbl">En cours</div></div>';
+  html += '<div class="vitrerie-stat"><div class="vitrerie-stat-num" style="color:#2A9D8F">'+nResolues+'</div><div class="vitrerie-stat-lbl">Résolues</div></div>';
+  html += '<div class="vitrerie-stat"><div class="vitrerie-stat-num" style="color:#4CC9F0">'+tauxRapide+'%</div><div class="vitrerie-stat-lbl">Résolues &lt;48h</div></div>';
+  html += '</div>';
+
+  if (recurrents.length){
+    html += '<div style="background:#0F1117;border-left:3px solid #FB5607;border-radius:8px;padding:10px 12px;margin-top:6px;">';
+    html += '<div style="font-size:12px;font-weight:700;color:#FB5607;margin-bottom:4px;">⚠️ Sites récurrents (≥2 réclamations)</div>';
+    recurrents.slice(0,8).forEach(function(s){
+      html += '<div style="font-size:11px;color:#ccc;padding:2px 0;">• '+s+' <span style="color:#FB5607;font-weight:700">('+bySite[s]+')</span></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="reclam-filters" style="margin-top:10px">';
+  [['all','Toutes'],['ouverte','🔴 Ouvertes'],['en_cours','🟡 En cours'],['resolue','🔵 Résolues'],['verifiee','🟢 Vérifiées']].forEach(function(o){
+    html += '<button class="reclam-filter'+(reclamFilterStatut===o[0]?' on':'')+'" onclick="reclamFilterStatut=\''+o[0]+'\';render()">'+o[1]+'</button>';
+  });
+  html += '</div>';
+  html += '<input type="text" id="reclamSiteFilter" placeholder="🔍 Filtrer par site..." value="'+escHtml(reclamFilterSite)+'" oninput="reclamFilterSite=this.value;render()" style="width:100%;margin-top:8px;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#fff;font-size:13px;padding:8px 12px;">';
+  html += '</div>';
+  m.innerHTML = html;
+
+  var filtered = all.filter(function(r){
+    if (reclamFilterStatut !== 'all' && r.statut !== reclamFilterStatut) return false;
+    if (reclamFilterSite && (r.site||'').toLowerCase().indexOf(reclamFilterSite.toLowerCase()) < 0) return false;
+    return true;
+  });
+
+  if (!filtered.length){
+    var e = document.createElement('div'); e.className='empty';
+    e.textContent = 'Aucune réclamation pour ce filtre.'; m.appendChild(e);
+    return;
+  }
+
+  filtered.forEach(function(r){
+    var idx = RECLAMATIONS.indexOf(r);
+    var typeInfo = RECLAM_TYPES[r.type] || RECLAM_TYPES.autre;
+    var statutInfo = RECLAM_STATUTS[r.statut] || RECLAM_STATUTS.ouverte;
+    var card = document.createElement('div');
+    card.className = 'reclam-card statut-'+r.statut;
+    var html2 = '<div class="reclam-hdr"><div>';
+    html2 += '<div class="reclam-site">🏢 '+escHtml(r.site||'—')+'</div>';
+    html2 += '<div class="reclam-date">📅 Reçue le '+fmtDateShort(r.date)+(r.agentConcerne?' · 👤 '+escHtml(r.agentConcerne):'')+'</div>';
+    html2 += '</div><span class="reclam-statut-badge" style="background:'+statutInfo.color+'22;color:'+statutInfo.color+'">'+statutInfo.label+'</span></div>';
+    html2 += '<span class="reclam-type" style="background:'+typeInfo.color+'22;color:'+typeInfo.color+'">'+typeInfo.label+'</span>';
+    if (r.gravite === 'critique') html2 += '<span class="reclam-type" style="background:#E6394644;color:#E63946">🔥 Critique</span>';
+    if (r.description) html2 += '<div class="reclam-desc">💬 '+escHtml(r.description)+'</div>';
+    if (r.cause) html2 += '<div class="reclam-meta"><b style="color:#8892A4">Cause :</b> '+escHtml(r.cause)+'</div>';
+    if (r.action) html2 += '<div class="reclam-meta"><b style="color:#8892A4">Action :</b> '+escHtml(r.action)+(r.dateAction?' ('+fmtDateShort(r.dateAction)+')':'')+'</div>';
+    if (r.statut === 'resolue') html2 += '<div class="reclam-meta" style="color:#4CC9F0">⏳ En attente de vérification que le correctif tient dans la durée</div>';
+    if (r.statut === 'verifiee') html2 += '<div class="reclam-meta" style="color:#2A9D8F">✅ Vérifié le '+fmtDateShort(r.dateVerif)+' — correctif confirmé</div>';
+    card.innerHTML = html2;
+    if (isAdminMode()){
+      var editBtn = document.createElement('button');
+      editBtn.style.cssText = 'margin-top:8px;background:#2A2D3E;border:none;color:#8892A4;border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;';
+      editBtn.textContent = '✏️ Modifier';
+      (function(i){ editBtn.onclick = function(){ openReclamForm(i); }; })(idx);
+      card.appendChild(editBtn);
+    }
+    m.appendChild(card);
+  });
+}
+
+function openReclamForm(idx){
+  if (!isAdminMode()) { showToast('🔒 Action admin uniquement'); return; }
+  var r = idx === -1 ? {
+    site:'', date: todayStr(), type:'qualite', gravite:'mineure', description:'', agentConcerne:'',
+    cause:'', action:'', dateAction:'', statut:'ouverte', dateVerif:'', verifOk: false
+  } : RECLAMATIONS[idx];
+
+  var ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:#000000CC;z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px;';
+  var box = document.createElement('div');
+  box.style.cssText = 'background:#1A1D2E;border-radius:16px;padding:20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;';
+
+  var siteOptions = DATA.map(function(s){ return '<option value="'+escHtml(s.n)+'"'+(r.site===s.n?' selected':'')+'>'+escHtml(s.n)+'</option>'; }).join('');
+  var typeOptions = Object.keys(RECLAM_TYPES).map(function(k){ return '<option value="'+k+'"'+(r.type===k?' selected':'')+'>'+RECLAM_TYPES[k].label+'</option>'; }).join('');
+  var statutOptions = Object.keys(RECLAM_STATUTS).map(function(k){ return '<option value="'+k+'"'+(r.statut===k?' selected':'')+'>'+RECLAM_STATUTS[k].label+'</option>'; }).join('');
+
+  var lbl = 'style="font-size:11px;color:#8892A4;display:block;margin-bottom:4px;margin-top:10px"';
+  var inp = 'style="width:100%;background:#0F1117;border:1px solid #2A2D3E;border-radius:8px;color:#fff;font-size:13px;padding:8px;"';
+
+  box.innerHTML =
+    '<div style="font-size:16px;font-weight:800;color:#E63946;margin-bottom:6px">'+(idx===-1?'📢 Nouvelle réclamation':'✏️ Modifier la réclamation')+'</div>'
+    +'<label '+lbl+'>Site concerné</label><select id="rcSite" '+inp+'><option value="">— Choisir —</option>'+siteOptions+'</select>'
+    +'<label '+lbl+'>Date de réception</label><input type="date" id="rcDate" value="'+(r.date||'')+'" '+inp+'>'
+    +'<label '+lbl+'>Type</label><select id="rcType" '+inp+'>'+typeOptions+'</select>'
+    +'<label '+lbl+'>Gravité</label><select id="rcGravite" '+inp+'><option value="mineure"'+(r.gravite==='mineure'?' selected':'')+'>Mineure</option><option value="majeure"'+(r.gravite==='majeure'?' selected':'')+'>Majeure</option><option value="critique"'+(r.gravite==='critique'?' selected':'')+'>Critique</option></select>'
+    +'<label '+lbl+'>Description de la réclamation</label><textarea id="rcDesc" '+inp+' style="min-height:60px;resize:vertical">'+escHtml(r.description||'')+'</textarea>'
+    +'<label '+lbl+'>Agent concerné</label><input type="text" id="rcAgent" value="'+escHtml(r.agentConcerne||'')+'" '+inp+' list="agentsListReclam"><datalist id="agentsListReclam"></datalist>'
+    +'<label '+lbl+'>Cause identifiée</label><input type="text" id="rcCause" value="'+escHtml(r.cause||'')+'" '+inp+' placeholder="Ex : absence non signalée, consigne mal transmise...">'
+    +'<label '+lbl+'>Action corrective</label><textarea id="rcAction" '+inp+' style="min-height:50px;resize:vertical">'+escHtml(r.action||'')+'</textarea>'
+    +'<label '+lbl+'>Date de l\'action</label><input type="date" id="rcDateAction" value="'+(r.dateAction||'')+'" '+inp+'>'
+    +'<label '+lbl+'>Statut</label><select id="rcStatut" '+inp+'>'+statutOptions+'</select>'
+    +'<div id="rcVerifBlock" style="display:'+(r.statut==='verifiee'||r.statut==='resolue'?'block':'none')+'">'
+    +'<label '+lbl+'>Date de vérification (le correctif tient-il ?)</label><input type="date" id="rcDateVerif" value="'+(r.dateVerif||'')+'" '+inp+'>'
+    +'</div>'
+    +'<div style="display:flex;gap:8px;margin-top:16px;">'
+    +'<button id="rcSave" style="flex:1;background:#E63946;border:none;color:#fff;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">💾 Enregistrer</button>'
+    +(idx>=0?'<button id="rcDel" style="background:#2A2D3E;border:1px solid #E63946;color:#E63946;border-radius:8px;padding:12px 16px;font-size:13px;cursor:pointer;">🗑️</button>':'')
+    +'<button id="rcCancel" style="background:#2A2D3E;border:none;color:#8892A4;border-radius:8px;padding:12px 16px;font-size:13px;cursor:pointer;">Annuler</button>'
+    +'</div>';
+
+  ov.appendChild(box); document.body.appendChild(ov);
+
+  var dl = document.getElementById('agentsListReclam');
+  getAgents().forEach(function(a){ var o=document.createElement('option'); o.value=a.name; dl.appendChild(o); });
+
+  document.getElementById('rcStatut').onchange = function(){
+    document.getElementById('rcVerifBlock').style.display = (this.value==='verifiee'||this.value==='resolue') ? 'block' : 'none';
+  };
+  document.getElementById('rcCancel').onclick = function(){ document.body.removeChild(ov); };
+  ov.onclick = function(e){ if (e.target===ov) document.body.removeChild(ov); };
+
+  document.getElementById('rcSave').onclick = function(){
+    var site = document.getElementById('rcSite').value;
+    if (!site){ alert('Choisissez un site.'); return; }
+    var entry = {
+      id: idx===-1 ? Date.now() : r.id,
+      site: site,
+      date: document.getElementById('rcDate').value || todayStr(),
+      type: document.getElementById('rcType').value,
+      gravite: document.getElementById('rcGravite').value,
+      description: document.getElementById('rcDesc').value.trim(),
+      agentConcerne: document.getElementById('rcAgent').value.trim(),
+      cause: document.getElementById('rcCause').value.trim(),
+      action: document.getElementById('rcAction').value.trim(),
+      dateAction: document.getElementById('rcDateAction').value || '',
+      statut: document.getElementById('rcStatut').value,
+      dateVerif: document.getElementById('rcDateVerif').value || ''
+    };
+    if (idx === -1){
+      RECLAMATIONS.push(entry);
+      addHistory(site, 'Réclamation ouverte ('+RECLAM_TYPES[entry.type].label+')');
+      showToast('📢 Réclamation enregistrée');
+    } else {
+      RECLAMATIONS[idx] = entry;
+      addHistory(site, 'Réclamation mise à jour — statut : '+RECLAM_STATUTS[entry.statut].label);
+      showToast('✅ Réclamation mise à jour');
+    }
+    saveReclamations();
+    document.body.removeChild(ov);
+    render();
+  };
+  if (idx >= 0) document.getElementById('rcDel').onclick = function(){
+    if (!confirm('Supprimer cette réclamation ?')) return;
+    RECLAMATIONS.splice(idx,1);
+    saveReclamations();
+    document.body.removeChild(ov);
+    render();
+    showToast('🗑️ Réclamation supprimée');
+  };
 }
 
 // Sécurité : si les données locales sont vides, repartir du Tableau 2026
