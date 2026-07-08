@@ -74,8 +74,9 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
 .sub { font-size:10px; color:#8892A4; }
 #stats { margin-left:auto; background:#13151F; border:1px solid #2A2D3E; border-radius:6px; padding:3px 10px; font-size:12px; color:#8892A4; }
 #search { width:100%; padding:9px 12px; background:#13151F; border:1px solid #2A2D3E; border-radius:9px; color:#E8ECF0; font-size:15px; outline:none; margin-bottom:10px; }
-.tabs { display:flex; gap:6px; }
-.tab { flex:1; padding:8px; border-radius:8px; border:none; cursor:pointer; font-size:13px; font-weight:600; background:#13151F; color:#8892A4; }
+.tabs { display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.tabs::-webkit-scrollbar { display:none; }
+.tab { flex:1 0 auto; white-space:nowrap; padding:8px 10px; border-radius:8px; border:none; cursor:pointer; font-size:13px; font-weight:600; background:#13151F; color:#8892A4; }
 .tab.on { background:#3A86FF; color:#fff; }
 #main { padding:14px; }
 .card { background:#13151F; border-radius:10px; padding:12px; margin-bottom:8px; border-left:4px solid #3A86FF; position:relative; }
@@ -220,6 +221,78 @@ body { font-family:Arial,sans-serif; background:#0F1117; color:#E8ECF0; }
 .reclam-filter{padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #2A2D3E;background:#13151F;color:#8892A4;}
 .reclam-filter.on{background:#E63946;border-color:#E63946;color:#fff;}
 .badge-reclam-open{display:inline-block;background:#E6394622;border:1px solid #E63946;color:#E63946;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:3px;}
+
+/* ============================================================
+   COMPATIBILITÉ MOBILE / PORTABLE (téléphones & petites tablettes)
+   ============================================================ */
+
+/* Empêche tout débordement horizontal de la page */
+html, body { max-width:100%; overflow-x:hidden; }
+@supports (overflow-x:clip) { html, body { overflow-x:clip; } }
+#header, #main { max-width:100%; }
+img, svg, video { max-width:100%; height:auto; }
+
+/* Les textes longs (consignes, adresses, codes d'accès) passent à la ligne */
+.card, .modal, .cal-detail, .today-hdr, .vitrerie-card, .reclam-card,
+.compta-row, .notes-text, .cadr, .cjr, .cnm, .cag {
+  overflow-wrap:break-word; word-break:break-word;
+}
+
+/* Tableaux récapitulatifs : défilement interne au lieu de casser la page */
+.recap-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+/* ---------- Écrans ≤ 640px (smartphones) ---------- */
+@media (max-width:640px) {
+  #header { padding:10px; }
+  #main { padding:10px; }
+
+  .htop { flex-wrap:wrap; gap:8px; }
+  .title { font-size:14px; }
+  #stats { font-size:11px; padding:3px 8px; }
+
+  .sync-bar { gap:5px; }
+  .sync-btn, .sync-cfg { padding:6px 9px; font-size:11px; }
+  .sync-info { flex-basis:100%; margin-left:0; order:10; }
+
+  /* Évite le zoom automatique iOS sur les champs de saisie */
+  #search, .field-input, .field-textarea, .field-select, .field-notes,
+  .abs-add-row select, .abs-add-row input { font-size:16px; }
+
+  .tab { padding:8px 11px; font-size:12px; }
+
+  /* Calendrier plus compact */
+  .cal-hdr { padding:10px; }
+  .cal-cell { min-height:42px; padding:3px 2px; }
+  .cal-day-num { font-size:10px; }
+  .cal-count { font-size:8px; }
+  .cal-month-title { font-size:14px; }
+
+  /* Cartes agents : 2 par ligne */
+  .acard { min-width:calc(50% - 4px); flex:1 1 calc(50% - 4px); }
+
+  /* Statistiques compta / vitrerie : 3 par ligne */
+  .compta-stat, .vitrerie-stat { min-width:calc(33.33% - 6px); padding:8px 6px; }
+  .compta-stat-num, .vitrerie-stat-num { font-size:18px; }
+
+  /* Fenêtres modales plein écran confortable */
+  .modal-overlay { padding:10px; align-items:flex-end; }
+  .modal { padding:16px 14px; max-height:92vh; border-radius:14px 14px 0 0; }
+
+  .recap-table { font-size:11px; }
+  .recap-table th, .recap-table td { padding:4px 5px; }
+
+  /* Zones tactiles suffisantes (min. 40px) */
+  .edit-btn { width:34px; height:34px; }
+  .dtab, .vitrerie-filter, .reclam-filter { padding:7px 13px; }
+  .cal-nav-btn { padding:8px 16px; }
+}
+
+/* ---------- Très petits écrans ≤ 380px ---------- */
+@media (max-width:380px) {
+  .tab { padding:7px 9px; font-size:11px; }
+  .sync-btn { padding:5px 8px; font-size:10px; }
+  .acard { min-width:100%; flex-basis:100%; }
+}
 </style>
 </head>
 <body>
